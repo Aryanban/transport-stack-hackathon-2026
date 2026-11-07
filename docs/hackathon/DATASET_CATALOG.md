@@ -8,7 +8,7 @@ This repository packages all official schemas, metadata documentation, instructi
 
 | ID | Seq Code | Dataset Name | Mode | Type | API Available | Local Files Loaded in Repo |
 | :--- | :--- | :--- | :--- | :--- | :---: | :--- |
-| **1** | `DLM1` | **Delhi Buses: GTFS Static Data** | Bus | Core Transport | No | `data/delhi_buses_gtfs/` (`agency.txt`, `routes.txt`, `stops.txt`, `trips.txt`, `stop_times.txt`, `shapes.txt`, `calendar.txt`) |
+| **1** | `DLM1` | **Delhi Buses: GTFS Static Data (v1-2)** | Bus | Core Transport | No | `data/delhi_buses_gtfs/` (Full production feed: 6,812 stops, 2,554 routes, 65,322 trips, 2.38M stop times, 765k shapes) |
 | **2** | `DLM2` | **Delhi Metro: Static Data** | Metro | Core Transport | No | `data/delhi_metro_gtfs/` (`agency.txt`, `routes.txt`, `stops.txt`, `trips.txt`, `stop_times.txt`, `shapes.txt`, `calendar.txt`) |
 | **3** | `DLM3` | **Delhi Metro: Gate Locations** | Metro | Core Transport | No | `data/delhi_metro_gates/03_DMRC_Gate_Locations.xlsx` |
 | **4** | `DLM4` | **Delhi Metro: Hourly Footfall Data** | Metro | Core Transport | No | `data/delhi_metro_footfall/04_DMRC_Hourly_Footfall_Sample.xlsx` |
@@ -18,8 +18,8 @@ This repository packages all official schemas, metadata documentation, instructi
 | **8** | `DLM8` | **Delhi Metro: Monthly Passenger Count (OD)** | Metro | Core Transport | No | `data/delhi_metro_od_matrix/08_DMRC_Monthly_OD_Sample.csv` |
 | **9** | `DLM9` | **Delhi Metro: Yearly Passenger Count (OD)** | Metro | Core Transport | No | `data/delhi_metro_od_matrix/09_DMRC_Yearly_OD_Sample.xls`, `Station_Code_Index.xlsx` |
 | **10** | `DLM10`| **Delhi Streetlight: Static Data** | Road | Ancillary | No | `data/ancillary_images/10_street_image_1752046852741_streetlight.png` |
-| **13** | `DLM13`| **Delhi Road: Static Data** | Road | Core Transport | No | Road dimensions, widths (>6m check for feeder buses) |
-| **14** | `DLM14`| **Delhi Shared Mobility: Static Data** | Shared | Core Transport | No | Survey-based routes & schedules |
+| **13** | `DLM13`| **Delhi Road: Static Data** | Road | Core Transport | No | `data/delhi_road_network/Data_Layer_04_Road.xlsb` (Road dimensions, widths >6m for feeder buses) |
+| **14** | `DLM14`| **Delhi Shared Mobility: Static Data** | Shared | Core Transport | No | `data/delhi_shared_mobility_gtfs/` (Full shared mobility GTFS routes, schedules, stops, frequencies) |
 | **15** | `DLM15`| **Delhi Accessibility: Static Data** | Metro | Core Transport | No | Accessibility friendly lifts, ramps, gates, parking |
 | **16** | `DLM16`| **Delhi Shop: Static Data** | Road | Ancillary | No | `data/ancillary_images/16_shop_image_1751974398407_shop.jfif` |
 | **17** | `DLM17`| **Delhi Subway and Overpass: Static Data** | Road | Core Transport | No | `data/ancillary_images/17_subway_image_1751974455881_subway.png` |

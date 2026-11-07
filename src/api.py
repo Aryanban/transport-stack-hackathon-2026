@@ -69,7 +69,7 @@ def health_check():
             "bus_and_metro_stops": len(network.stops),
             "transit_routes": len(network.routes),
             "scheduled_trips": len(network.trips),
-            "stop_times_indexed": len(network.stop_times),
+            "stop_times_indexed": network.stop_times_count or len(network.stop_times),
             "od_matrix_origin_stations": len(network.od_matrix),
             "live_vehicles_tracked": len(traffic_model.live_vehicle_updates)
         },

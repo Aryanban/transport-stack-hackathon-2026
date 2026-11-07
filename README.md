@@ -92,8 +92,10 @@ Where:
 ```
 transport-stack-hackathon-2026/
 ├── data/                                  # Loaded Transit Datasets & Matrices
-│   ├── delhi_buses_gtfs/                  # Delhi Buses Static GTFS (stops, routes, trips, stop_times)
+│   ├── delhi_buses_gtfs/                  # Full Delhi Buses Static GTFS (6,812 stops, 2,554 routes, 65,322 trips, 2.38M stop times, 765k shapes)
 │   ├── delhi_metro_gtfs/                  # Delhi Metro Static GTFS (DMRC lines & stations)
+│   ├── delhi_shared_mobility_gtfs/        # Delhi Shared Mobility GTFS (routes, stops, trips, frequencies)
+│   ├── delhi_road_network/                # Data_Layer_04_Road.xlsb (road dimensions, widths >6m for feeder buses)
 │   ├── delhi_metro_gates/                 # DMRC Station Gate Geocodes (.xlsx)
 │   ├── delhi_metro_footfall/              # Hourly Station Entry/Exit Counts (.xlsx)
 │   ├── delhi_metro_od_matrix/             # 258x258 Origin-Destination Flow Matrix & Station Index
