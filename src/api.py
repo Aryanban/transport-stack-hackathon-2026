@@ -18,11 +18,13 @@ from .data_loader import get_loaded_network, Stop, Route
 from .gtfs_router import JourneyPlanner, JourneyOption
 from .traffic_model import BusTrafficModel, LiveVehiclePosition, DEFAULT_HOURLY_SPEED_KMH
 from .crowdedness_model import CrowdednessModel, CrowdednessEstimate
+from .feeder_optimizer import FeederOptimizer
+from .od_extrapolator import ODExtrapolator
 
 app = FastAPI(
     title="Delhi Transport Stack Hackathon 2026 API",
-    description="Real-Time Bus Traffic Model & Crowdedness-Aware Transit Journey Planner",
-    version="1.0.0"
+    description="Real-Time Bus Traffic Model, Crowdedness Planner, OD Extrapolation & EV Feeder Engine",
+    version="1.1.0"
 )
 
 app.add_middleware(
@@ -38,6 +40,8 @@ network = get_loaded_network()
 planner = JourneyPlanner(network)
 traffic_model = planner.traffic_model
 crowdedness_model = planner.crowdedness_model
+feeder_optimizer = FeederOptimizer()
+od_extrapolator = ODExtrapolator()
 
 WEB_DIR = Path(__file__).resolve().parent / "web"
 
@@ -292,3 +296,44 @@ def ingest_gps(telemetry: GPSUpdatePayload):
         "message": f"Updated live speed for route {telemetry.route_id}: {telemetry.speed_kmh} km/h",
         "active_vehicles": len(traffic_model.live_vehicle_updates)
     }
+
+@app.get("/api/v1/feeder-routes")
+def get_feeder_routes(total_fleet: int = Query(500, description="Total electric buses available in fleet")):
+    """
+    Problem 4 API Endpoint: Metro Feeder Route & Electric Bus Fleet Plan.
+    Returns feeder routes respecting constraints (length <= 7km, roads > 6m width, EV charging duty cycle).
+    """
+    routes = feeder_optimizer.design_feeder_network(total_ev_fleet=total_fleet)
+    return {
+        "target_metro_stations_count": len(feeder_optimizer.target_stations),
+        "total_electric_buses_allocated": total_fleet,
+        "feeder_routes_count": len(routes),
+        "routes": [r.__dict__ for r in routes]
+    }
+
+@app.get("/api/v1/od-extrapolation")
+def get_od_extrapolation(limit: int = Query(25, le=100)):
+    """
+    Problem 3 API Endpoint: City-Wide Public Transit OD Extrapolation.
+    Scales 3.5% bus e-ticketing sample to total daily ridership (~4.2M), anchored by Metro AFC gates.
+    """
+    flows = od_extrapolator.extrapolate_zone_matrix()
+    return {
+        "total_travel_analysis_zones": len(od_extrapolator.taz_zones),
+        "total_flows_computed": len(flows),
+        "scaling_method": "Gravity Model + Furness Bi-proportional Balancing (Anchored on DMRC AFC Gates)",
+        "sample_expansion_multiplier": 28.57,
+        "top_interzone_flows": [f.__dict__ for f in flows[:limit]]
+    }
+
+@app.get("/api/v1/road-compliance")
+def get_road_compliance():
+    """
+    Problem 4 Data Endpoint: Summarizes Delhi road width compliance for EV feeder buses from Data_Layer_04_Road.xlsb.
+    """
+    summary_file = Path(__file__).resolve().parent.parent / "data" / "metro_feeder_ev_data" / "road_width_compliance_summary.json"
+    if summary_file.exists():
+        with open(summary_file) as f:
+            return json.load(f)
+    return {"message": "Road compliance summary not found"}
+

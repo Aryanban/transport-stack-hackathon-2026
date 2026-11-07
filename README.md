@@ -95,7 +95,12 @@ transport-stack-hackathon-2026/
 │   ├── delhi_buses_gtfs/                  # Full Delhi Buses Static GTFS (6,812 stops, 2,554 routes, 65,322 trips, 2.38M stop times, 765k shapes)
 │   ├── delhi_metro_gtfs/                  # Delhi Metro Static GTFS (DMRC lines & stations)
 │   ├── delhi_shared_mobility_gtfs/        # Delhi Shared Mobility GTFS (routes, stops, trips, frequencies)
-│   ├── delhi_road_network/                # Data_Layer_04_Road.xlsb (road dimensions, widths >6m for feeder buses)
+│   ├── delhi_road_network/                # Data_Layer_04_Road.xlsb (76,808 surveyed road points with widths in ft)
+│   ├── historical_gps_traces/             # 4-Week hourly corridor bus speeds & high-frequency GPS traces
+│   ├── etm_ticketing_data/                # 4-Week calibrated ETM/e-ticketing transactions (9,648 logs), fare matrix & fleet specs
+│   ├── delhi_transit_zones/               # 26 Travel Analysis Zones (TAZ) & stop-to-zone mappings
+│   ├── metro_feeder_ev_data/              # Target metro stations, EV charging depots & road width compliance analysis
+│   ├── metro_segment_loads/               # DMRC line segment topologies & 24-hour directional passenger load curves
 │   ├── delhi_metro_gates/                 # DMRC Station Gate Geocodes (.xlsx)
 │   ├── delhi_metro_footfall/              # Hourly Station Entry/Exit Counts (.xlsx)
 │   ├── delhi_metro_od_matrix/             # 258x258 Origin-Destination Flow Matrix & Station Index
@@ -103,28 +108,23 @@ transport-stack-hackathon-2026/
 │   ├── rapid_rail_ncrtc_gtfs/             # NCRTC Rapid Rail GTFS Schedules
 │   └── ancillary_images/                  # Streetlight, shop & subway survey assets
 ├── docs/
-│   ├── hackathon/
-│   │   ├── OVERVIEW.md                    # Hackathon rules, dates, prizes, and timeline
-│   │   ├── FAQS.md                        # Official FAQs from Where U Elevate
-│   │   ├── DATASET_CATALOG.md             # Complete metadata of all 15 DTS datasets
-│   │   ├── PROBLEM_1_BUS_TRAVEL_TIME.md   # Google Doc brief for Problem 1
-│   │   ├── PROBLEM_2_CROWDEDNESS_PLANNER.md# Google Doc brief for Problem 2
-│   │   ├── PROBLEM_3_OD_MATRIX.md         # Google Doc brief for Problem 3
-│   │   ├── PROBLEM_4_METRO_FEEDER.md      # Google Doc brief for Problem 4
-│   │   └── PROBLEM_5_METRO_BUS_CROWDING.md# Google Doc brief for Problem 5
+│   ├── hackathon/                         # Complete problem briefs (1 to 5), FAQs & Catalog
 │   └── metadata/                          # Official DTS metadata PDFs & license agreements
 ├── src/
 │   ├── data_loader.py                     # Universal GTFS & OD matrix parser + spatial indexer
 │   ├── traffic_model.py                   # Problem 1: Bus traffic velocity & delay model
 │   ├── crowdedness_model.py               # Problem 2: ETM ticket occupancy & comfort model
 │   ├── gtfs_router.py                     # Multimodal pathfinding engine (walking + bus + metro)
+│   ├── feeder_optimizer.py                # Problem 4: Metro feeder route & 500 electric bus scheduler
+│   ├── od_extrapolator.py                 # Problem 3: Multi-zone transit OD matrix scaling engine
 │   ├── api.py                             # FastAPI REST endpoints
 │   └── web/
 │       └── index.html                     # Interactive Leaflet transit UI & trip planner
 ├── scripts/
+│   ├── benchmark_routes.py                # Validates peak vs off-peak route estimates
 │   └── download_dts_data.py               # Script to sync new datasets from DTS portal
 ├── tests/
-│   └── test_engine.py                     # Comprehensive pytest test suite
+│   └── test_engine.py                     # 12 comprehensive unit & integration tests
 ├── requirements.txt                       # Python dependencies
 ├── pyproject.toml                         # Package configuration
 └── README.md                              # This documentation

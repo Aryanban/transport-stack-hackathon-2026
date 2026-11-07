@@ -1,0 +1,137 @@
+[
+  {
+    "station_name": "Hauz Khas",
+    "line": "Yellow & Magenta",
+    "code": "HAUZ",
+    "lat": 28.5431,
+    "lon": 77.2065,
+    "daily_footfall": 125000,
+    "priority": "Critical Interchange"
+  },
+  {
+    "station_name": "Kashmere Gate",
+    "line": "Red, Yellow & Violet",
+    "code": "KGTR",
+    "lat": 28.6675,
+    "lon": 77.2285,
+    "daily_footfall": 210000,
+    "priority": "Tri-Line Interchange"
+  },
+  {
+    "station_name": "Botanical Garden",
+    "line": "Blue & Magenta",
+    "code": "BOTA",
+    "lat": 28.5641,
+    "lon": 77.3341,
+    "daily_footfall": 110000,
+    "priority": "Noida Sub-Hub"
+  },
+  {
+    "station_name": "Janakpuri West",
+    "line": "Blue & Magenta",
+    "code": "JKPW",
+    "lat": 28.6294,
+    "lon": 77.0778,
+    "daily_footfall": 95000,
+    "priority": "West Delhi Feeder"
+  },
+  {
+    "station_name": "Rajouri Garden",
+    "line": "Blue & Pink",
+    "code": "RJGD",
+    "lat": 28.6492,
+    "lon": 77.1226,
+    "daily_footfall": 90000,
+    "priority": "Ring Road Interchange"
+  },
+  {
+    "station_name": "Netaji Subhash Place",
+    "line": "Red & Pink",
+    "code": "NTSP",
+    "lat": 28.6917,
+    "lon": 77.1517,
+    "daily_footfall": 85000,
+    "priority": "North-West Commercial"
+  },
+  {
+    "station_name": "Karkardooma",
+    "line": "Blue & Pink",
+    "code": "KKDM",
+    "lat": 28.6558,
+    "lon": 77.3031,
+    "daily_footfall": 65000,
+    "priority": "East Delhi Catchment"
+  },
+  {
+    "station_name": "Dwarka Sector 21",
+    "line": "Blue & Airport Express",
+    "code": "DW21",
+    "lat": 28.5522,
+    "lon": 77.0583,
+    "daily_footfall": 75000,
+    "priority": "Airport Sub-Hub"
+  },
+  {
+    "station_name": "Anand Vihar ISBT",
+    "line": "Blue & Pink",
+    "code": "ANVR",
+    "lat": 28.6473,
+    "lon": 77.3158,
+    "daily_footfall": 180000,
+    "priority": "Interstate Multi-Modal"
+  },
+  {
+    "station_name": "Inderlok",
+    "line": "Red & Green",
+    "code": "INDL",
+    "lat": 28.6736,
+    "lon": 77.1706,
+    "daily_footfall": 70000,
+    "priority": "West-North Connector"
+  },
+  {
+    "station_name": "Kalkaji Mandir",
+    "line": "Violet & Magenta",
+    "code": "KLKM",
+    "lat": 28.5503,
+    "lon": 77.26,
+    "daily_footfall": 80000,
+    "priority": "South-East Commercial"
+  },
+  {
+    "station_name": "Lajpat Nagar",
+    "line": "Violet & Pink",
+    "code": "LJPN",
+    "lat": 28.5708,
+    "lon": 77.2372,
+    "daily_footfall": 92000,
+    "priority": "Shopping & Residential"
+  },
+  {
+    "station_name": "Mayur Vihar Phase-1",
+    "line": "Blue & Pink",
+    "code": "MVH1",
+    "lat": 28.6041,
+    "lon": 77.2947,
+    "daily_footfall": 68000,
+    "priority": "East Feeder"
+  },
+  {
+    "station_name": "Saket",
+    "line": "Yellow Line",
+    "code": "SAKT",
+    "lat": 28.5222,
+    "lon": 77.2144,
+    "daily_footfall": 72000,
+    "priority": "South Catchment"
+  },
+  {
+    "station_name": "Azadpur",
+    "line": "Yellow & Pink",
+    "code": "AZDP",
+    "lat": 28.7078,
+    "lon": 77.1754,
+    "daily_footfall": 88000,
+    "priority": "North Wholesale Hub"
+  }
+]

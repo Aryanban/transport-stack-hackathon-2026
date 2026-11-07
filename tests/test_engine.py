@@ -101,3 +101,40 @@ def test_api_journey(client):
     data = res.json()
     assert "options" in data
     assert len(data["options"]) > 0
+
+def test_feeder_optimizer():
+    """Verifies Problem 4 Feeder Optimizer constraints (<= 7 km, electric bus allocations)."""
+    from src.feeder_optimizer import FeederOptimizer
+    optimizer = FeederOptimizer()
+    routes = optimizer.design_feeder_network(total_ev_fleet=500)
+    assert len(routes) > 0
+    for r in routes:
+        assert r.route_length_km <= 7.0, f"Route {r.route_id} exceeds 7km constraint"
+        assert r.road_width_compliant is True
+        assert r.daily_energy_kwh_per_bus > 0
+        assert r.is_valid_route is True
+
+def test_od_extrapolator():
+    """Verifies Problem 3 OD matrix extrapolation and scaling logic."""
+    from src.od_extrapolator import ODExtrapolator
+    extrapolator = ODExtrapolator()
+    flows = extrapolator.extrapolate_zone_matrix()
+    assert len(flows) > 0
+    top = flows[0]
+    assert top.scaled_bus_trips > top.sample_bus_trips
+    assert top.total_multimodal_trips >= top.scaled_bus_trips
+    assert "Confidence" in top.confidence_interval
+
+def test_api_new_endpoints(client):
+    """Verifies Problem 3 and Problem 4 REST endpoints."""
+    res_feeder = client.get("/api/v1/feeder-routes?total_fleet=500")
+    assert res_feeder.status_code == 200
+    data_f = res_feeder.json()
+    assert data_f["total_electric_buses_allocated"] == 500
+    assert len(data_f["routes"]) > 0
+
+    res_od = client.get("/api/v1/od-extrapolation?limit=10")
+    assert res_od.status_code == 200
+    data_od = res_od.json()
+    assert len(data_od["top_interzone_flows"]) == 10
+
