@@ -26,6 +26,27 @@ This repository packages all official schemas, metadata documentation, instructi
 
 ---
 
+## 🎯 Problem 2 Dedicated Data Ecosystem (`data/etm_ticketing_data/`)
+
+See the in-depth [Problem 2 Data Guide](file:///Users/aryanbansal/Documents/antigravity/transport-stack-hackathon-2026/docs/hackathon/PROBLEM_2_DATA_GUIDE.md) for schemas, formulas, and operational background.
+
+| Dataset File | Format | Records / Size | Description |
+| :--- | :--- | :--- | :--- |
+| `delhi_bus_etm_5weeks_transactions_sample.csv` | CSV | 20,455 rows / 1.0 MB | 35-day (5 weeks) multi-corridor ETM transaction dump with boarding/alighting stops, fare stages, payment modes. |
+| `delhi_bus_etm_transactions_sample.csv` | CSV | 9,648 rows / 1.6 MB | High-density corridor sample for Route 102 (Rohini to Old Delhi Railway Station). |
+| `pink_pass_ridership_by_depot.csv` | CSV | 42 depots / 3.5 KB | Official depot-level female ridership shares (32.8% to 43.6%), electric vs CNG fleet assignments. |
+| `pass_holder_expansion_factors.json` | JSON | 5.3 KB | Expansion multipliers ($K_{\text{expansion}}$) by route typology (Trunk, Radial, Feeder) and time band. |
+| `stop_to_fare_stage_mapping.csv` | CSV | 85 stops / 6.6 KB | Sequenced fare stage mapping (Stages 1-6), distances, stage boundaries, and metro interchange lines. |
+| `trip_fleet_assignment_roster.csv` | CSV | 200 trips / 25 KB | GTFS `trip_id` mapping to vehicle models (12m AC, 12m Non-AC, 9m Feeder) and crush capacities (40, 65, 70). |
+| `passenger_alighting_decay_matrix.csv` | CSV | 13 slabs / 983 B | Conditional alighting probability matrix modeling distance decay and metro hub attractors. |
+| `dwell_time_crowding_calibration.csv` | CSV | 15 scenarios / 1.1 KB | Stop dwell time (seconds) calibrated against boarding passenger volumes and on-board crowd level. |
+| `delhi_daily_environmental_context.csv` | CSV | 35 days / 2.9 KB | 35-day timeline: weather, rain, holidays (Diwali, Dussehra), AQI index, GRAP Stages, ridership scaling. |
+| `corridor_hourly_crowding_ground_truth.csv` | CSV | 2,754 rows / 244 KB | Hourly segment loads, occupancy ratios, standing probabilities, and crowd classifications. |
+| `fare_stage_matrix.csv` | CSV | 5 slabs / 226 B | DTC official fare distance slabs and pricing for Non-AC, AC, and Pink Tickets. |
+| `bus_fleet_specifications.json` | JSON | 877 B | Physical vehicle dimensions, door counts, floor heights, and rated crush thresholds. |
+
+---
+
 ## 🔑 Accessing Full & Real-Time Datasets
 
 1. **Sign up on DTS:** Visit [delhi.transportstack.in](https://delhi.transportstack.in) and register your team account.

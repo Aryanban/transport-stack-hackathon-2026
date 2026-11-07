@@ -97,7 +97,7 @@ transport-stack-hackathon-2026/
 │   ├── delhi_shared_mobility_gtfs/        # Delhi Shared Mobility GTFS (routes, stops, trips, frequencies)
 │   ├── delhi_road_network/                # Data_Layer_04_Road.xlsb (76,808 surveyed road points with widths in ft)
 │   ├── historical_gps_traces/             # 4-Week hourly corridor bus speeds & high-frequency GPS traces
-│   ├── etm_ticketing_data/                # 4-Week calibrated ETM/e-ticketing transactions (9,648 logs), fare matrix & fleet specs
+│   ├── etm_ticketing_data/                # Complete Problem 2 Data Suite (5-week multi-route ETM logs, depot pink passes, expansion JSON, fare stages, fleet roster, alighting decay, dwell times, ground truth)
 │   ├── delhi_transit_zones/               # 26 Travel Analysis Zones (TAZ) & stop-to-zone mappings
 │   ├── metro_feeder_ev_data/              # Target metro stations, EV charging depots & road width compliance analysis
 │   ├── metro_segment_loads/               # DMRC line segment topologies & 24-hour directional passenger load curves
@@ -122,6 +122,8 @@ transport-stack-hackathon-2026/
 │       └── index.html                     # Interactive Leaflet transit UI & trip planner
 ├── scripts/
 │   ├── benchmark_routes.py                # Validates peak vs off-peak route estimates
+│   ├── build_problem_2_datasets.py        # Generates all Problem 2 datasets (depots, fare stages, fleet roster, alighting decay, environmental context)
+│   ├── generate_etm_5weeks_data.py        # CLI generator to synthesize 35-day multi-corridor ETM transaction dumps
 │   └── download_dts_data.py               # Script to sync new datasets from DTS portal
 ├── tests/
 │   └── test_engine.py                     # 12 comprehensive unit & integration tests

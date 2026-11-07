@@ -1,0 +1,163 @@
+{
+  "metadata": {
+    "title": "Delhi Bus Pass-Holder & Unrecorded Commuter Expansion Multipliers",
+    "description": "Institutional multipliers to convert ETM revenue ticket counts into true on-board passenger load. Accounts for Pink Pass (Women Free Travel Scheme), student concession passes, senior citizen passes, DTC employee passes, and rush-hour unpunched boardings.",
+    "authority": "Delhi Transport Infrastructure Development Corporation (DTIDC) / DTC Operational Guidelines",
+    "formula": "True_Load(t) = Ticketed_Revenue_Boardings(t) * Expansion_Factor(route_type, time_band)",
+    "effective_year": 2026
+  },
+  "city_wide_summary": {
+    "mean_pink_pass_ratio": 0.372,
+    "mean_student_pass_ratio": 0.045,
+    "mean_senior_concession_ratio": 0.031,
+    "mean_unrecorded_crush_ratio": 0.048,
+    "overall_aggregate_expansion_multiplier": 1.58
+  },
+  "route_type_profiles": {
+    "trunk_arterial": {
+      "description": "High-capacity corridors along Ring Road, Outer Ring Road, and Grand Trunk Road (e.g., 761, 894, OMS, TMS).",
+      "time_bands": {
+        "morning_peak_08_11": {
+          "pink_share": 0.38,
+          "concession_share": 0.08,
+          "unrecorded_rush_pct": 0.07,
+          "expansion_factor": 1.64
+        },
+        "afternoon_offpeak_12_15": {
+          "pink_share": 0.4,
+          "concession_share": 0.07,
+          "unrecorded_rush_pct": 0.02,
+          "expansion_factor": 1.52
+        },
+        "evening_peak_17_20": {
+          "pink_share": 0.36,
+          "concession_share": 0.06,
+          "unrecorded_rush_pct": 0.09,
+          "expansion_factor": 1.66
+        },
+        "night_21_24": {
+          "pink_share": 0.22,
+          "concession_share": 0.03,
+          "unrecorded_rush_pct": 0.01,
+          "expansion_factor": 1.3
+        },
+        "early_morning_05_07": {
+          "pink_share": 0.25,
+          "concession_share": 0.04,
+          "unrecorded_rush_pct": 0.02,
+          "expansion_factor": 1.35
+        }
+      }
+    },
+    "radial_cbd": {
+      "description": "Radial routes connecting residential hubs to Connaught Place, Central Secretariat, ITO, Old Delhi (e.g., 502, 102, 449).",
+      "time_bands": {
+        "morning_peak_08_11": {
+          "pink_share": 0.39,
+          "concession_share": 0.09,
+          "unrecorded_rush_pct": 0.06,
+          "expansion_factor": 1.61
+        },
+        "afternoon_offpeak_12_15": {
+          "pink_share": 0.37,
+          "concession_share": 0.06,
+          "unrecorded_rush_pct": 0.02,
+          "expansion_factor": 1.48
+        },
+        "evening_peak_17_20": {
+          "pink_share": 0.38,
+          "concession_share": 0.07,
+          "unrecorded_rush_pct": 0.08,
+          "expansion_factor": 1.63
+        },
+        "night_21_24": {
+          "pink_share": 0.24,
+          "concession_share": 0.03,
+          "unrecorded_rush_pct": 0.01,
+          "expansion_factor": 1.32
+        },
+        "early_morning_05_07": {
+          "pink_share": 0.26,
+          "concession_share": 0.04,
+          "unrecorded_rush_pct": 0.02,
+          "expansion_factor": 1.36
+        }
+      }
+    },
+    "metro_feeder": {
+      "description": "Last-mile feeder operations using 9m electric midi buses connecting metro stations to residential colonies.",
+      "time_bands": {
+        "morning_peak_08_11": {
+          "pink_share": 0.32,
+          "concession_share": 0.05,
+          "unrecorded_rush_pct": 0.03,
+          "expansion_factor": 1.43
+        },
+        "afternoon_offpeak_12_15": {
+          "pink_share": 0.35,
+          "concession_share": 0.05,
+          "unrecorded_rush_pct": 0.01,
+          "expansion_factor": 1.45
+        },
+        "evening_peak_17_20": {
+          "pink_share": 0.33,
+          "concession_share": 0.05,
+          "unrecorded_rush_pct": 0.04,
+          "expansion_factor": 1.47
+        },
+        "night_21_24": {
+          "pink_share": 0.2,
+          "concession_share": 0.02,
+          "unrecorded_rush_pct": 0.01,
+          "expansion_factor": 1.25
+        },
+        "early_morning_05_07": {
+          "pink_share": 0.22,
+          "concession_share": 0.03,
+          "unrecorded_rush_pct": 0.01,
+          "expansion_factor": 1.28
+        }
+      }
+    },
+    "suburban_cross_border": {
+      "description": "Routes extending to border terminals like Najafgarh, Narela, Bawana, Badarpur.",
+      "time_bands": {
+        "morning_peak_08_11": {
+          "pink_share": 0.34,
+          "concession_share": 0.09,
+          "unrecorded_rush_pct": 0.05,
+          "expansion_factor": 1.54
+        },
+        "afternoon_offpeak_12_15": {
+          "pink_share": 0.36,
+          "concession_share": 0.07,
+          "unrecorded_rush_pct": 0.02,
+          "expansion_factor": 1.49
+        },
+        "evening_peak_17_20": {
+          "pink_share": 0.33,
+          "concession_share": 0.08,
+          "unrecorded_rush_pct": 0.06,
+          "expansion_factor": 1.55
+        },
+        "night_21_24": {
+          "pink_share": 0.18,
+          "concession_share": 0.02,
+          "unrecorded_rush_pct": 0.01,
+          "expansion_factor": 1.23
+        },
+        "early_morning_05_07": {
+          "pink_share": 0.23,
+          "concession_share": 0.04,
+          "unrecorded_rush_pct": 0.02,
+          "expansion_factor": 1.33
+        }
+      }
+    }
+  },
+  "weekend_adjustment": {
+    "saturday_scale": 0.92,
+    "sunday_scale": 0.78,
+    "market_corridor_sunday_boost": 1.25
+  }
+}
