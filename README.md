@@ -198,6 +198,7 @@ Before the deadline on **20 November 2026**:
 ## 👥 Contributors & Team
 
 - **Aryan Bansal** ([@Aryanban](https://github.com/Aryanban))
+- **Aryan** ([@aryan-c285](https://github.com/aryan-c285))
 - Developed for the **Transport Stack Hackathon 2026** (Delhi Transport Stack / JICA / CSM @ IIIT Delhi).
 
 ## 📄 License
