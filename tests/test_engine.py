@@ -138,3 +138,44 @@ def test_api_new_endpoints(client):
     data_od = res_od.json()
     assert len(data_od["top_interzone_flows"]) == 10
 
+def test_gtfs_realtime_client():
+    """Verifies GTFS-RT Protocol Buffer client and vehicle ingestion."""
+    from src.gtfs_rt_client import DelhiGTFSRealtimeClient
+    client = DelhiGTFSRealtimeClient(api_key=None)
+    vehicles = client.fetch_vehicle_positions()
+    assert len(vehicles) > 0
+    v = vehicles[0]
+    assert "vehicle_id" in v
+    assert "latitude" in v
+    assert "longitude" in v
+    assert "speed_kmh" in v
+
+    route_502 = client.get_vehicles_by_route("502UP")
+    assert len(route_502) > 0
+
+def test_pareto_comfort_routing():
+    """Verifies McRAPTOR Pareto multi-criteria journey evaluation."""
+    from src.crowdedness_model import CrowdednessModel
+    model = CrowdednessModel()
+    
+    # Perceived time under crush load should be significantly higher than nominal
+    nominal_time = 45.0
+    perceived_rush = model.calculate_perceived_travel_time(nominal_time, "BUS_102DOWN", hour=9)
+    perceived_night = model.calculate_perceived_travel_time(nominal_time, "BUS_102DOWN", hour=23)
+    assert perceived_rush > nominal_time
+    assert perceived_rush > perceived_night
+
+    # Test 3-tier Pareto sorting
+    sample_journeys = [
+        {"route_id": "502UP", "duration_minutes": 42.0, "occupancy_count": 65, "seating_capacity": 35, "crush_capacity": 70},
+        {"route_id": "534UP", "duration_minutes": 50.0, "occupancy_count": 42, "seating_capacity": 35, "crush_capacity": 70},
+        {"route_id": "761DOWN", "duration_minutes": 58.0, "occupancy_count": 22, "seating_capacity": 35, "crush_capacity": 70},
+    ]
+    pareto_tiers = model.evaluate_pareto_journey_options(sample_journeys)
+    assert len(pareto_tiers) == 3
+    tiers = [p["pareto_tier"] for p in pareto_tiers]
+    assert "Fastest Route" in tiers
+    assert "Comfort First (Seated)" in tiers
+    assert "Balanced Compromise" in tiers
+
+

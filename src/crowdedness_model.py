@@ -33,6 +33,7 @@ class CrowdednessEstimate:
     color_code: str    # "green", "amber", "red"
     comfort_score: int # 100 (empty) to 0 (packed)
     recommendation: str
+    perceived_time_multiplier: float = 1.0  # Hensher-Wardman VOT multiplier (1.0x seated, 1.45x standing, 2.25x crush)
 
 class CrowdednessModel:
     """
@@ -105,11 +106,91 @@ class CrowdednessModel:
             comfort = max(10, int(35 - ((ratio - 1.25) * 40)))
             rec = "High crowding. Consider taking a route 15-20 min later or an alternate service."
 
+        # Hensher-Wardman Value of Time (VOT) Crowding Multiplier
+        if ratio <= 1.0:
+            perceived_mult = 1.0
+        elif ratio <= 1.5:
+            # Standee penalty: standing feels 1.35x - 1.65x longer
+            standing_share = (total_estimated - cfg.seating_capacity) / max(1, total_capacity - cfg.seating_capacity)
+            perceived_mult = round(1.0 + 0.50 * standing_share, 2)
+        else:
+            # Crush penalty: physical crush feels up to 2.25x longer
+            crush_share = (total_estimated - cfg.seating_capacity) / max(1, total_capacity - cfg.seating_capacity)
+            perceived_mult = round(1.0 + 0.60 * crush_share + 0.65 * (crush_share ** 2), 2)
+
         return CrowdednessEstimate(
             occupancy_count=total_estimated,
             load_factor=round(ratio, 2),
             status_label=status,
             color_code=color,
             comfort_score=comfort,
-            recommendation=rec
+            recommendation=rec,
+            perceived_time_multiplier=perceived_mult
         )
+
+    def calculate_perceived_travel_time(
+        self,
+        actual_travel_minutes: float,
+        route_id: str,
+        hour: int,
+        stop_sequence_progress: float = 0.5
+    ) -> float:
+        """
+        Applies Hensher-Wardman transit economics crowding multipliers to return
+        perceived travel time in minutes.
+        """
+        crowd_est = self.estimate_load(route_id, hour, stop_sequence_progress)
+        return round(actual_travel_minutes * crowd_est.perceived_time_multiplier, 1)
+
+    def evaluate_pareto_journey_options(self, journeys: list) -> list:
+        """
+        McRAPTOR-inspired multi-criteria Pareto sorter.
+        Categorizes candidate journey options into three distinct commuter choices:
+        1. Fastest Option (minimal physical travel time)
+        2. Balanced Option (compromise on duration and comfort)
+        3. Comfort First Option (minimal perceived fatigue / seated guarantee)
+        """
+        if not journeys:
+            return []
+
+        # Annotate perceived times
+        for j in journeys:
+            dur = j.get("duration_minutes", j.get("travel_time_min", 30.0))
+            load = j.get("occupancy_count", 30)
+            seat_cap = j.get("seating_capacity", 35)
+            crush_cap = j.get("crush_capacity", 70)
+            
+            if load <= seat_cap:
+                mult = 1.0
+            else:
+                s_ratio = (load - seat_cap) / max(1, crush_cap - seat_cap)
+                mult = 1.0 + 0.50 * s_ratio + 0.75 * (s_ratio ** 2)
+            
+            j["perceived_duration_minutes"] = round(dur * mult, 1)
+
+        # Sort along two frontiers
+        by_speed = sorted(journeys, key=lambda x: x.get("duration_minutes", 0))
+        by_comfort = sorted(journeys, key=lambda x: x.get("perceived_duration_minutes", 0))
+
+        fastest = by_speed[0]
+        comfort = by_comfort[0]
+
+        # Find balanced middle ground
+        balanced = None
+        for j in by_speed:
+            if j != fastest and j != comfort:
+                balanced = j
+                break
+        if not balanced:
+            balanced = by_comfort[-1] if len(by_comfort) > 1 else fastest
+
+        fastest["pareto_tier"] = "Fastest Route"
+        fastest["pareto_description"] = "Minimizes physical travel time on road."
+
+        comfort["pareto_tier"] = "Comfort First (Seated)"
+        comfort["pareto_description"] = "Maximizes seating availability, minimizing commuter fatigue."
+
+        balanced["pareto_tier"] = "Balanced Compromise"
+        balanced["pareto_description"] = "Optimal balance of journey duration and acceptable crowding."
+
+        return [fastest, balanced, comfort]
