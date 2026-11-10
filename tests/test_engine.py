@@ -178,4 +178,20 @@ def test_pareto_comfort_routing():
     assert "Comfort First (Seated)" in tiers
     assert "Balanced Compromise" in tiers
 
+def test_api_live_gtfs_rt_endpoints(client):
+    """Verifies live fleet telemetry and vehicle endpoints via REST API."""
+    res_stats = client.get("/api/v1/live/fleet-stats")
+    assert res_stats.status_code == 200
+    stats = res_stats.json()
+    assert "active_vehicles" in stats
+    assert stats["active_vehicles"] > 0
+    assert "fleet_average_speed_kmh" in stats
+
+    res_veh = client.get("/api/v1/live/vehicles?limit=10")
+    assert res_veh.status_code == 200
+    veh_data = res_veh.json()
+    assert veh_data["total_matching"] > 0
+    assert len(veh_data["vehicles"]) <= 10
+
+
 

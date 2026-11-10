@@ -20,6 +20,7 @@ from .traffic_model import BusTrafficModel, LiveVehiclePosition, DEFAULT_HOURLY_
 from .crowdedness_model import CrowdednessModel, CrowdednessEstimate
 from .feeder_optimizer import FeederOptimizer
 from .od_extrapolator import ODExtrapolator
+from .gtfs_rt_client import DelhiGTFSRealtimeClient
 
 app = FastAPI(
     title="Delhi Transport Stack Hackathon 2026 API",
@@ -42,6 +43,7 @@ traffic_model = planner.traffic_model
 crowdedness_model = planner.crowdedness_model
 feeder_optimizer = FeederOptimizer()
 od_extrapolator = ODExtrapolator()
+gtfs_rt_client = DelhiGTFSRealtimeClient()
 
 WEB_DIR = Path(__file__).resolve().parent / "web"
 
@@ -336,4 +338,31 @@ def get_road_compliance():
         with open(summary_file) as f:
             return json.load(f)
     return {"message": "Road compliance summary not found"}
+
+@app.get("/api/v1/live/fleet-stats")
+def get_live_fleet_stats():
+    """
+    Returns real-time fleet telemetry metrics (active buses, active routes, fleet velocity)
+    parsed directly from the Delhi Buses GTFS-RT feed (VehiclePositions.pb).
+    """
+    return gtfs_rt_client.get_fleet_live_stats()
+
+@app.get("/api/v1/live/vehicles")
+def get_live_vehicles(
+    route_id: Optional[str] = Query(None, description="Optional route filter e.g. '502UP' or '1346'"),
+    limit: int = Query(50, ge=1, le=500, description="Max vehicles to return")
+):
+    """
+    Returns live vehicle positions from the Delhi Buses GTFS-RT feed.
+    """
+    if route_id:
+        vehicles = gtfs_rt_client.get_vehicles_by_route(route_id)
+    else:
+        vehicles = gtfs_rt_client.fetch_vehicle_positions()
+    return {
+        "total_matching": len(vehicles),
+        "limit": limit,
+        "vehicles": vehicles[:limit]
+    }
+
 
