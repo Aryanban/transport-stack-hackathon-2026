@@ -1,0 +1,6 @@
+route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color,route_sort_order,continuous_pickup,continuous_drop_off
+33,,R_SP_R,RAPID_Phase 3 (Rapid Metro) to Sector 55-56 (Rapid Metro),,1,,,,,,
+31,,G_DD_R,GRAY_Dhansa Bus Stand to Dwarka,,1,,,,,,
+29,,P_MS_R,PINK_Shiv Vihar to Majlis Park,,1,,,,,,
+12,,M_JB,MAGENTA_Janak Puri West to Botanical Garden,,1,,,,,,
+11,,P_MS,PINK_Majlis Park to Shiv Vihar,,1,,,,,,

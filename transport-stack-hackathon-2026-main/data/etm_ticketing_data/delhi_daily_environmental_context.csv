@@ -1,0 +1,36 @@
+date,day_of_week,is_weekend,is_public_holiday,holiday_name,weather_condition,rainfall_mm,delhi_aqi_index,grap_stage,bus_ridership_demand_scale
+2026-10-01,Thursday,0,0,None,Clear / Pleasant,0.0,167,Stage I (Poor),1.0
+2026-10-02,Friday,0,1,Mahatma Gandhi Jayanti,Clear / Pleasant,0.0,177,Stage I (Poor),0.82
+2026-10-03,Saturday,1,0,None,Clear / Pleasant,0.0,205,Stage I (Poor),0.82
+2026-10-04,Sunday,1,0,None,Clear / Pleasant,0.0,190,Stage I (Poor),0.82
+2026-10-05,Monday,0,0,None,Clear / Pleasant,0.0,181,Stage I (Poor),1.0
+2026-10-06,Tuesday,0,0,None,Scattered Rain,24.3,132,Stage 0 (Normal),1.08
+2026-10-07,Wednesday,0,0,None,Scattered Rain,18.4,125,Stage 0 (Normal),1.08
+2026-10-08,Thursday,0,0,None,Clear / Pleasant,0.0,169,Stage I (Poor),1.0
+2026-10-09,Friday,0,0,None,Clear / Pleasant,0.0,149,Stage I (Poor),1.0
+2026-10-10,Saturday,1,0,None,Clear / Pleasant,0.0,183,Stage I (Poor),0.82
+2026-10-11,Sunday,1,0,None,Clear / Pleasant,0.0,182,Stage I (Poor),0.82
+2026-10-12,Monday,0,0,None,Clear / Pleasant,0.0,210,Stage I (Poor),1.0
+2026-10-13,Tuesday,0,0,None,Clear / Pleasant,0.0,183,Stage I (Poor),1.0
+2026-10-14,Wednesday,0,0,None,Clear / Pleasant,0.0,180,Stage I (Poor),1.0
+2026-10-15,Thursday,0,0,None,Clear / Pleasant,0.0,170,Stage I (Poor),1.0
+2026-10-16,Friday,0,0,None,Clear / Pleasant,0.0,148,Stage I (Poor),1.0
+2026-10-17,Saturday,1,0,None,Clear / Pleasant,0.0,199,Stage I (Poor),0.82
+2026-10-18,Sunday,1,0,None,Clear / Pleasant,0.0,195,Stage I (Poor),0.82
+2026-10-19,Monday,0,0,None,Moderate Smog / Haze,0.0,341,Stage II (Very Poor),1.06
+2026-10-20,Tuesday,0,1,Dussehra (Vijayadashami),Moderate Smog / Haze,0.0,339,Stage II (Very Poor),0.85
+2026-10-21,Wednesday,0,0,None,Moderate Smog / Haze,0.0,326,Stage II (Very Poor),1.06
+2026-10-22,Thursday,0,0,None,Moderate Smog / Haze,0.0,353,Stage II (Very Poor),1.06
+2026-10-23,Friday,0,0,None,Moderate Smog / Haze,0.0,328,Stage II (Very Poor),1.06
+2026-10-24,Saturday,1,0,None,Moderate Smog / Haze,0.0,380,Stage II (Very Poor),0.85
+2026-10-25,Sunday,1,1,Maharishi Valmiki Jayanti,Moderate Smog / Haze,0.0,385,Stage II (Very Poor),0.85
+2026-10-26,Monday,0,0,None,Moderate Smog / Haze,0.0,313,Stage II (Very Poor),1.06
+2026-10-27,Tuesday,0,0,None,Moderate Smog / Haze,0.0,375,Stage II (Very Poor),1.06
+2026-10-28,Wednesday,0,0,None,Moderate Smog / Haze,0.0,311,Stage II (Very Poor),1.06
+2026-10-29,Thursday,0,0,None,Severe Smog / Fog,0.0,429,Stage III / IV (Severe+),1.18
+2026-10-30,Friday,0,0,None,Severe Smog / Fog,0.0,470,Stage III / IV (Severe+),1.18
+2026-10-31,Saturday,1,0,None,Severe Smog / Fog,0.0,445,Stage III / IV (Severe+),0.88
+2026-11-01,Sunday,1,1,Diwali (Deepavali),Severe Smog / Fog,0.0,437,Stage III / IV (Severe+),0.88
+2026-11-02,Monday,0,1,Govardhan Puja,Severe Smog / Fog,0.0,411,Stage III / IV (Severe+),0.88
+2026-11-03,Tuesday,0,1,Bhai Dooj,Severe Smog / Fog,0.0,462,Stage III / IV (Severe+),0.88
+2026-11-04,Wednesday,0,0,None,Severe Smog / Fog,0.0,458,Stage III / IV (Severe+),1.18

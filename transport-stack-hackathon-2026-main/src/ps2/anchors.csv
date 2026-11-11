@@ -1,0 +1,45 @@
+sample_route,gtfs_route,sample_stop,gtfs_stop
+502UP,1995,Mehrauli Terminal,7908
+502UP,1995,Qutub Minar Metro Station,2345
+502UP,1995,Lado Sarai Crossing,2347
+502UP,1995,Hauz Khas,2994
+502UP,1995,Green Park Metro Station,2995
+502UP,1995,AIIMS Hospital,2997
+502UP,1995,Kidwai Nagar,2426
+502UP,1995,Prithviraj Road,2998
+502UP,1995,ITO Metro Station,374
+502UP,1995,Delhi Gate,2070
+502UP,1995,Jama Masjid,379
+502UP,1995,Red Fort,380
+502UP,1995,ISBT Kashmere Gate City Terminal,1025
+761DOWN,2227,Azadpur Terminal,7587
+761DOWN,2227,Shalimar Bagh,221
+761DOWN,2227,Prem Bari Pul,741
+761DOWN,2227,Madhuban Chowk,4811
+761DOWN,2227,Peera Garhi Chowk,3335
+761DOWN,2227,District Centre Janakpuri,3900
+761DOWN,2227,Uttam Nagar East Metro,8208
+761DOWN,2227,Dabri Mor,3784
+761DOWN,2227,Mangla Puri Terminal,3691
+534UP,2050,Anand Vihar ISBT Terminal,8256
+534UP,2050,Sarai Kale Khan ISBT,2714
+534UP,2050,Maharani Bagh / Ashram Chowk,7902
+534UP,2050,Modi Mills,5704
+534UP,2050,Kalkaji Mandir,2289
+534UP,2050,Nehru Place Bus Terminal,9729
+534UP,2050,Chirag Delhi,7957
+534UP,2050,Sheikh Sarai,7958
+534UP,2050,Mehrauli Terminal,7908
+102UP,10,Old Delhi Railway Station (T),7572
+102UP,10,Wazirpur Depot,742
+102UP,10,Rohini Sec 21,95
+102UP,10,Rohini Sec 22 Terminal,1
+449UP,1960,ISBT Kashmiri Gate,6026
+449UP,1960,Red Fort,333
+449UP,1960,Delhi Gate,336
+449UP,1960,ITO Ring Road,338
+449UP,1960,Pragati Maidan,1369
+449UP,1960,Sundar Nagar / Zoo,2620
+449UP,1960,Moolchand Hospital,7952
+449UP,1960,Kailash Colony,2557
+449UP,1960,Ambedkar Nagar Sec 5 (T),4602

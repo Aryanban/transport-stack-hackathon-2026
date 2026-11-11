@@ -1,0 +1,10 @@
+{
+  "total_surveyed_points": 76808,
+  "width_ge_6m_count": 50839,
+  "width_ge_6m_percentage": 66.19,
+  "width_lt_6m_count": 25969,
+  "width_lt_6m_percentage": 33.81,
+  "minimum_width_constraint_ft": 19.685,
+  "minimum_width_constraint_m": 6.0,
+  "rule_definition": "Routes must use only roads wider than 6 metres on each side to safely accommodate 9m/12m electric buses."
+}

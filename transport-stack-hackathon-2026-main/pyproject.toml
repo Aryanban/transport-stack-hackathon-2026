@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "delhi-transport-stack"
+version = "1.0.0"
+description = "Delhi Transport Stack Hackathon 2026 — Real-Time Bus Traffic Model & Crowdedness-Aware Transit Journey Planner"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn>=0.28.0",
+    "pydantic>=2.5.0",
+    "requests>=2.31.0",
+    "httpx>=0.27.0",
+    "gtfs-realtime-bindings>=1.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

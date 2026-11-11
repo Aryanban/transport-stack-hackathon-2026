@@ -1,0 +1,317 @@
+route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_id,block_id,shape_id,wheelchair_accessible,bikes_allowed
+route_0,summer_weekdays,trip_0,Flex Cycle Rickshaw service from Govind Puri,,,,shp_715_52,0,0
+route_1,summer_weekdays,trip_1,Flex e-Rickshaw service from Harkesh Nagar,,,,shp_715_45,0,0
+route_10,summer_weekdays,trip_10,Flex e-Rickshaw service from Shastri Nagar,,,,shp_715_267,0,0
+route_100,summer_weekdays,trip_100,Flex Shared Auto service from Johari  Enclave,,,,shp_715_102,0,0
+route_101,summer_weekdays,trip_101,Flex Shared Auto service from Johari  Enclave,,,,shp_715_103,0,0
+route_102,summer_weekdays,trip_102,Flex e-Rickshaw service from Shiv Vihar,,,,shp_715_265,0,0
+route_103,summer_weekdays,trip_103,Flex Shared Auto service from Shiv Vihar,,,,shp_715_266,0,0
+route_104,summer_weekdays,trip_104,Flex e-Rickshaw service from Peera Garhi,,,,shp_715_237,0,0
+route_105,summer_weekdays,trip_105,Flex e-Rickshaw service from Peera Garhi,,,,shp_715_238,0,0
+route_106,summer_weekdays,trip_106,Flex Gramin-Seva service from Peera Garhi,,,,shp_715_239,0,0
+route_107,summer_weekdays,trip_107,Flex e-Rickshaw service from Udyog Nagar,,,,shp_715_289,0,0
+route_108,summer_weekdays,trip_108,Flex Cycle Rickshaw service from Udyog Nagar,,,,shp_715_290,0,0
+route_109,summer_weekdays,trip_109,Flex e-Rickshaw service from Nangloi,,,,shp_715_166,0,0
+route_11,summer_weekdays,trip_11,Flex e-Rickshaw service from Inderlok,,,,shp_715_83,0,0
+route_110,summer_weekdays,trip_110,Flex e-Rickshaw service from Nangloi Railway Station,,,,shp_715_163,0,0
+route_111,summer_weekdays,trip_111,Flex e-Rickshaw service from Nangloi,,,,shp_715_167,0,0
+route_112,summer_weekdays,trip_112,Flex e-Rickshaw service from Nangloi Railway Station,,,,shp_715_164,0,0
+route_113,summer_weekdays,trip_113,Flex e-Rickshaw service from Nangloi Railway Station,,,,shp_715_165,0,0
+route_114,summer_weekdays,trip_114,Flex e-Rickshaw service from Rajdhani Park,,,,shp_715_216,0,0
+route_115,summer_weekdays,trip_115,Flex e-Rickshaw service from Rajdhani Park,,,,shp_715_217,0,0
+route_116,summer_weekdays,trip_116,Flex Gramin-Seva service from Mundka,,,,shp_715_155,0,0
+route_117,summer_weekdays,trip_117,Flex Gramin-Seva service from Mundka,,,,shp_715_156,0,0
+route_118,summer_weekdays,trip_118,Flex Gramin-Seva service from Mundka IA,,,,shp_715_158,0,0
+route_119,summer_weekdays,trip_119,Flex Gramin-Seva service from Mundka IA,,,,shp_715_159,0,0
+route_12,summer_weekdays,trip_12,Flex e-Rickshaw service from Inderlok,,,,shp_715_84,0,0
+route_120,summer_weekdays,trip_120,Flex Gramin-Seva service from Tikri Kalan,,,,shp_715_287,0,0
+route_121,summer_weekdays,trip_121,Flex Gramin-Seva service from Tikri Kalan,,,,shp_715_288,0,0
+route_122,summer_weekdays,trip_122,Flex Shared Auto service from Brigadier Hoshiyar Singh,,,,shp_715_8,0,0
+route_123,summer_weekdays,trip_123,Flex e-Rickshaw service from Bahadurgarh City,,,,shp_715_11,0,0
+route_124,summer_weekdays,trip_124,Flex e-Rickshaw service from Bahadurgarh City,,,,shp_715_12,0,0
+route_125,summer_weekdays,trip_125,Flex Shared Auto service from Bahadurgarh City,,,,shp_715_13,0,0
+route_126,summer_weekdays,trip_126,Flex e-Rickshaw service from Pandit Shri Ram Sharma,,,,shp_715_193,0,0
+route_127,summer_weekdays,trip_127,Flex Shared Auto service from Pandit Shri Ram Sharma,,,,shp_715_194,0,0
+route_128,summer_weekdays,trip_128,Flex Shared Auto service from pandit shree ram sharma,,,,shp_715_195,0,0
+route_129,summer_weekdays,trip_129,Flex Gramin-Seva service from Tikri Border,,,,shp_715_282,0,0
+route_13,summer_weekdays,trip_13,Flex e-Rickshaw service from Inderlok,,,,shp_715_85,0,0
+route_130,summer_weekdays,trip_130,Flex Shared Auto service from Tikri Border,,,,shp_715_283,0,0
+route_131,summer_weekdays,trip_131,Flex Gramin-Seva service from Ghevra,,,,shp_715_40,0,0
+route_132,summer_weekdays,trip_132,Flex e-Rickshaw service from Rohini Sector-18-19,,,,shp_715_229,0,0
+route_133,summer_weekdays,trip_133,Flex e-Rickshaw service from Rohini Sector-18-19,,,,shp_715_230,0,0
+route_134,summer_weekdays,trip_134,Flex e-Rickshaw service from Haiderpur Badli Mor,,,,shp_715_57,0,0
+route_135,summer_weekdays,trip_135,Flex e-Rickshaw service from Haiderpur Badli Mor,,,,shp_715_58,0,0
+route_136,summer_weekdays,trip_136,Flex e-Rickshaw service from Haiderpur Badli Mor,,,,shp_715_59,0,0
+route_137,summer_weekdays,trip_137,Flex e-Rickshaw service from JahangirPuri,,,,shp_715_248,0,0
+route_138,summer_weekdays,trip_138,Flex e-Rickshaw service from JahangirPuri,,,,shp_715_249,0,0
+route_139,summer_weekdays,trip_139,Flex e-Rickshaw service from JahangirPuri,,,,shp_715_250,0,0
+route_14,summer_weekdays,trip_14,Flex e-Rickshaw service from Pratap Nagar,,,,shp_715_212,0,0
+route_140,summer_weekdays,trip_140,Flex e-Rickshaw service from Adarsh Nagar,,,,shp_715_27,0,0
+route_141,summer_weekdays,trip_141,Flex e-Rickshaw service from Adarsh Nagar,,,,shp_715_28,0,0
+route_142,summer_weekdays,trip_142,Flex e-Rickshaw service from Model Town,,,,shp_715_141,0,0
+route_143,summer_weekdays,trip_143,Flex e-Rickshaw service from Model Town,,,,shp_715_142,0,0
+route_144,summer_weekdays,trip_144,Flex e-Rickshaw service from Model Town,,,,shp_715_143,0,0
+route_145,summer_weekdays,trip_145,Flex e-Rickshaw service from Guru Tegh Bahadur Nagar,,,,shp_715_61,0,0
+route_146,summer_weekdays,trip_146,Flex e-Rickshaw service from Guru Tegh Bahadur Nagar,,,,shp_715_62,0,0
+route_147,summer_weekdays,trip_147,Flex e-Rickshaw service from Guru Tegh Bahadur Nagar,,,,shp_715_63,0,0
+route_148,summer_weekdays,trip_148,Flex e-Rickshaw service from dwarka sector 21,,,,shp_715_29,0,0
+route_149,summer_weekdays,trip_149,Flex Gramin-Seva service from Guru Tegh Bahadur Nagar,,,,shp_715_64,0,0
+route_15,summer_weekdays,trip_15,Flex e-Rickshaw service from Pratap Nagar,,,,shp_715_213,0,0
+route_150,summer_weekdays,trip_150,Flex Gramin-Seva service from Guru Tegh Bahadur Nagar,,,,shp_715_65,0,0
+route_151,summer_weekdays,trip_151,Flex e-Rickshaw service from Guru Tegh Bahadur Nagar,,,,shp_715_66,0,0
+route_152,summer_weekdays,trip_152,Flex e-Rickshaw service from Dwarka Sec08,,,,shp_715_32,0,0
+route_153,summer_weekdays,trip_153,Flex e-Rickshaw service from Vishwa vidalaya,,,,shp_715_297,0,0
+route_154,summer_weekdays,trip_154,Flex e-Rickshaw service from Vishwa vidalaya,,,,shp_715_298,0,0
+route_155,summer_weekdays,trip_155,Flex e-Rickshaw service from Dwarka Sec10,,,,shp_715_24,0,0
+route_156,summer_weekdays,trip_156,Flex e-Rickshaw service from dwarka sector 10,,,,shp_715_25,0,0
+route_157,summer_weekdays,trip_157,Flex e-Rickshaw service from Vidhan Sabha,,,,shp_715_292,0,0
+route_158,summer_weekdays,trip_158,Flex e-Rickshaw service from Civil Lines,,,,shp_715_14,0,0
+route_159,summer_weekdays,trip_159,Flex e-Rickshaw service from Dwarka Sec09,,,,shp_715_33,0,0
+route_16,summer_weekdays,trip_16,Flex e-Rickshaw service from Inderlok,,,,shp_715_86,0,0
+route_160,summer_weekdays,trip_160,Flex e-Rickshaw service from Dwarka Sec11,,,,shp_715_42,0,0
+route_161,summer_weekdays,trip_161,Flex Shared Auto service from Kashmere Gate Metro,,,,shp_715_110,0,0
+route_162,summer_weekdays,trip_162,Flex e-Rickshaw service from Dwarka Sec11,,,,shp_715_43,0,0
+route_163,summer_weekdays,trip_163,Flex e-Rickshaw service from Kashmere Gate,,,,shp_715_105,0,0
+route_164,summer_weekdays,trip_164,Flex e-Rickshaw service from Dwarka Sec12,,,,shp_715_30,0,0
+route_165,summer_weekdays,trip_165,Flex Private e-Rickshaw service from Dwarka Sec12,,,,shp_715_31,0,0
+route_166,summer_weekdays,trip_166,Flex Shared Auto service from Kashmere Gate Metro,,,,shp_715_111,0,0
+route_167,summer_weekdays,trip_167,Flex e-Rickshaw service from Chandani Chowk,,,,shp_715_1,0,0
+route_168,summer_weekdays,trip_168,Flex e-Rickshaw service from Dwarka,,,,shp_715_67,0,0
+route_169,summer_weekdays,trip_169,Flex e-Rickshaw service from Dwarka,,,,shp_715_68,0,0
+route_17,summer_weekdays,trip_17,Flex e-Rickshaw service from Keshav Puram,,,,shp_715_120,0,0
+route_170,summer_weekdays,trip_170,Flex e-Rickshaw service from New Delhi,,,,shp_715_168,0,0
+route_171,summer_weekdays,trip_171,Flex e-Rickshaw service from Dwarka Mor,,,,shp_715_77,0,0
+route_172,summer_weekdays,trip_172,Flex e-Rickshaw service from Dwarka Mor,,,,shp_715_78,0,0
+route_173,summer_weekdays,trip_173,Flex e-Rickshaw service from Dwarka Mor,,,,shp_715_79,0,0
+route_174,summer_weekdays,trip_174,Flex e-Rickshaw service from Dwarka Mor,,,,shp_715_80,0,0
+route_175,summer_weekdays,trip_175,Flex e-Rickshaw service from Dwarka Mor,,,,shp_715_81,0,0
+route_176,summer_weekdays,trip_176,Flex e-Rickshaw service from dwarka mor,,,,shp_715_82,0,0
+route_177,summer_weekdays,trip_177,Flex e-Rickshaw service from New Delhi,,,,shp_715_169,0,0
+route_178,summer_weekdays,trip_178,Flex e-Rickshaw service from Nawada,,,,shp_715_170,0,0
+route_179,summer_weekdays,trip_179,Flex e-Rickshaw service from Nawada,,,,shp_715_171,0,0
+route_18,summer_weekdays,trip_18,Flex e-Rickshaw service from Keshav Puram,,,,shp_715_121,0,0
+route_180,summer_weekdays,trip_180,Flex e-Rickshaw service from nawada,,,,shp_715_172,0,0
+route_181,summer_weekdays,trip_181,Flex e-Rickshaw service from Uttam Ngr West,,,,shp_715_303,0,0
+route_182,summer_weekdays,trip_182,Flex Shared Auto service from Jor Bagh,,,,shp_715_87,0,0
+route_183,summer_weekdays,trip_183,Flex e-Rickshaw service from Uttam Ngr West,,,,shp_715_304,0,0
+route_184,summer_weekdays,trip_184,Flex e-Rickshaw service from Uttam Ngr East,,,,shp_715_305,0,0
+route_185,summer_weekdays,trip_185,Flex Shared Auto service from Uttam Ngr East,,,,shp_715_306,0,0
+route_186,summer_weekdays,trip_186,Flex e-Rickshaw service from Uttam Ngr East,,,,shp_715_307,0,0
+route_187,summer_weekdays,trip_187,Flex e-Rickshaw service from Uttam Ngr East,,,,shp_715_308,0,0
+route_188,summer_weekdays,trip_188,Flex e-Rickshaw service from Janak Puri West,,,,shp_715_113,0,0
+route_189,summer_weekdays,trip_189,Flex Shared Auto service from Malaviya Nagar,,,,shp_715_128,0,0
+route_19,summer_weekdays,trip_19,Flex e-Rickshaw service from Rithala,,,,shp_715_252,0,0
+route_190,summer_weekdays,trip_190,Flex Shared Auto service from Malaviya Nagar,,,,shp_715_129,0,0
+route_191,summer_weekdays,trip_191,Flex e-Rickshaw service from Tilak Nagar,,,,shp_715_309,0,0
+route_192,summer_weekdays,trip_192,Flex e-Rickshaw service from Tilak Nagar,,,,shp_715_310,0,0
+route_193,summer_weekdays,trip_193,Flex Gramin-Seva service from Saket,,,,shp_715_234,0,0
+route_194,summer_weekdays,trip_194,Flex e-Rickshaw service from Tilak Nagar,,,,shp_715_311,0,0
+route_195,summer_weekdays,trip_195,Flex Shared Auto service from Qutab Minar,,,,shp_715_214,0,0
+route_196,summer_weekdays,trip_196,Flex e-Rickshaw service from Tilak Nagar,,,,shp_715_312,0,0
+route_197,summer_weekdays,trip_197,Flex Gramin-Seva service from Chhatar Pur,,,,shp_715_2,0,0
+route_198,summer_weekdays,trip_198,Flex e-Rickshaw service from Tilak Nagar,,,,shp_715_313,0,0
+route_199,summer_weekdays,trip_199,Flex e-Rickshaw service from Chhatar Pur,,,,shp_715_3,0,0
+route_2,summer_weekdays,trip_2,Flex e-Rickshaw service from Shastri Nagar,,,,shp_715_268,0,0
+route_20,summer_weekdays,trip_20,Flex e-Rickshaw service from Rithala,,,,shp_715_253,0,0
+route_200,summer_weekdays,trip_200,Flex e-Rickshaw service from Chhatar Pur,,,,shp_715_4,0,0
+route_201,summer_weekdays,trip_201,Flex e-Rickshaw service from Subhash Nagar,,,,shp_715_275,0,0
+route_202,summer_weekdays,trip_202,Flex e-Rickshaw service from Tagore Garden,,,,shp_715_286,0,0
+route_203,summer_weekdays,trip_203,Flex e-Rickshaw service from Rajendra Place,,,,shp_715_222,0,0
+route_204,summer_weekdays,trip_204,Flex e-Rickshaw service from Chhatar Pur,,,,shp_715_5,0,0
+route_205,summer_weekdays,trip_205,Flex e-Rickshaw service from Rajendra Place,,,,shp_715_223,0,0
+route_206,summer_weekdays,trip_206,Flex Cycle Rickshaw service from Rajendra Place,,,,shp_715_224,0,0
+route_207,summer_weekdays,trip_207,Flex e-Rickshaw service from Sultan Pur,,,,shp_715_273,0,0
+route_208,summer_weekdays,trip_208,Flex e-Rickshaw service from Karol Bagh,,,,shp_715_98,0,0
+route_209,summer_weekdays,trip_209,Flex e-Rickshaw service from Karol Bagh,,,,shp_715_99,0,0
+route_21,summer_weekdays,trip_21,Flex e-Rickshaw service from Rithala,,,,shp_715_254,0,0
+route_210,summer_weekdays,trip_210,Flex e-Rickshaw service from Guru DronaCharya,,,,shp_715_41,0,0
+route_211,summer_weekdays,trip_211,Flex e-Rickshaw service from Karol Bagh,,,,shp_715_100,0,0
+route_212,summer_weekdays,trip_212,Flex e-Rickshaw service from Sikanderpur,,,,shp_715_284,0,0
+route_213,summer_weekdays,trip_213,Flex e-Rickshaw service from Karol Bagh,,,,shp_715_101,0,0
+route_214,summer_weekdays,trip_214,Flex e-Rickshaw service from Jhandewalan,,,,shp_715_76,0,0
+route_215,summer_weekdays,trip_215,Flex e-Rickshaw service from R K Ashram Marg,,,,shp_715_232,0,0
+route_216,summer_weekdays,trip_216,Flex e-Rickshaw service from R K Ashram Marg,,,,shp_715_233,0,0
+route_217,summer_weekdays,trip_217,Flex e-Rickshaw service from Laxmi Nagar,,,,shp_715_152,0,0
+route_218,summer_weekdays,trip_218,Flex e-Rickshaw service from Nirman Vihar,,,,shp_715_180,0,0
+route_219,summer_weekdays,trip_219,Flex e-Rickshaw service from Laxmi nagar,,,,shp_715_153,0,0
+route_22,summer_weekdays,trip_22,Flex e-Rickshaw service from Rithala,,,,shp_715_255,0,0
+route_220,summer_weekdays,trip_220,Flex e-Rickshaw service from Laxmi Nagar,,,,shp_715_154,0,0
+route_221,summer_weekdays,trip_221,Flex Cycle Rickshaw service from Preet Vihar,,,,shp_715_205,0,0
+route_222,summer_weekdays,trip_222,Flex Shared Auto service from Kaushambi,,,,shp_715_225,0,0
+route_223,summer_weekdays,trip_223,Flex Shared Auto service from Kaushambi,,,,shp_715_226,0,0
+route_224,summer_weekdays,trip_224,Flex e-Rickshaw service from New Ashok Nagar,,,,shp_715_161,0,0
+route_225,summer_weekdays,trip_225,Flex Shared Auto service from Noida sector 15,,,,shp_715_198,0,0
+route_226,summer_weekdays,trip_226,Flex Private e-Rickshaw service from Noida Sec15,,,,shp_715_181,0,0
+route_227,summer_weekdays,trip_227,Flex e-Rickshaw service from Noida Sec16,,,,shp_715_184,0,0
+route_228,summer_weekdays,trip_228,Flex e-Rickshaw service from Noida Sec18,,,,shp_715_179,0,0
+route_229,summer_weekdays,trip_229,Flex e-Rickshaw service from Botanical Garden,,,,shp_715_22,0,0
+route_23,summer_weekdays,trip_23,Flex e-Rickshaw service from Rithala,,,,shp_715_256,0,0
+route_230,summer_weekdays,trip_230,Flex e-Rickshaw service from Sikanderpur,,,,shp_715_285,0,0
+route_231,summer_weekdays,trip_231,Flex Shared Auto service from Noida City centre,,,,shp_715_206,0,0
+route_232,summer_weekdays,trip_232,Flex Shared Auto service from MG Road,,,,shp_715_137,0,0
+route_233,summer_weekdays,trip_233,Flex e-Rickshaw service from noida City centre,,,,shp_715_207,0,0
+route_234,summer_weekdays,trip_234,Flex Gramin-Seva service from MG Road,,,,shp_715_138,0,0
+route_235,summer_weekdays,trip_235,Flex e-Rickshaw service from noida City centre,,,,shp_715_208,0,0
+route_236,summer_weekdays,trip_236,Flex Gramin-Seva service from Iffco Chowk,,,,shp_715_60,0,0
+route_237,summer_weekdays,trip_237,Flex Gramin-Seva service from Huda City Centre,,,,shp_715_50,0,0
+route_238,summer_weekdays,trip_238,Flex e-Rickshaw service from Sector 59 Noida,,,,shp_715_182,0,0
+route_239,summer_weekdays,trip_239,Flex e-Rickshaw service from Huda City Centre,,,,shp_715_51,0,0
+route_24,summer_weekdays,trip_24,Flex e-Rickshaw service from Samaypur Badli,,,,shp_715_235,0,0
+route_240,summer_weekdays,trip_240,Flex e-Rickshaw service from Sector 59 Noida,,,,shp_715_183,0,0
+route_241,summer_weekdays,trip_241,Flex e-Rickshaw service from Sector 62 Noida,,,,shp_715_190,0,0
+route_242,summer_weekdays,trip_242,Flex e-Rickshaw service from Sector 62 Noida,,,,shp_715_191,0,0
+route_243,summer_weekdays,trip_243,Flex e-Rickshaw service from Sector 62 Noida,,,,shp_715_192,0,0
+route_244,summer_weekdays,trip_244,Flex e-Rickshaw service from Noida Electronic City,,,,shp_715_174,0,0
+route_245,summer_weekdays,trip_245,Flex Shared Auto service from Vaishali,,,,shp_715_296,0,0
+route_246,summer_weekdays,trip_246,Flex Gramin-Seva service from Sikandar Pur,,,,shp_715_293,0,0
+route_247,summer_weekdays,trip_247,Flex Gramin-Seva service from Phase-1,,,,shp_715_220,0,0
+route_248,summer_weekdays,trip_248,Flex Shared Auto service from noida sector 51,,,,shp_715_189,0,0
+route_249,summer_weekdays,trip_249,Flex Gramin-Seva service from Phase-1,,,,shp_715_221,0,0
+route_25,summer_weekdays,trip_25,Flex e-Rickshaw service from Samaypur Badli,,,,shp_715_235,0,0
+route_250,summer_weekdays,trip_250,Flex Gramin-Seva service from Sector 42-43,,,,shp_715_260,0,0
+route_251,summer_weekdays,trip_251,Flex Gramin-Seva service from Sector 42-43,,,,shp_715_261,0,0
+route_252,summer_weekdays,trip_252,Flex Gramin-Seva service from Sector 53-54,,,,shp_715_246,0,0
+route_253,summer_weekdays,trip_253,Flex Gramin-Seva service from Sector 53-54,,,,shp_715_247,0,0
+route_254,summer_weekdays,trip_254,Flex Gramin-Seva service from Sector 54 Chowk,,,,shp_715_244,0,0
+route_255,summer_weekdays,trip_255,Flex Gramin-Seva service from Sector 55-56,,,,shp_715_251,0,0
+route_256,summer_weekdays,trip_256,Flex Shared Auto service from Sector 52 Noida,,,,shp_715_202,0,0
+route_257,summer_weekdays,trip_257,Flex e-Rickshaw service from Lal Quila,,,,shp_715_175,0,0
+route_258,summer_weekdays,trip_258,Flex Shared Auto service from Sector 52 Noida,,,,shp_715_203,0,0
+route_259,summer_weekdays,trip_259,Flex e-Rickshaw service from Lal Quila,,,,shp_715_176,0,0
+route_26,summer_weekdays,trip_26,Flex e-Rickshaw service from Rohini West,,,,shp_715_236,0,0
+route_260,summer_weekdays,trip_260,Flex e-Rickshaw service from Lal Quila,,,,shp_715_177,0,0
+route_261,summer_weekdays,trip_261,Flex e-Rickshaw service from Lal Quila,,,,shp_715_178,0,0
+route_262,summer_weekdays,trip_262,Flex e-Rickshaw service from Jama Masjid,,,,shp_715_123,0,0
+route_263,summer_weekdays,trip_263,Flex e-Rickshaw service from Jama Masjid,,,,shp_715_124,0,0
+route_264,summer_weekdays,trip_264,Flex e-Rickshaw service from Jama Masjid,,,,shp_715_125,0,0
+route_265,summer_weekdays,trip_265,Flex e-Rickshaw service from Dhansa Bus Stand,,,,shp_715_37,0,0
+route_266,summer_weekdays,trip_266,Flex e-Rickshaw service from Dhansa Bus Stand,,,,shp_715_38,0,0
+route_267,summer_weekdays,trip_267,Flex e-Rickshaw service from Jama Masjid,,,,shp_715_126,0,0
+route_268,summer_weekdays,trip_268,Flex e-Rickshaw service from Delhi Gate,,,,shp_715_15,0,0
+route_269,summer_weekdays,trip_269,Flex e-Rickshaw service from Delhi gate,,,,shp_715_16,0,0
+route_27,summer_weekdays,trip_27,Flex e-Rickshaw service from Rohini East,,,,shp_715_228,0,0
+route_270,summer_weekdays,trip_270,Flex e-Rickshaw service from Janak Puri West,,,,shp_715_114,0,0
+route_271,summer_weekdays,trip_271,Flex e-Rickshaw service from Dashrathpuri,,,,shp_715_34,0,0
+route_272,summer_weekdays,trip_272,Flex e-Rickshaw service from Dashrathpuri,,,,shp_715_35,0,0
+route_273,summer_weekdays,trip_273,Flex e-Rickshaw service from Dashrathpuri,,,,shp_715_36,0,0
+route_274,summer_weekdays,trip_274,Flex e-Rickshaw service from Palam,,,,shp_715_200,0,0
+route_275,summer_weekdays,trip_275,Flex e-Rickshaw service from Palam,,,,shp_715_201,0,0
+route_276,summer_weekdays,trip_276,Flex e-Rickshaw service from Delhi Cantt,,,,shp_715_9,0,0
+route_277,summer_weekdays,trip_277,Flex e-Rickshaw service from Sadar Bazar,,,,shp_715_231,0,0
+route_278,summer_weekdays,trip_278,Flex e-Rickshaw service from Jangpura,,,,shp_715_74,0,0
+route_279,summer_weekdays,trip_279,Flex e-Rickshaw service from Kailash Colony,,,,shp_715_95,0,0
+route_28,summer_weekdays,trip_28,Flex e-Rickshaw service from Keshav Puram,,,,shp_715_122,0,0
+route_280,summer_weekdays,trip_280,Flex Cycle Rickshaw service from Govind Puri,,,,shp_715_53,0,0
+route_281,summer_weekdays,trip_281,Flex Gramin-Seva service from Govind Puri,,,,shp_715_54,0,0
+route_282,summer_weekdays,trip_282,Flex e-Rickshaw service from Okhla,,,,shp_715_46,0,0
+route_283,summer_weekdays,trip_283,Flex Gramin-Seva service from Hauz Khas,,,,shp_715_49,0,0
+route_284,summer_weekdays,trip_284,Flex e-Rickshaw service from Jashola,,,,shp_715_75,0,0
+route_285,summer_weekdays,trip_285,Flex e-Rickshaw service from Mohan Estate,,,,shp_715_146,0,0
+route_286,summer_weekdays,trip_286,Flex e-Rickshaw service from Mohan Estate,,,,shp_715_147,0,0
+route_287,summer_weekdays,trip_287,Flex e-Rickshaw service from Tughlakabad,,,,shp_715_300,0,0
+route_288,summer_weekdays,trip_288,Flex Gramin-Seva service from Nehru Enclave,,,,shp_715_162,0,0
+route_289,summer_weekdays,trip_289,Flex Shared Auto service from Tughlakabad,,,,shp_715_301,0,0
+route_29,summer_weekdays,trip_29,Flex e-Rickshaw service from Pitampura,,,,shp_715_279,0,0
+route_290,summer_weekdays,trip_290,Flex Shared Auto service from Tughlakabad,,,,shp_715_302,0,0
+route_291,summer_weekdays,trip_291,Flex e-Rickshaw service from Badarpur,,,,shp_715_20,0,0
+route_292,summer_weekdays,trip_292,Flex e-Rickshaw service from Sukhdev Vihar,,,,shp_715_274,0,0
+route_293,summer_weekdays,trip_293,Flex Gramin-Seva service from Badarpur,,,,shp_715_21,0,0
+route_294,summer_weekdays,trip_294,Flex e-Rickshaw service from Jamia Millia Islamia,,,,shp_715_69,0,0
+route_295,summer_weekdays,trip_295,Flex e-Rickshaw service from Jamia Millia Islamia,,,,shp_715_70,0,0
+route_296,summer_weekdays,trip_296,Flex e-Rickshaw service from Sarai,,,,shp_715_242,0,0
+route_297,summer_weekdays,trip_297,Flex e-Rickshaw service from Jamia Millia Islamia,,,,shp_715_71,0,0
+route_298,summer_weekdays,trip_298,Flex e-Rickshaw service from NHPC Chowk,,,,shp_715_173,0,0
+route_299,summer_weekdays,trip_299,Flex e-Rickshaw service from Jamia Millia Islamia,,,,shp_715_72,0,0
+route_3,summer_weekdays,trip_3,Flex e-Rickshaw service from Kanhaiya Nagar,,,,shp_715_115,0,0
+route_30,summer_weekdays,trip_30,Flex e-Rickshaw service from Pitampura,,,,shp_715_280,0,0
+route_300,summer_weekdays,trip_300,Flex e-Rickshaw service from Jamia Millia Islamia,,,,shp_715_73,0,0
+route_301,summer_weekdays,trip_301,Flex e-Rickshaw service from Okhla Vihar,,,,shp_715_186,0,0
+route_302,summer_weekdays,trip_302,Flex e-Rickshaw service from Okhla Vihar,,,,shp_715_187,0,0
+route_303,summer_weekdays,trip_303,Flex e-Rickshaw service from Sector-28,,,,shp_715_243,0,0
+route_304,summer_weekdays,trip_304,Flex e-Rickshaw service from Jasola Vihar,,,,shp_715_88,0,0
+route_305,summer_weekdays,trip_305,Flex e-Rickshaw service from Old Faridabad,,,,shp_715_188,0,0
+route_306,summer_weekdays,trip_306,Flex e-Rickshaw service from Jasola Vihar,,,,shp_715_89,0,0
+route_307,summer_weekdays,trip_307,Flex e-Rickshaw service from Jasola Vihar,,,,shp_715_90,0,0
+route_308,summer_weekdays,trip_308,Flex e-Rickshaw service from Kalindi Kunj,,,,shp_715_96,0,0
+route_309,summer_weekdays,trip_309,Flex Shared Auto service from Bata Chowk,,,,shp_715_6,0,0
+route_31,summer_weekdays,trip_31,Flex Private e-Rickshaw service from Pitampura,,,,shp_715_281,0,0
+route_310,summer_weekdays,trip_310,Flex Shared Auto service from Okhla Bird Sanctury,,,,shp_715_185,0,0
+route_311,summer_weekdays,trip_311,Flex Shared Auto service from Bata Chowk,,,,shp_715_7,0,0
+route_312,summer_weekdays,trip_312,Flex e-Rickshaw service from Botanical Garden,,,,shp_715_23,0,0
+route_313,summer_weekdays,trip_313,Flex Shared Auto service from Sant Surdas Sihi,,,,shp_715_240,0,0
+route_314,summer_weekdays,trip_314,Flex e-Rickshaw service from Raja Nahar Singh-Ballabhgarh,,,,shp_715_241,0,0
+route_315,summer_weekdays,trip_315,Flex e-Rickshaw service from Govind Puri,,,,shp_715_55,0,0
+route_32,summer_weekdays,trip_32,Flex e-Rickshaw service from Netaji Subhash Place,,,,shp_715_160,0,0
+route_33,summer_weekdays,trip_33,Flex Cycle Rickshaw service from Pul Bangash,,,,shp_715_209,0,0
+route_34,summer_weekdays,trip_34,Flex e-Rickshaw service from Pul Bangash,,,,shp_715_210,0,0
+route_35,summer_weekdays,trip_35,Flex e-Rickshaw service from Shivaji Park,,,,shp_715_264,0,0
+route_36,summer_weekdays,trip_36,Flex e-Rickshaw service from Kashmere Gate,,,,shp_715_106,0,0
+route_37,summer_weekdays,trip_37,Flex e-Rickshaw service from Kashmere Gate,,,,shp_715_107,0,0
+route_38,summer_weekdays,trip_38,Flex e-Rickshaw service from Moti Nagar,,,,shp_715_150,0,0
+route_39,summer_weekdays,trip_39,Flex e-Rickshaw service from Rajouri Garden,,,,shp_715_218,0,0
+route_4,summer_weekdays,trip_4,Flex e-Rickshaw service from Kanhaiya Nagar,,,,shp_715_116,0,0
+route_40,summer_weekdays,trip_40,Flex e-Rickshaw service from Rajouri Garden,,,,shp_715_219,0,0
+route_41,summer_weekdays,trip_41,Flex e-Rickshaw service from Ramesh Nagar,,,,shp_715_227,0,0
+route_42,summer_weekdays,trip_42,Flex e-Rickshaw service from Moti Nagar,,,,shp_715_151,0,0
+route_43,summer_weekdays,trip_43,Flex e-Rickshaw service from Kirti Nagar New,,,,shp_715_109,0,0
+route_44,summer_weekdays,trip_44,Flex e-Rickshaw service from Patel Nagar,,,,shp_715_204,0,0
+route_45,summer_weekdays,trip_45,Flex e-Rickshaw service from Shastri Park,,,,shp_715_262,0,0
+route_46,summer_weekdays,trip_46,Flex e-Rickshaw service from Shastri Park,,,,shp_715_263,0,0
+route_47,summer_weekdays,trip_47,Flex e-Rickshaw service from Shahdara,,,,shp_715_272,0,0
+route_48,summer_weekdays,trip_48,Flex e-Rickshaw service from Mansarovar Park,,,,shp_715_127,0,0
+route_49,summer_weekdays,trip_49,Flex e-Rickshaw service from Dilshad Garden,,,,shp_715_17,0,0
+route_5,summer_weekdays,trip_5,Flex e-Rickshaw service from Kanhaiya Nagar,,,,shp_715_116,0,0
+route_50,summer_weekdays,trip_50,Flex Auto service from Mohan Nagar,,,,shp_715_148,0,0
+route_51,summer_weekdays,trip_51,Flex Shared Auto service from Mohan Nagar,,,,shp_715_149,0,0
+route_52,summer_weekdays,trip_52,Flex e-Rickshaw service from Raj Bagh,,,,shp_715_215,0,0
+route_53,summer_weekdays,trip_53,Flex e-Rickshaw service from Jhilmil,,,,shp_715_91,0,0
+route_54,summer_weekdays,trip_54,Flex e-Rickshaw service from Jhilmil,,,,shp_715_92,0,0
+route_55,summer_weekdays,trip_55,Flex e-Rickshaw service from Kashmere Gate,,,,shp_715_108,0,0
+route_56,summer_weekdays,trip_56,Flex Shared Auto service from Maj M.Sharma-Rajendra Nagar,,,,shp_715_130,0,0
+route_57,summer_weekdays,trip_57,Flex e-Rickshaw service from Shaheed Sthal-New Bus Adda,,,,shp_715_257,0,0
+route_58,summer_weekdays,trip_58,Flex e-Rickshaw service from Shaheed Sthal-New Bus Adda,,,,shp_715_258,0,0
+route_59,summer_weekdays,trip_59,Flex e-Rickshaw service from Shaheed Sthal-New Bus Adda,,,,shp_715_259,0,0
+route_6,summer_weekdays,trip_6,Flex e-Rickshaw service from Kanhaiya Nagar,,,,shp_715_117,0,0
+route_60,summer_weekdays,trip_60,Flex Shared Auto service from Shyam Park,,,,shp_715_270,0,0
+route_61,summer_weekdays,trip_61,Flex Auto service from Shyam Park,,,,shp_715_271,0,0
+route_62,summer_weekdays,trip_62,Flex e-Rickshaw service from Paschim V East,,,,shp_715_196,0,0
+route_63,summer_weekdays,trip_63,Flex e-Rickshaw service from Paschim V West,,,,shp_715_199,0,0
+route_64,summer_weekdays,trip_64,Flex e-Rickshaw service from Paschim V East,,,,shp_715_197,0,0
+route_65,summer_weekdays,trip_65,Flex e-Rickshaw service from Govind Puri,,,,shp_715_56,0,0
+route_66,summer_weekdays,trip_66,Flex e-Rickshaw service from Majlis Park,,,,shp_715_131,0,0
+route_67,summer_weekdays,trip_67,Flex e-Rickshaw service from Majlis Park,,,,shp_715_132,0,0
+route_68,summer_weekdays,trip_68,Flex e-Rickshaw service from Azadpur,,,,shp_715_18,0,0
+route_69,summer_weekdays,trip_69,Flex Cycle Rickshaw service from Azadpur,,,,shp_715_19,0,0
+route_7,summer_weekdays,trip_7,Flex e-Rickshaw service from Kanhaiya Nagar,,,,shp_715_118,0,0
+route_70,summer_weekdays,trip_70,Flex Cycle Rickshaw service from Shalimar Bagh,,,,shp_715_276,0,0
+route_71,summer_weekdays,trip_71,Flex Cycle Rickshaw service from Shalimar Bagh,,,,shp_715_277,0,0
+route_72,summer_weekdays,trip_72,Flex e-Rickshaw service from Shalimar Bagh,,,,shp_715_278,0,0
+route_73,summer_weekdays,trip_73,Flex e-Rickshaw service from Shakurpur,,,,shp_715_294,0,0
+route_74,summer_weekdays,trip_74,Flex e-Rickshaw service from Shakurpur,,,,shp_715_295,0,0
+route_75,summer_weekdays,trip_75,Flex e-Rickshaw service from Punjabi Bagh West,,,,shp_715_211,0,0
+route_76,summer_weekdays,trip_76,Flex e-Rickshaw service from Mayapuri,,,,shp_715_133,0,0
+route_77,summer_weekdays,trip_77,Flex e-Rickshaw service from Mayapuri,,,,shp_715_133,0,0
+route_78,summer_weekdays,trip_78,Flex e-Rickshaw service from Narayana Vihar,,,,shp_715_157,0,0
+route_79,summer_weekdays,trip_79,Flex e-Rickshaw service from Delhi Cantt,,,,shp_715_10,0,0
+route_8,summer_weekdays,trip_8,Flex e-Rickshaw service from Kanhaiya Nagar,,,,shp_715_119,0,0
+route_80,summer_weekdays,trip_80,Flex Cycle Rickshaw service from Sarai Kale Khan Nizamuddin,,,,shp_715_245,0,0
+route_81,summer_weekdays,trip_81,Flex Shared Auto service from DD South Campus,,,,shp_715_26,0,0
+route_82,summer_weekdays,trip_82,Flex e-Rickshaw service from Mayapuri,,,,shp_715_134,0,0
+route_83,summer_weekdays,trip_83,Flex e-Rickshaw service from Mayur V Ph1,,,,shp_715_135,0,0
+route_84,summer_weekdays,trip_84,Flex Cycle Rickshaw service from Mayur V Ph1,,,,shp_715_136,0,0
+route_85,summer_weekdays,trip_85,Flex Cycle Rickshaw service from Mayur VPkt1,,,,shp_715_139,0,0
+route_86,summer_weekdays,trip_86,Flex Cycle Rickshaw service from Mayur VPkt1,,,,shp_715_140,0,0
+route_87,summer_weekdays,trip_87,Flex e-Rickshaw service from Trilokpuri,,,,shp_715_291,0,0
+route_88,summer_weekdays,trip_88,Flex Cycle Rickshaw service from East Vinod Nagar,,,,shp_715_39,0,0
+route_89,summer_weekdays,trip_89,Flex e-Rickshaw service from Karkardooma,,,,shp_715_97,0,0
+route_9,summer_weekdays,trip_9,Flex e-Rickshaw service from Shastri Nagar,,,,shp_715_269,0,0
+route_90,summer_weekdays,trip_90,Flex e-Rickshaw service from Krishna Nagar,,,,shp_715_112,0,0
+route_91,summer_weekdays,trip_91,Flex e-Rickshaw service from East Azad Nagar,,,,shp_715_47,0,0
+route_92,summer_weekdays,trip_92,Flex Cycle Rickshaw service from East Azad Nagar,,,,shp_715_48,0,0
+route_93,summer_weekdays,trip_93,Flex e-Rickshaw service from Welcome,,,,shp_715_299,0,0
+route_94,summer_weekdays,trip_94,Flex e-Rickshaw service from Jaffarabad,,,,shp_715_93,0,0
+route_95,summer_weekdays,trip_95,Flex Cycle Rickshaw service from Jaffarabad,,,,shp_715_94,0,0
+route_96,summer_weekdays,trip_96,Flex Cycle Rickshaw service from Maujpur,,,,shp_715_144,0,0
+route_97,summer_weekdays,trip_97,Flex e-Rickshaw service from Maujpur,,,,shp_715_145,0,0
+route_98,summer_weekdays,trip_98,Flex e-Rickshaw service from Gokulpuri,,,,shp_715_44,0,0
+route_99,summer_weekdays,trip_99,Flex e-Rickshaw service from Johari  Enclave,,,,shp_715_104,0,0
