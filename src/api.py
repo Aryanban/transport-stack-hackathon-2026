@@ -21,6 +21,7 @@ from .crowdedness_model import CrowdednessModel, CrowdednessEstimate
 from .feeder_optimizer import FeederOptimizer
 from .od_extrapolator import ODExtrapolator
 from .gtfs_rt_client import DelhiGTFSRealtimeClient
+from .ps2.api import app as ps2_app
 
 app = FastAPI(
     title="Delhi Transport Stack Hackathon 2026 API",
@@ -46,6 +47,7 @@ od_extrapolator = ODExtrapolator()
 gtfs_rt_client = DelhiGTFSRealtimeClient()
 
 WEB_DIR = Path(__file__).resolve().parent / "web"
+app.mount("/ps2", ps2_app)
 
 # Pydantic Schemas
 class GPSUpdatePayload(BaseModel):

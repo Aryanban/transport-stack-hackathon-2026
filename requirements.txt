@@ -11,3 +11,4 @@ pyxlsb>=1.0.10
 pandas>=2.2.0
 shapely>=2.0.0
 geopandas>=1.0.0
+gtfs-realtime-bindings>=1.0.0

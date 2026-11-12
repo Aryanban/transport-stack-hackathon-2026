@@ -1,6 +1,0 @@
-fare_stage,distance_band_km,non_ac_fare_inr,ac_fare_inr,pink_pass_fare_inr
-Stage 1,0.0 - 4.0 km,5,10,0
-Stage 2,4.1 - 8.0 km,10,15,0
-Stage 3,8.1 - 12.0 km,10,20,0
-Stage 4,12.1 - 16.0 km,15,25,0
-Stage 5+,> 16.0 km,15,25,0

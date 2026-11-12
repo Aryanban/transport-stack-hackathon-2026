@@ -41,8 +41,10 @@ class DelhiGTFSRealtimeClient:
     Client for consuming and parsing Delhi Buses GTFS-RT VehiclePositions.pb feeds.
     """
 
-    def __init__(self, api_key: Optional[str] = None, endpoint: Optional[str] = None, timeout_seconds: int = 10):
-        self.api_key = api_key or os.getenv("DTS_API_KEY", "")
+    def __init__(self, api_key: Optional[str] = None, endpoint: Optional[str] = None,
+                 timeout_seconds: int = 10, *, live_only: bool = False):
+        self.api_key = api_key or os.getenv("DTS_API_KEY") or os.getenv("DELHI_GTFS_RT_API_KEY", "")
+        self.live_only = live_only
         self.endpoint = endpoint or os.getenv("DTS_RT_ENDPOINT", DEFAULT_DTS_ENDPOINT)
         self.timeout = timeout_seconds
         self._last_fetch_time: float = 0.0
@@ -90,18 +92,21 @@ class DelhiGTFSRealtimeClient:
             return self._cached_vehicles
 
         raw_bytes = None
+        source = "live"
         headers = {"x-api-key": self.api_key} if self.api_key else {}
 
         # 1. Attempt primary Delhi Transport Stack gateway
         if self.api_key:
             try:
-                resp = requests.get(self.endpoint, headers=headers, timeout=self.timeout)
+                resp = requests.get(self.endpoint, headers=headers, timeout=self.timeout, allow_redirects=False)
                 if resp.status_code == 200 and len(resp.content) > 100:
                     raw_bytes = resp.content
             except Exception:
                 pass
 
         # 2. Attempt fallback Open Transit Data Delhi public endpoint
+        if raw_bytes is None and self.live_only:
+            return []
         if raw_bytes is None and self.api_key:
             try:
                 resp = requests.get(f"{DEFAULT_OTD_ENDPOINT}?key={self.api_key}", timeout=self.timeout)
@@ -115,6 +120,7 @@ class DelhiGTFSRealtimeClient:
             try:
                 with open(self._snapshot_path, "rb") as f:
                     raw_bytes = f.read()
+                    source = "snapshot"
             except Exception:
                 pass
 
@@ -127,7 +133,7 @@ class DelhiGTFSRealtimeClient:
             feed.ParseFromString(raw_bytes)
             vehicles = []
             for entity in feed.entity:
-                if entity.HasField("vehicle"):
+                if entity.HasField("vehicle") and entity.vehicle.HasField("position"):
                     v = entity.vehicle
                     speed_kmh = round(v.position.speed * 3.6, 1) if v.position.HasField("speed") else 0.0
                     vehicles.append({
@@ -138,13 +144,14 @@ class DelhiGTFSRealtimeClient:
                         "longitude": round(v.position.longitude, 6),
                         "bearing": round(v.position.bearing, 1) if v.position.HasField("bearing") else 0.0,
                         "speed_kmh": speed_kmh,
-                        "timestamp": v.timestamp
+                        "timestamp": v.timestamp or feed.header.timestamp,
+                        "source": source,
                     })
             self._cached_vehicles = vehicles
             self._last_fetch_time = now
             return vehicles
         except Exception:
-            return self._generate_fallback_vehicles()
+            return [] if self.live_only else self._generate_fallback_vehicles()
 
     def get_vehicles_by_route(self, route_id: str) -> List[Dict]:
         """
@@ -194,6 +201,7 @@ class DelhiGTFSRealtimeClient:
                 "longitude": 77.2000 + (idx * 0.015),
                 "bearing": 45.0 * idx,
                 "speed_kmh": 22.5,
-                "timestamp": now_ts - (idx * 15)
+                "timestamp": now_ts - (idx * 15),
+                "source": "simulated",
             })
         return vehicles
