@@ -156,16 +156,25 @@ class DelhiGTFSRealtimeClient:
     def get_vehicles_by_route(self, route_id: str) -> List[Dict]:
         """
         Filters live vehicles operating on a specific GTFS route.
-        Accepts both GTFS route_id (e.g. '1996') and route_short_name (e.g. '502UP').
+        Accepts GTFS route_id (e.g. '1996'), route_short_name (e.g. '502UP'),
+        or route family prefix (e.g. '502').
         """
         vehicles = self.fetch_vehicle_positions()
         target = route_id.strip().upper()
         resolved_id = self._route_name_to_id.get(target, target)
 
+        # Match exact ID, resolved ID, or route family (e.g. 502UP and 502DOWN)
+        base_name = target.rstrip("UP").rstrip("DOWN")
+        family_ids = {resolved_id, target}
+        for name, r_id in self._route_name_to_id.items():
+            if name.startswith(base_name) or name == target:
+                family_ids.add(r_id)
+                family_ids.add(name)
+
         matches = []
         for v in vehicles:
             v_rid = str(v.get("route_id", "")).strip().upper()
-            if v_rid == resolved_id or v_rid == target:
+            if v_rid in family_ids:
                 matches.append(v)
         return matches
 

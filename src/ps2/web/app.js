@@ -8,7 +8,14 @@ const timeFormat = new Intl.DateTimeFormat("en-IN", {
   timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
 });
 const clock = (value) => timeFormat.format(new Date(value));
+
+// Dual Engine Initialization: 2D Schematic Canvas & 3D WebGL God's Eye
 const routeMap = new RouteMap(byId("map"), byId("map-vehicles"), byId("map-motion"));
+const godsEyeContainer = byId("gods-eye-container");
+const godsEye3D = typeof GodsEye3D !== "undefined" && godsEyeContainer ? new GodsEye3D(godsEyeContainer) : null;
+window.godsEye3D = godsEye3D;
+
+let currentActiveOption = null;
 let liveRequest = 0;
 let liveTimer = null;
 
@@ -27,6 +34,7 @@ function node(tag, content, className) {
   return item;
 }
 
+// --- STOP AUTOCOMPLETE CONTROLLER ---
 function bindStop(id) {
   const field = byId(id);
   const list = byId(id + "-results");
@@ -120,6 +128,33 @@ function pill(level) {
   return node("span", level === "Unknown" ? "Crowd estimate unavailable" : level, "pill " + (classes[level] || ""));
 }
 
+function updateVisualizers(option) {
+  currentActiveOption = option;
+  routeMap.setJourney(option);
+  if (godsEye3D) {
+    godsEye3D.setJourney(option);
+  }
+
+  const emptyNote = byId("map-empty");
+  if (emptyNote) {
+    emptyNote.hidden = !!option;
+  }
+
+  // Update floating HUD navigation banner (Reference 2)
+  const navBanner = byId("hud-nav-banner");
+  if (navBanner && option && option.legs && option.legs.length) {
+    const firstLeg = option.legs[0];
+    const points = firstLeg.points || [];
+    const nextStopName = points.length > 1 ? points[1].name : firstLeg.to.name;
+
+    byId("hud-next-stop").textContent = "Next: " + nextStopName;
+    byId("hud-subtext").textContent = "Bus " + firstLeg.route + " · " + Math.round(option.minutes) + " min arrival";
+    navBanner.hidden = false;
+  } else if (navBanner) {
+    navBanner.hidden = true;
+  }
+}
+
 function journeyCard(option) {
   const card = node("article", undefined, "card");
   const top = node("div", undefined, "card-top");
@@ -128,10 +163,12 @@ function journeyCard(option) {
   const transfer = option.transfers ? "1 transfer" : "Direct";
   bottom.append(node("span", clock(option.departure) + " → " + clock(option.arrival) + " · " + transfer));
   if (option.extraMinutes > 0) bottom.append(node("span", "+" + option.extraMinutes + " min"));
+
   const details = node("details");
   details.append(node("summary", "Bus and stop details"));
   details.append(node("p", "Initial wait " + option.waitMinutes + " min"
     + (option.transfers && option.crowd.busiestLeg ? " · Busiest leg " + option.crowd.busiestLeg.toLowerCase() : ""), "leg-note"));
+
   for (const leg of option.legs) {
     const row = node("div", undefined, "leg");
     const headline = node("div", undefined, "leg-top");
@@ -146,7 +183,8 @@ function journeyCard(option) {
     }
     details.append(row);
   }
-  const show = node("button", "Show on map");
+
+  const show = node("button", "Show 3D route ↗");
   show.className = "show-route";
   show.setAttribute("aria-pressed", "false");
   show.type = "button";
@@ -155,14 +193,18 @@ function journeyCard(option) {
       item.classList.toggle("selected", item === card);
       item.querySelector(".show-route").setAttribute("aria-pressed", String(item === card));
     }
-    routeMap.setJourney(option);
-    if (window.matchMedia("(max-width: 710px)").matches) byId("map-title").scrollIntoView({ block: "start" });
+    updateVisualizers(option);
+    if (window.matchMedia("(max-width: 710px)").matches) {
+      byId("map-title").scrollIntoView({ block: "start", behavior: "smooth" });
+    }
   });
+
   bottom.append(show);
   card.append(top, node("strong", option.minutes + " min", "minutes"), bottom, details);
   return card;
 }
 
+// --- JOURNEY PLANNER SUBMIT ---
 async function plan(event) {
   event?.preventDefault();
   const submit = form.querySelector("button[type=submit]");
@@ -174,7 +216,8 @@ async function plan(event) {
   submit.disabled = true;
   status.textContent = "Finding scheduled journeys…";
   byId("options").replaceChildren();
-  routeMap.setJourney(null);
+  updateVisualizers(null);
+
   try {
     const result = await request("/api/journeys", {
       origin: stopIds.origin, destination: stopIds.destination,
@@ -187,7 +230,7 @@ async function plan(event) {
       cards[0].querySelector(".show-route").setAttribute("aria-pressed", "true");
     }
     byId("options").replaceChildren(...cards);
-    routeMap.setJourney(result.options[0] || null);
+    updateVisualizers(result.options[0] || null);
   } catch (error) {
     status.textContent = error.message;
   } finally {
@@ -195,18 +238,21 @@ async function plan(event) {
   }
 }
 
+// --- LIVE VEHICLES POLLING ---
 async function refreshLive() {
   const requestId = ++liveRequest;
   try {
     const result = await request("/api/vehicles");
     if (liveTimer === null || requestId !== liveRequest) return;
     routeMap.setLive(result.positions);
+    if (godsEye3D) godsEye3D.setLiveVehicles(result.positions);
     byId("live-status").textContent = result.status === "live"
       ? "Live positions as of " + clock(result.timestamp * 1000) + " IST"
       : "Live positions currently unavailable";
   } catch {
     if (liveTimer === null || requestId !== liveRequest) return;
     routeMap.setLive([]);
+    if (godsEye3D) godsEye3D.setLiveVehicles([]);
     byId("live-status").textContent = "Live positions currently unavailable";
   }
 }
@@ -216,8 +262,9 @@ byId("live").addEventListener("click", () => {
     clearInterval(liveTimer);
     liveTimer = null;
     routeMap.setLive([]);
+    if (godsEye3D) godsEye3D.setLiveVehicles([]);
     byId("live").textContent = "Show live buses";
-    byId("live-status").textContent = "Stop-to-stop schematic";
+    byId("live-status").textContent = "Stop-to-stop simulation";
     return;
   }
   liveTimer = setInterval(refreshLive, 30000);
@@ -225,11 +272,95 @@ byId("live").addEventListener("click", () => {
   byId("live-status").textContent = "Loading live positions…";
   refreshLive();
 });
+
 byId("extra").addEventListener("input", () => {
   byId("extra-value").value = byId("extra").value + " min";
 });
 form.addEventListener("submit", plan);
 
+// --- VIEW MODE TOGGLE (3D God's Eye vs 2D Schematic) ---
+const btnToggle3D = byId("toggle-view-3d");
+const btnToggle2D = byId("toggle-view-2d");
+const layer3D = byId("gods-eye-container");
+const layer2D = byId("canvas-2d-container");
+const captionText = byId("caption-mode-text");
+
+function setViewMode(mode) {
+  const is3D = mode === "3d";
+  btnToggle3D.classList.toggle("active", is3D);
+  btnToggle3D.setAttribute("aria-pressed", String(is3D));
+  btnToggle2D.classList.toggle("active", !is3D);
+  btnToggle2D.setAttribute("aria-pressed", String(!is3D));
+
+  layer3D.hidden = !is3D;
+  layer2D.hidden = is3D;
+
+  if (captionText) {
+    captionText.textContent = is3D ? "3D WebGL God's Eye Simulation" : "2D Stop-to-Stop Schematic";
+  }
+
+  if (is3D && godsEye3D) {
+    godsEye3D._resizeHandler();
+    if (currentActiveOption) godsEye3D.setJourney(currentActiveOption);
+  } else if (!is3D) {
+    routeMap.layout();
+    if (currentActiveOption) routeMap.setJourney(currentActiveOption);
+  }
+}
+
+btnToggle3D.addEventListener("click", () => setViewMode("3d"));
+btnToggle2D.addEventListener("click", () => setViewMode("2d"));
+
+// --- 3D HUD CAMERA & SPEED CONTROLS ---
+const btnCamOverview = byId("cam-overview");
+const btnCamChase = byId("cam-chase");
+const btnSpeed1x = byId("speed-1x");
+const btnSpeed3x = byId("speed-3x");
+
+if (btnCamOverview && btnCamChase) {
+  btnCamOverview.addEventListener("click", () => {
+    btnCamOverview.classList.add("active");
+    btnCamChase.classList.remove("active");
+    godsEye3D?.setCameraMode("overview");
+  });
+  btnCamChase.addEventListener("click", () => {
+    btnCamChase.classList.add("active");
+    btnCamOverview.classList.remove("active");
+    godsEye3D?.setCameraMode("chase");
+  });
+}
+
+if (btnSpeed1x && btnSpeed3x) {
+  btnSpeed1x.addEventListener("click", () => {
+    btnSpeed1x.classList.add("active");
+    btnSpeed3x.classList.remove("active");
+    if (godsEye3D) godsEye3D.options.speedMultiplier = 1.0;
+  });
+  btnSpeed3x.addEventListener("click", () => {
+    btnSpeed3x.classList.add("active");
+    btnSpeed1x.classList.remove("active");
+    if (godsEye3D) godsEye3D.options.speedMultiplier = 3.0;
+  });
+}
+
+// --- QUICK DEMO ROUTE CHIPS ---
+document.querySelectorAll(".chip").forEach((chip) => {
+  chip.addEventListener("click", async () => {
+    document.querySelectorAll(".chip").forEach((c) => c.classList.remove("active-chip"));
+    chip.classList.add("active-chip");
+
+    const fromId = chip.dataset.from;
+    const fromName = chip.dataset.fromName;
+    const toId = chip.dataset.to;
+    const toName = chip.dataset.toName;
+
+    chooseOrigin({ id: fromId, name: fromName });
+    chooseDestination({ id: toId, name: toName });
+    await plan();
+  });
+});
+
+// --- INITIALIZATION ---
 async function initialize() {
   try {
     const config = await request("/api/config");
@@ -252,6 +383,7 @@ async function initialize() {
 }
 initialize();
 
+// Populate Corridor Evaluation selector
 for (let hour = 0; hour < 24; hour += 1) {
   const option = node("option", String(hour).padStart(2, "0") + ":00");
   option.value = hour;

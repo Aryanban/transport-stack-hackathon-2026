@@ -3,27 +3,56 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Delhi Bus Planner</title>
+  <title>Delhi Bus Planner · 3D God's Eye</title>
   <link rel="stylesheet" href="style.css">
+  <script src="vendor/three.min.js"></script>
+  <script src="vendor/OrbitControls.js"></script>
+  <script src="gods-eye-3d.js" defer></script>
   <script src="route-map.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
   <header class="header">
     <div class="header-inner">
-      <a class="brand" href="./" aria-label="Delhi Bus Planner home"><span class="brand-icon" aria-hidden="true"><i></i></span>Delhi Bus <strong>Planner</strong></a>
-      <nav aria-label="Page navigation"><a href="#journey">Journey planner</a><a href="#evidence-title">Corridor data</a></nav>
+      <a class="brand" href="./" aria-label="Delhi Bus Planner home">
+        <span class="brand-icon" aria-hidden="true"><i></i></span>Delhi Bus <strong>Planner</strong>
+      </a>
+      <nav aria-label="Page navigation">
+        <a href="#journey">Journey planner</a>
+        <a href="#evidence-title">Corridor data</a>
+      </nav>
     </div>
   </header>
   <main>
     <section class="intro" id="journey">
-      <div><h1>Find your <em>bus.</em></h1>
-      <p>Compare faster trips and quieter rides across Delhi.</p></div>
+      <div>
+        <h1>Find your <em>bus.</em></h1>
+        <p>Compare faster trips, quieter rides, and 3D animated routes across Delhi.</p>
+      </div>
       <span id="mode" class="mode" hidden></span>
     </section>
+
     <div class="workspace">
+      <!-- Search & Journey Selection Panel -->
       <section class="panel search-panel" aria-labelledby="search-title">
         <h2 id="search-title">Journey details</h2>
+
+        <!-- Quick Corridor Demo Chips -->
+        <div class="quick-corridors" aria-label="Quick Demo Routes">
+          <span class="quick-label">⚡ Quick Demo:</span>
+          <div class="chip-list">
+            <button type="button" class="chip active-chip" data-from="2070" data-from-name="Delhi Gate" data-to="1025" data-to-name="Kashmere Gate City Bus Terminal">
+              Delhi Gate ⇄ Kashmere Gate
+            </button>
+            <button type="button" class="chip" data-from="1000" data-from-name="Mehrauli Terminal" data-to="1010" data-to-name="INA Colony / Dilli Haat">
+              Mehrauli ⇄ INA Colony
+            </button>
+            <button type="button" class="chip" data-from="1007" data-from-name="AIIMS Hospital" data-to="1017" data-to-name="Shivaji Stadium / Connaught Place">
+              AIIMS ⇄ Connaught Place
+            </button>
+          </div>
+        </div>
+
         <form id="planner">
           <div class="stop-field origin-field">
             <label for="origin">From</label>
@@ -42,25 +71,77 @@
           <button class="primary search-button" type="submit">Find journeys <span aria-hidden="true">↗</span></button>
         </form>
       </section>
+
+      <!-- Map & Visualizer Panel (2D Schematic / 3D God's Eye) -->
       <section class="panel map-panel" aria-labelledby="map-title">
         <div class="map-header">
-          <div><h2 id="map-title">Route preview</h2><p id="map-route">Delhi bus network</p></div>
-          <div class="map-tools"><button id="live" type="button" hidden>Show live buses</button>
-          <button id="map-motion" type="button" hidden>Pause preview</button></div>
+          <div>
+            <h2 id="map-title">Route preview</h2>
+            <p id="map-route">Delhi bus network</p>
+          </div>
+          <div class="map-tools">
+            <!-- View Mode Switcher: 2D vs 3D God's Eye -->
+            <div class="segmented-control" role="group" aria-label="Visualizer Mode">
+              <button type="button" id="toggle-view-3d" class="segmented-btn active" aria-pressed="true">🛸 3D God's Eye</button>
+              <button type="button" id="toggle-view-2d" class="segmented-btn" aria-pressed="false">🗺️ 2D Map</button>
+            </div>
+            <button id="live" type="button" hidden>Show live buses</button>
+            <button id="map-motion" type="button" hidden>Pause preview</button>
+          </div>
         </div>
-        <div class="map-body">
-          <canvas id="map" role="img" aria-label="Schematic route diagram. Stop details appear in the journey cards."></canvas>
-          <canvas id="map-vehicles" aria-hidden="true"></canvas>
+
+        <div class="map-body" id="map-viewport">
+          <!-- 3D WebGL God's Eye Viewport -->
+          <div id="gods-eye-container" class="viewport-layer">
+            <!-- Floating Navigation Turn Banner (Reference 2) -->
+            <div id="hud-nav-banner" class="hud-nav-banner">
+              <span class="hud-nav-icon">↗</span>
+              <div class="hud-nav-text">
+                <strong id="hud-next-stop">Next Stop: Subhash Park</strong>
+                <span id="hud-subtext">Bus 502 · In 4 min</span>
+              </div>
+            </div>
+
+            <!-- Floating 3D Control Dock -->
+            <div id="hud-controls" class="hud-controls">
+              <div class="hud-group">
+                <button type="button" id="cam-overview" class="hud-btn active" title="High-Altitude God's Eye Overview">🛸 Overview</button>
+                <button type="button" id="cam-chase" class="hud-btn" title="Follow Bus 3D Chase Camera">🎥 Follow Bus</button>
+              </div>
+              <div class="hud-group">
+                <button type="button" id="speed-1x" class="hud-btn active">1x</button>
+                <button type="button" id="speed-3x" class="hud-btn">3x</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2D Schematic Canvas Layer (Fallback & Alternative) -->
+          <div id="canvas-2d-container" class="viewport-layer" hidden>
+            <canvas id="map" role="img" aria-label="Schematic route diagram. Stop details appear in the journey cards."></canvas>
+            <canvas id="map-vehicles" aria-hidden="true"></canvas>
+          </div>
+
           <p id="map-empty">Search for a journey to see its stops.</p>
         </div>
-        <div class="map-caption"><span><i class="line-key"></i> Route simulation</span><span id="live-status" role="status">Stop-to-stop schematic</span></div>
+
+        <div class="map-caption">
+          <span><i class="line-key"></i> <span id="caption-mode-text">3D WebGL Simulation</span></span>
+          <span id="live-status" role="status">Stop-to-stop schematic</span>
+        </div>
       </section>
     </div>
+
+    <!-- Journey Options Results -->
     <section class="results" aria-labelledby="results-title">
-      <div class="result-header"><h2 id="results-title">Journey options</h2><p id="source"></p></div>
+      <div class="result-header">
+        <h2 id="results-title">Journey options</h2>
+        <p id="source"></p>
+      </div>
       <p id="status" role="status"></p>
       <div id="options" class="cards"></div>
     </section>
+
+    <!-- Evidence & Corridor Crowding Audit -->
     <section class="panel evidence" aria-labelledby="evidence-title">
       <h2 id="evidence-title">Crowding by corridor</h2>
       <p id="validation">Loading model evaluation…</p>
@@ -73,7 +154,14 @@
       <p id="corridor-status" role="status"></p>
       <div class="table-scroll">
         <table>
-          <thead><tr><th scope="col">Stretch</th><th scope="col">Expected crowding</th><th scope="col">Modeled passengers</th><th scope="col">Sample days</th></tr></thead>
+          <thead>
+            <tr>
+              <th scope="col">Stretch</th>
+              <th scope="col">Expected crowding</th>
+              <th scope="col">Modeled passengers</th>
+              <th scope="col">Sample days</th>
+            </tr>
+          </thead>
           <tbody id="segments"></tbody>
         </table>
       </div>
