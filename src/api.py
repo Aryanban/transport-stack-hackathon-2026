@@ -11,7 +11,7 @@ from typing import List, Optional
 
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
 from pydantic import BaseModel, Field
 
 from .data_loader import get_loaded_network, Stop, Route
@@ -46,10 +46,8 @@ feeder_optimizer = FeederOptimizer()
 od_extrapolator = ODExtrapolator()
 gtfs_rt_client = DelhiGTFSRealtimeClient()
 
-WEB_DIR = Path(__file__).resolve().parent / "web"
 app.mount("/ps2", ps2_app)
 
-# Pydantic Schemas
 class GPSUpdatePayload(BaseModel):
     vehicle_id: str = Field(..., json_schema_extra={"example": "DL1PC1234"})
     route_id: str = Field(..., json_schema_extra={"example": "BUS_102ADOWN"})
@@ -60,12 +58,8 @@ class GPSUpdatePayload(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 def serve_ui():
-    """Serves the interactive web UI."""
-    index_file = WEB_DIR / "index.html"
-    if index_file.exists():
-        with open(index_file, "r", encoding="utf-8") as f:
-            return HTMLResponse(content=f.read())
-    return HTMLResponse("<h2>Delhi Transport Stack Hackathon API is Live! Visit /docs for Swagger.</h2>")
+    """Redirects root directly to the unified Problem Statement 2 visualizer."""
+    return RedirectResponse(url="/ps2/")
 
 @app.get("/api/v1/health")
 def health_check():

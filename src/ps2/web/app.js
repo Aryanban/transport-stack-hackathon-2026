@@ -2,28 +2,29 @@
 
 const byId = (id) => document.getElementById(id);
 const form = byId("planner");
-const status = byId("status");
+const statusEl = byId("status");
 const stopIds = {};
 const timeFormat = new Intl.DateTimeFormat("en-IN", {
-  timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+  timeZone: "Asia/Kolkata",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
 });
 const clock = (value) => timeFormat.format(new Date(value));
 
-// Dual Engine Initialization: 2D Schematic Canvas & 3D WebGL God's Eye
-const routeMap = new RouteMap(byId("map"), byId("map-vehicles"), byId("map-motion"));
-const godsEyeContainer = byId("gods-eye-container");
-const godsEye3D = typeof GodsEye3D !== "undefined" && godsEyeContainer ? new GodsEye3D(godsEyeContainer) : null;
-window.godsEye3D = godsEye3D;
+// 1. Initialize MapLibre GL 3D Transit Engine
+const transitMap = typeof TransitMapEngine !== "undefined" ? new TransitMapEngine("map-container") : null;
+window.transitMap = transitMap;
 
 let currentActiveOption = null;
-let liveRequest = 0;
-let liveTimer = null;
 
 async function request(path, params, signal) {
   const query = params ? "?" + new URLSearchParams(params).toString() : "";
   const response = await fetch(path.replace(/^\//, "") + query, { signal });
   const data = await response.json();
-  if (!response.ok) throw new Error(typeof data.detail === "string" ? data.detail : "Check your entries and try again.");
+  if (!response.ok) {
+    throw new Error(typeof data.detail === "string" ? data.detail : "Check your entries and try again.");
+  }
   return data;
 }
 
@@ -34,7 +35,7 @@ function node(tag, content, className) {
   return item;
 }
 
-// --- STOP AUTOCOMPLETE CONTROLLER ---
+// 2. Stop Autocomplete Controller
 function bindStop(id) {
   const field = byId(id);
   const list = byId(id + "-results");
@@ -63,6 +64,7 @@ function bindStop(id) {
     hide();
     const term = field.value.trim();
     if (!term) return;
+
     timer = setTimeout(async () => {
       controller = new AbortController();
       const signal = controller.signal;
@@ -71,7 +73,9 @@ function bindStop(id) {
         if (signal.aborted || document.activeElement !== field) return;
         suggestions = found;
         list.replaceChildren();
-        if (!suggestions.length) list.append(node("p", "No matching stops."));
+        if (!suggestions.length) {
+          list.append(node("p", "No matching stops."));
+        }
         const counts = new Map();
         suggestions.forEach(({ name }) => counts.set(name, (counts.get(name) || 0) + 1));
         suggestions.forEach((stop, index) => {
@@ -89,7 +93,7 @@ function bindStop(id) {
         list.hidden = false;
         field.setAttribute("aria-expanded", "true");
       } catch (error) {
-        if (!signal.aborted) status.textContent = error.message;
+        if (!signal.aborted && statusEl) statusEl.textContent = error.message;
       }
     }, 160);
   });
@@ -109,7 +113,8 @@ function bindStop(id) {
     if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
     event.preventDefault();
     const direction = event.key === "ArrowDown" ? 1 : -1;
-    selected = selected < 0 && direction < 0 ? suggestions.length - 1
+    selected = selected < 0 && direction < 0
+      ? suggestions.length - 1
       : (selected + direction + suggestions.length) % suggestions.length;
     [...list.children].forEach((option, index) => option.setAttribute("aria-selected", String(index === selected)));
     const option = list.children[selected];
@@ -123,227 +128,253 @@ function bindStop(id) {
 const chooseOrigin = bindStop("origin");
 const chooseDestination = bindStop("destination");
 
-function pill(level) {
-  const classes = { "Seats available": "low", "Standing room": "moderate", "Heavily crowded": "high" };
-  return node("span", level === "Unknown" ? "Crowd estimate unavailable" : level, "pill " + (classes[level] || ""));
+// 3. Crowding Status Pill Generator (Google Maps Style)
+function makeCrowdBadge(level) {
+  const container = document.createElement("span");
+  container.className = "crowd-pill";
+  const dot = document.createElement("span");
+  dot.className = "dot";
+  container.appendChild(dot);
+
+  const textNode = document.createElement("span");
+  if (level === "Seats available") {
+    container.classList.add("low");
+    textNode.textContent = "Seats available";
+  } else if (level === "Standing room") {
+    container.classList.add("moderate");
+    textNode.textContent = "Standing room";
+  } else if (level === "Heavily crowded") {
+    container.classList.add("high");
+    textNode.textContent = "Crowded";
+  } else {
+    textNode.textContent = "Normal load";
+  }
+  container.appendChild(textNode);
+  return container;
 }
 
+// 4. Update Visualizers & Floating HUD Navigation Banner
 function updateVisualizers(option) {
   currentActiveOption = option;
-  routeMap.setJourney(option);
-  if (godsEye3D) {
-    godsEye3D.setJourney(option);
+  if (transitMap) {
+    transitMap.setJourney(option);
   }
 
-  const emptyNote = byId("map-empty");
-  if (emptyNote) {
-    emptyNote.hidden = !!option;
-  }
-
-  // Update floating HUD navigation banner (Reference 2)
   const navBanner = byId("hud-nav-banner");
   if (navBanner && option && option.legs && option.legs.length) {
     const firstLeg = option.legs[0];
     const points = firstLeg.points || [];
     const nextStopName = points.length > 1 ? points[1].name : firstLeg.to.name;
+    const isMetro = String(firstLeg.route).toLowerCase().includes("line") || String(firstLeg.route).toLowerCase().includes("metro");
+    const routePrefix = isMetro ? "Metro " : "Bus ";
 
-    byId("hud-next-stop").textContent = "Next: " + nextStopName;
-    byId("hud-subtext").textContent = "Bus " + firstLeg.route + " · " + Math.round(option.minutes) + " min arrival";
+    const hudNext = byId("hud-next-stop");
+    const hudSub = byId("hud-subtext");
+    if (hudNext) hudNext.textContent = "Next: " + nextStopName;
+    if (hudSub) hudSub.textContent = routePrefix + firstLeg.route + " · " + Math.round(option.minutes) + " min duration";
     navBanner.hidden = false;
   } else if (navBanner) {
     navBanner.hidden = true;
   }
 }
 
-function journeyCard(option) {
-  const card = node("article", undefined, "card");
-  const top = node("div", undefined, "card-top");
-  top.append(node("h3", option.label), pill(option.crowd.level));
-  const bottom = node("div", undefined, "card-bottom");
-  const transfer = option.transfers ? "1 transfer" : "Direct";
-  bottom.append(node("span", clock(option.departure) + " → " + clock(option.arrival) + " · " + transfer));
-  if (option.extraMinutes > 0) bottom.append(node("span", "+" + option.extraMinutes + " min"));
+// 5. Google Maps / Apple Maps Style Transit Option Card
+function journeyCard(option, isFirst = false) {
+  const card = document.createElement("article");
+  card.className = "transit-card" + (isFirst ? " selected" : "");
+  card.tabIndex = 0;
+  card.setAttribute("role", "button");
+  card.setAttribute("aria-pressed", String(isFirst));
 
-  const details = node("details");
-  details.append(node("summary", "Bus and stop details"));
-  details.append(node("p", "Initial wait " + option.waitMinutes + " min"
-    + (option.transfers && option.crowd.busiestLeg ? " · Busiest leg " + option.crowd.busiestLeg.toLowerCase() : ""), "leg-note"));
+  // Top Row: Badges & Crowding Level
+  const top = document.createElement("div");
+  top.className = "transit-card-top";
 
-  for (const leg of option.legs) {
-    const row = node("div", undefined, "leg");
-    const headline = node("div", undefined, "leg-top");
-    headline.append(node("strong", "Bus " + leg.route), pill(leg.crowd.level));
-    row.append(headline, node("p", clock(leg.departure) + " " + leg.from.name + " → "
-      + clock(leg.arrival) + " " + leg.to.name));
-    if (leg.crowd.days) {
-      row.append(node("p", "About " + leg.crowd.modeledPassengers + " passengers · "
-        + Math.round(leg.crowd.coverage * 100) + "% of ride modeled · "
-        + leg.crowd.days + " sample days", "leg-note"));
-      row.append(node("p", "Busiest modeled stretch · " + leg.crowd.busiestSegment, "leg-note"));
+  const badgeRow = document.createElement("div");
+  badgeRow.className = "badge-row";
+
+  // Build badges for each leg
+  option.legs.forEach((leg, i) => {
+    if (i > 0) {
+      const arrow = document.createElement("span");
+      arrow.textContent = "›";
+      arrow.style.color = "var(--g-subtext)";
+      arrow.style.fontWeight = "bold";
+      badgeRow.appendChild(arrow);
     }
-    details.append(row);
-  }
+    const badge = document.createElement("span");
+    const isMetro = String(leg.route).toLowerCase().includes("line");
+    badge.className = "route-badge " + (isMetro ? "metro" : "bus");
 
-  const show = node("button", "Show 3D route ↗");
-  show.className = "show-route";
-  show.setAttribute("aria-pressed", "false");
-  show.type = "button";
-  show.addEventListener("click", () => {
-    for (const item of byId("options").children) {
-      item.classList.toggle("selected", item === card);
-      item.querySelector(".show-route").setAttribute("aria-pressed", String(item === card));
+    // Clean SVG icon for bus or metro
+    const svgIcon = isMetro
+      ? `<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2c-4.42 0-8 .5-8 4v10c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4zm0 2c3.5 0 6 .4 6 2v2H6V6c0-1.6 2.5-2 6-2zm-5 13c-.83 0-1.5-.67-1.5-1.5S6.17 14 7 14s1.5.67 1.5 1.5S7.83 17 7 17zm10 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>`
+      : `<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/></svg>`;
+
+    badge.innerHTML = `${svgIcon}<span>${leg.route}</span>`;
+    badgeRow.appendChild(badge);
+  });
+
+  top.appendChild(badgeRow);
+  top.appendChild(makeCrowdBadge(option.crowd?.level));
+
+  // Main Row: Large Duration & Time Range
+  const main = document.createElement("div");
+  main.className = "transit-card-main";
+
+  const duration = document.createElement("span");
+  duration.className = "duration-text";
+  duration.textContent = Math.round(option.minutes) + " min";
+
+  const timeWindow = document.createElement("span");
+  timeWindow.className = "time-window";
+  const transferText = option.transfers ? option.transfers + " transfer" : "Direct";
+  timeWindow.textContent = clock(option.departure) + " – " + clock(option.arrival) + " · " + transferText;
+
+  main.appendChild(duration);
+  main.appendChild(timeWindow);
+
+  // Collapsible Legs Details
+  const details = document.createElement("details");
+  details.className = "transit-card-details";
+  const summary = document.createElement("summary");
+  summary.textContent = "Route details and stops";
+  details.appendChild(summary);
+
+  const legsContainer = document.createElement("div");
+  legsContainer.style.paddingTop = "8px";
+
+  option.legs.forEach((leg) => {
+    const legRow = document.createElement("div");
+    legRow.style.marginBottom = "6px";
+    legRow.style.lineHeight = "1.4";
+
+    const legTitle = document.createElement("div");
+    legTitle.style.fontWeight = "600";
+    legTitle.style.color = "var(--g-text)";
+    legTitle.textContent = leg.route + " · " + Math.round(leg.rideMinutes) + " min";
+
+    const legPath = document.createElement("div");
+    legPath.textContent = clock(leg.departure) + " " + leg.from.name + " → " + clock(leg.arrival) + " " + leg.to.name;
+
+    legRow.appendChild(legTitle);
+    legRow.appendChild(legPath);
+
+    if (leg.crowd?.modeledPassengers) {
+      const stats = document.createElement("div");
+      stats.style.fontSize = "0.72rem";
+      stats.style.color = "var(--g-subtext)";
+      stats.textContent = "Modeled occupancy: ~" + Math.round(leg.crowd.modeledPassengers) + " passengers (" + leg.crowd.days + " day sample)";
+      legRow.appendChild(stats);
     }
+
+    legsContainer.appendChild(legRow);
+  });
+
+  details.appendChild(legsContainer);
+
+  card.appendChild(top);
+  card.appendChild(main);
+  card.appendChild(details);
+
+  // Click & Keyboard Selection
+  const selectThisOption = () => {
+    const allCards = byId("options").children;
+    for (const c of allCards) {
+      c.classList.remove("selected");
+      c.setAttribute("aria-pressed", "false");
+    }
+    card.classList.add("selected");
+    card.setAttribute("aria-pressed", "true");
     updateVisualizers(option);
-    if (window.matchMedia("(max-width: 710px)").matches) {
-      byId("map-title").scrollIntoView({ block: "start", behavior: "smooth" });
+  };
+
+  card.addEventListener("click", (e) => {
+    // Prevent toggling details from triggering map zoom change if user clicked summary
+    if (e.target.tagName.toLowerCase() === "summary") return;
+    selectThisOption();
+  });
+
+  card.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      selectThisOption();
     }
   });
 
-  bottom.append(show);
-  card.append(top, node("strong", option.minutes + " min", "minutes"), bottom, details);
   return card;
 }
 
-// --- JOURNEY PLANNER SUBMIT ---
+// 6. Journey Planner Form Submission
 async function plan(event) {
   event?.preventDefault();
-  const submit = form.querySelector("button[type=submit]");
-  if (submit.disabled) return;
+  const submit = form?.querySelector("button[type=submit]");
+  if (submit?.disabled) return;
+
   if (!stopIds.origin || !stopIds.destination) {
-    status.textContent = "Choose both stops from the search suggestions.";
+    if (statusEl) statusEl.textContent = "Choose both stops from the search suggestions.";
     return;
   }
-  submit.disabled = true;
-  status.textContent = "Finding scheduled journeys…";
+
+  if (submit) submit.disabled = true;
+  if (statusEl) statusEl.textContent = "Finding scheduled journeys…";
   byId("options").replaceChildren();
   updateVisualizers(null);
 
   try {
     const result = await request("/api/journeys", {
-      origin: stopIds.origin, destination: stopIds.destination,
-      departure: byId("departure").value, extra: byId("extra").value,
+      origin: stopIds.origin,
+      destination: stopIds.destination,
+      departure: byId("departure").value,
+      extra: byId("extra").value,
     });
-    status.textContent = result.comfortReason || "";
-    const cards = result.options.map(journeyCard);
-    if (cards.length) {
-      cards[0].classList.add("selected");
-      cards[0].querySelector(".show-route").setAttribute("aria-pressed", "true");
+
+    if (statusEl) {
+      statusEl.textContent = result.comfortReason || "";
     }
+
+    const cards = result.options.map((opt, idx) => journeyCard(opt, idx === 0));
     byId("options").replaceChildren(...cards);
     updateVisualizers(result.options[0] || null);
   } catch (error) {
-    status.textContent = error.message;
+    if (statusEl) statusEl.textContent = error.message;
   } finally {
-    submit.disabled = false;
+    if (submit) submit.disabled = false;
   }
 }
 
-// --- LIVE VEHICLES POLLING ---
-async function refreshLive() {
-  const requestId = ++liveRequest;
-  try {
-    const result = await request("/api/vehicles");
-    if (liveTimer === null || requestId !== liveRequest) return;
-    routeMap.setLive(result.positions);
-    if (godsEye3D) godsEye3D.setLiveVehicles(result.positions);
-    byId("live-status").textContent = result.status === "live"
-      ? "Live positions as of " + clock(result.timestamp * 1000) + " IST"
-      : "Live positions currently unavailable";
-  } catch {
-    if (liveTimer === null || requestId !== liveRequest) return;
-    routeMap.setLive([]);
-    if (godsEye3D) godsEye3D.setLiveVehicles([]);
-    byId("live-status").textContent = "Live positions currently unavailable";
-  }
-}
+if (form) form.addEventListener("submit", plan);
 
-byId("live").addEventListener("click", () => {
-  if (liveTimer !== null) {
-    clearInterval(liveTimer);
-    liveTimer = null;
-    routeMap.setLive([]);
-    if (godsEye3D) godsEye3D.setLiveVehicles([]);
-    byId("live").textContent = "Show live buses";
-    byId("live-status").textContent = "Stop-to-stop simulation";
-    return;
-  }
-  liveTimer = setInterval(refreshLive, 30000);
-  byId("live").textContent = "Hide live buses";
-  byId("live-status").textContent = "Loading live positions…";
-  refreshLive();
-});
-
-byId("extra").addEventListener("input", () => {
-  byId("extra-value").value = byId("extra").value + " min";
-});
-form.addEventListener("submit", plan);
-
-// --- VIEW MODE TOGGLE (3D God's Eye vs 2D Schematic) ---
-const btnToggle3D = byId("toggle-view-3d");
-const btnToggle2D = byId("toggle-view-2d");
-const layer3D = byId("gods-eye-container");
-const layer2D = byId("canvas-2d-container");
-const captionText = byId("caption-mode-text");
-
-function setViewMode(mode) {
-  const is3D = mode === "3d";
-  btnToggle3D.classList.toggle("active", is3D);
-  btnToggle3D.setAttribute("aria-pressed", String(is3D));
-  btnToggle2D.classList.toggle("active", !is3D);
-  btnToggle2D.setAttribute("aria-pressed", String(!is3D));
-
-  layer3D.hidden = !is3D;
-  layer2D.hidden = is3D;
-
-  if (captionText) {
-    captionText.textContent = is3D ? "3D WebGL God's Eye Simulation" : "2D Stop-to-Stop Schematic";
-  }
-
-  if (is3D && godsEye3D) {
-    godsEye3D._resizeHandler();
-    if (currentActiveOption) godsEye3D.setJourney(currentActiveOption);
-  } else if (!is3D) {
-    routeMap.layout();
-    if (currentActiveOption) routeMap.setJourney(currentActiveOption);
-  }
-}
-
-btnToggle3D.addEventListener("click", () => setViewMode("3d"));
-btnToggle2D.addEventListener("click", () => setViewMode("2d"));
-
-// --- 3D HUD CAMERA & SPEED CONTROLS ---
-const btnCamOverview = byId("cam-overview");
-const btnCamChase = byId("cam-chase");
-const btnSpeed1x = byId("speed-1x");
-const btnSpeed3x = byId("speed-3x");
-
-if (btnCamOverview && btnCamChase) {
-  btnCamOverview.addEventListener("click", () => {
-    btnCamOverview.classList.add("active");
-    btnCamChase.classList.remove("active");
-    godsEye3D?.setCameraMode("overview");
-  });
-  btnCamChase.addEventListener("click", () => {
-    btnCamChase.classList.add("active");
-    btnCamOverview.classList.remove("active");
-    godsEye3D?.setCameraMode("chase");
+const extraInput = byId("extra");
+if (extraInput) {
+  extraInput.addEventListener("input", () => {
+    const val = byId("extra-value");
+    if (val) val.value = extraInput.value + " min";
   });
 }
 
-if (btnSpeed1x && btnSpeed3x) {
-  btnSpeed1x.addEventListener("click", () => {
-    btnSpeed1x.classList.add("active");
-    btnSpeed3x.classList.remove("active");
-    if (godsEye3D) godsEye3D.options.speedMultiplier = 1.0;
-  });
-  btnSpeed3x.addEventListener("click", () => {
-    btnSpeed3x.classList.add("active");
-    btnSpeed1x.classList.remove("active");
-    if (godsEye3D) godsEye3D.options.speedMultiplier = 3.0;
+// 7. Floating 3D and Follow Camera Controls
+const btnToggle3D = byId("btn-toggle-3d");
+if (btnToggle3D) {
+  btnToggle3D.addEventListener("click", () => {
+    if (transitMap) {
+      const is3D = transitMap.toggle3D();
+      btnToggle3D.classList.toggle("active", is3D);
+    }
   });
 }
 
-// --- QUICK DEMO ROUTE CHIPS ---
+const btnFollowVehicle = byId("btn-follow-vehicle");
+if (btnFollowVehicle) {
+  btnFollowVehicle.addEventListener("click", () => {
+    if (transitMap) {
+      const isFollow = transitMap.toggleFollow();
+      btnFollowVehicle.classList.toggle("active", isFollow);
+    }
+  });
+}
+
+// 8. Quick Corridor Shortcuts
 document.querySelectorAll(".chip").forEach((chip) => {
   chip.addEventListener("click", async () => {
     document.querySelectorAll(".chip").forEach((c) => c.classList.remove("active-chip"));
@@ -360,77 +391,104 @@ document.querySelectorAll(".chip").forEach((chip) => {
   });
 });
 
-// --- INITIALIZATION ---
+// 9. Initial Configuration & Boot
 async function initialize() {
   try {
     const config = await request("/api/config");
-    byId("departure").value = config.defaultTime;
-    byId("source").textContent = config.source === "unavailable" ? "Scheduled times · crowd data unavailable"
-      : "Scheduled times · " + config.source;
-    byId("live").hidden = !config.liveConfigured;
-    if (config.sample) {
-      byId("mode").textContent = "Generated ticket data";
-      byId("mode").hidden = false;
+    const departureEl = byId("departure");
+    if (departureEl && config.defaultTime) {
+      departureEl.value = config.defaultTime;
     }
+    const sourceEl = byId("source");
+    if (sourceEl) {
+      sourceEl.textContent = config.source === "unavailable"
+        ? "Scheduled times · crowd data unavailable"
+        : "Scheduled times · " + config.source;
+    }
+
     if (config.origin && config.destination) {
       chooseOrigin(config.origin);
       chooseDestination(config.destination);
       await plan();
     }
   } catch (error) {
-    status.textContent = error.message;
+    if (statusEl) statusEl.textContent = error.message;
   }
 }
 initialize();
 
-// Populate Corridor Evaluation selector
-for (let hour = 0; hour < 24; hour += 1) {
-  const option = node("option", String(hour).padStart(2, "0") + ":00");
-  option.value = hour;
-  byId("corridor-hour").append(option);
+// 10. Corridor Audit Table
+const corridorHour = byId("corridor-hour");
+if (corridorHour) {
+  for (let hour = 0; hour < 24; hour += 1) {
+    const opt = node("option", String(hour).padStart(2, "0") + ":00");
+    opt.value = hour;
+    corridorHour.append(opt);
+  }
+  corridorHour.value = 18;
 }
-byId("corridor-hour").value = 18;
 
 async function showSegments(event) {
   event?.preventDefault();
-  const button = byId("corridor-form").querySelector("button");
-  button.disabled = true;
-  byId("corridor-status").textContent = "Loading segments…";
+  const corridorForm = byId("corridor-form");
+  const button = corridorForm?.querySelector("button");
+  if (button) button.disabled = true;
+  const corridorStatus = byId("corridor-status");
+  if (corridorStatus) corridorStatus.textContent = "Loading segments…";
   byId("segments").replaceChildren();
+
   try {
     const data = await request("/api/crowding", {
       route: byId("corridor").value,
       hour: byId("corridor-hour").value,
       weekend: byId("corridor-day").value,
     });
-    byId("corridor-status").textContent = data.segments.some((item) => item.days)
-      ? "Stops below are in the ticket sample’s corridor order." : "No ticket sample for this hour and day type.";
+    if (corridorStatus) {
+      corridorStatus.textContent = data.segments.some((item) => item.days)
+        ? "Stops below are in corridor sequence."
+        : "No ticket sample for this hour and day type.";
+    }
     for (const segment of data.segments) {
       const row = node("tr");
       const crowd = node("td");
-      crowd.append(pill(segment.level));
-      row.append(node("td", segment.from + " → " + segment.to), crowd,
+      crowd.append(makeCrowdBadge(segment.level));
+      row.append(
+        node("td", segment.from + " → " + segment.to),
+        crowd,
         node("td", segment.estimate === null ? "—" : segment.estimate.toFixed(1)),
-        node("td", segment.days || "—"));
+        node("td", segment.days || "—")
+      );
       byId("segments").append(row);
     }
   } catch (error) {
-    byId("corridor-status").textContent = error.message;
+    if (corridorStatus) corridorStatus.textContent = error.message;
   } finally {
-    button.disabled = false;
+    if (button) button.disabled = false;
   }
 }
 
-byId("corridor-form").addEventListener("submit", showSegments);
-request("/api/validation").then(async ({ audit, validation }) => {
-  byId("validation").textContent = audit.modeled_ticket_rows.toLocaleString() + " generated tickets · "
-    + validation.scored_segment_hour_cells + " held-out stretch/time combinations · average error "
-    + validation.holdout_mae + " modeled passengers";
-  for (const route of audit.sample_routes) {
-    const option = node("option", route);
-    option.value = route;
-    byId("corridor").append(option);
-  }
-  byId("corridor").value = "502UP";
-  await showSegments();
-}).catch((error) => { byId("validation").textContent = error.message; });
+const corridorForm = byId("corridor-form");
+if (corridorForm) {
+  corridorForm.addEventListener("submit", showSegments);
+  request("/api/validation").then(async ({ audit, validation }) => {
+    const valEl = byId("validation");
+    if (valEl) {
+      valEl.textContent = audit.modeled_ticket_rows.toLocaleString() + " generated tickets · "
+        + validation.scored_segment_hour_cells + " held-out stretch/time combinations · average error "
+        + validation.holdout_mae + " modeled passengers";
+    }
+    const corridorSelect = byId("corridor");
+    if (corridorSelect) {
+      for (const route of audit.sample_routes) {
+        const option = node("option", route);
+        option.value = route;
+        corridorSelect.append(option);
+      }
+      corridorSelect.value = "502UP";
+    }
+    await showSegments();
+  }).catch((error) => {
+    const valEl = byId("validation");
+    if (valEl) valEl.textContent = error.message;
+  });
+}

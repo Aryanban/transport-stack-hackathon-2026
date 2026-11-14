@@ -1,0 +1,959 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Yellow Line (Line 2)",
+        "color": "#FFD700",
+        "code": "YELLOW",
+        "type": "metro"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            77.13788,
+            28.74445
+          ],
+          [
+            77.16225,
+            28.72625
+          ],
+          [
+            77.17029,
+            28.71689
+          ],
+          [
+            77.1812,
+            28.7071
+          ],
+          [
+            77.19387,
+            28.70282
+          ],
+          [
+            77.20563,
+            28.69875
+          ],
+          [
+            77.21473,
+            28.69472
+          ],
+          [
+            77.2203,
+            28.6865
+          ],
+          [
+            77.22483,
+            28.67722
+          ],
+          [
+            77.2285,
+            28.6675
+          ],
+          [
+            77.2301,
+            28.6578
+          ],
+          [
+            77.2263,
+            28.6493
+          ],
+          [
+            77.2215,
+            28.6425
+          ],
+          [
+            77.2195,
+            28.6328
+          ],
+          [
+            77.2145,
+            28.6231
+          ],
+          [
+            77.2118,
+            28.6148
+          ],
+          [
+            77.212,
+            28.608
+          ],
+          [
+            77.2099,
+            28.5976
+          ],
+          [
+            77.2124,
+            28.5866
+          ],
+          [
+            77.2092,
+            28.5745
+          ],
+          [
+            77.2077,
+            28.5674
+          ],
+          [
+            77.2065,
+            28.5582
+          ],
+          [
+            77.2058,
+            28.54385
+          ],
+          [
+            77.2051,
+            28.5284
+          ],
+          [
+            77.20191,
+            28.52069
+          ],
+          [
+            77.18641,
+            28.51378
+          ],
+          [
+            77.17493,
+            28.50655
+          ],
+          [
+            77.16137,
+            28.49926
+          ],
+          [
+            77.1492,
+            28.4938
+          ],
+          [
+            77.1258,
+            28.4815
+          ],
+          [
+            77.102,
+            28.481
+          ],
+          [
+            77.0927,
+            28.4818
+          ],
+          [
+            77.08181,
+            28.48007
+          ],
+          [
+            77.07245,
+            28.47173
+          ],
+          [
+            77.07282,
+            28.45984
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Blue Line (Line 3)",
+        "color": "#0066B2",
+        "code": "BLUE",
+        "type": "metro"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            77.0583,
+            28.5523
+          ],
+          [
+            77.0777,
+            28.6295
+          ],
+          [
+            77.1215,
+            28.6492
+          ],
+          [
+            77.1511,
+            28.6558
+          ],
+          [
+            77.1902,
+            28.6441
+          ],
+          [
+            77.2195,
+            28.6328
+          ],
+          [
+            77.2274,
+            28.6305
+          ],
+          [
+            77.2342,
+            28.6258
+          ],
+          [
+            77.2435,
+            28.62
+          ],
+          [
+            77.2512,
+            28.6186
+          ],
+          [
+            77.2662,
+            28.6231
+          ],
+          [
+            77.2942,
+            28.6045
+          ],
+          [
+            77.3261,
+            28.5708
+          ],
+          [
+            77.3342,
+            28.5641
+          ],
+          [
+            77.3561,
+            28.5746
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Red Line (Line 1)",
+        "color": "#EE2726",
+        "code": "RED",
+        "type": "metro"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            77.1077,
+            28.7204
+          ],
+          [
+            77.1528,
+            28.6958
+          ],
+          [
+            77.1706,
+            28.6734
+          ],
+          [
+            77.2285,
+            28.6675
+          ],
+          [
+            77.2505,
+            28.6685
+          ],
+          [
+            77.3215,
+            28.676
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Violet Line (Line 6)",
+        "color": "#800080",
+        "code": "VIOLET",
+        "type": "metro"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            77.2285,
+            28.6675
+          ],
+          [
+            77.2405,
+            28.6414
+          ],
+          [
+            77.2415,
+            28.6285
+          ],
+          [
+            77.2342,
+            28.6258
+          ],
+          [
+            77.2118,
+            28.6148
+          ],
+          [
+            77.2275,
+            28.6005
+          ],
+          [
+            77.2345,
+            28.5855
+          ],
+          [
+            77.2375,
+            28.5705
+          ],
+          [
+            77.2345,
+            28.5645
+          ],
+          [
+            77.2585,
+            28.5495
+          ],
+          [
+            77.3015,
+            28.4915
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Airport Express",
+        "color": "#E65100",
+        "code": "AIRPORT",
+        "type": "metro"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            77.2215,
+            28.6425
+          ],
+          [
+            77.2145,
+            28.6295
+          ],
+          [
+            77.1615,
+            28.5915
+          ],
+          [
+            77.1215,
+            28.5485
+          ],
+          [
+            77.0865,
+            28.5565
+          ],
+          [
+            77.0583,
+            28.5523
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Samaypur Badli",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.13788,
+          28.74445
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Rohini Sector 18,19",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.13975,
+          28.73823
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Haiderpur Badli Mor",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.14989,
+          28.73014
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jahangirpuri",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.16225,
+          28.72625
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Adarsh Nagar",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.17029,
+          28.71689
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Azadpur",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.1812,
+          28.7071
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Model Town",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.19387,
+          28.70282
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "GTB Nagar",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.20563,
+          28.69875
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vishwa Vidyalaya",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.21473,
+          28.69472
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vidhan Sabha",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2203,
+          28.6865
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Civil Lines",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.22483,
+          28.67722
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kashmere Gate",
+        "type": "station",
+        "interchange": true,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2285,
+          28.6675
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Chandni Chowk",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2301,
+          28.6578
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Chawri Bazar",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2263,
+          28.6493
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "New Delhi",
+        "type": "station",
+        "interchange": true,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2215,
+          28.6425
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Rajiv Chowk",
+        "type": "station",
+        "interchange": true,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2195,
+          28.6328
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Patel Chowk",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2145,
+          28.6231
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Central Secretariat",
+        "type": "station",
+        "interchange": true,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2118,
+          28.6148
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Udyog Bhawan",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.212,
+          28.608
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lok Kalyan Marg",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2099,
+          28.5976
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jor Bagh",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2124,
+          28.5866
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Dilli Haat INA",
+        "type": "station",
+        "interchange": true,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2092,
+          28.5745
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "AIIMS",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2077,
+          28.5674
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Green Park",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2065,
+          28.5582
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hauz Khas",
+        "type": "station",
+        "interchange": true,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2058,
+          28.54385
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Malviya Nagar",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.2051,
+          28.5284
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Saket",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.20191,
+          28.52069
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Qutab Minar",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.18641,
+          28.51378
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Chhatarpur",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.17493,
+          28.50655
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sultanpur",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.16137,
+          28.49926
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ghitorni",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.1492,
+          28.4938
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Arjan Garh",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.1258,
+          28.4815
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Guru Dronacharya",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.102,
+          28.481
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sikanderpur",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.0927,
+          28.4818
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "MG Road",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.08181,
+          28.48007
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "IFFCO Chowk",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.07245,
+          28.47173
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Millennium City Centre Gurugram",
+        "type": "station",
+        "interchange": false,
+        "line": "Yellow Line"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.07282,
+          28.45984
+        ]
+      }
+    }
+  ]
+}
