@@ -5,30 +5,32 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Delhi Bus Planner</title>
   <link rel="stylesheet" href="style.css">
+  <script src="route-map.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
   <header class="header">
     <div class="header-inner">
-      <a class="brand" href="./" aria-label="Delhi Bus Planner home"><span class="brand-icon" aria-hidden="true"><i></i></span>Delhi Bus Planner</a>
-      <span id="mode" class="mode" hidden></span>
+      <a class="brand" href="./" aria-label="Delhi Bus Planner home"><span class="brand-icon" aria-hidden="true"><i></i></span>Delhi Bus <strong>Planner</strong></a>
+      <nav aria-label="Page navigation"><a href="#journey">Journey planner</a><a href="#evidence-title">Corridor data</a></nav>
     </div>
   </header>
   <main>
-    <section class="intro">
-      <h1>Plan your bus journey</h1>
-      <p>Compare travel time and expected crowding before you leave.</p>
+    <section class="intro" id="journey">
+      <div><h1>Find your <em>bus.</em></h1>
+      <p>Compare faster trips and quieter rides across Delhi.</p></div>
+      <span id="mode" class="mode" hidden></span>
     </section>
     <div class="workspace">
       <section class="panel search-panel" aria-labelledby="search-title">
         <h2 id="search-title">Journey details</h2>
         <form id="planner">
-          <div class="stop-field">
+          <div class="stop-field origin-field">
             <label for="origin">From</label>
             <input id="origin" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="origin-results" placeholder="Search for a bus stop" autocomplete="off" required>
             <div id="origin-results" class="suggestions" role="listbox" hidden></div>
           </div>
-          <div class="stop-field">
+          <div class="stop-field destination-field">
             <label for="destination">To</label>
             <input id="destination" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="destination-results" placeholder="Search for a bus stop" autocomplete="off" required>
             <div id="destination-results" class="suggestions" role="listbox" hidden></div>
@@ -37,19 +39,21 @@
           <input id="departure" type="datetime-local" required>
           <label class="range-label" for="extra">Extra time for a quieter ride <output for="extra" id="extra-value">15 min</output></label>
           <input id="extra" type="range" min="0" max="60" step="5" value="15">
-          <button class="primary" type="submit">Find journeys <span aria-hidden="true">→</span></button>
+          <button class="primary search-button" type="submit">Find journeys <span aria-hidden="true">↗</span></button>
         </form>
       </section>
       <section class="panel map-panel" aria-labelledby="map-title">
         <div class="map-header">
-          <h2 id="map-title">Route overview</h2>
-          <button id="live" type="button" hidden>Show live buses</button>
+          <div><h2 id="map-title">Route preview</h2><p id="map-route">Delhi bus network</p></div>
+          <div class="map-tools"><button id="live" type="button" hidden>Show live buses</button>
+          <button id="map-motion" type="button" hidden>Pause preview</button></div>
         </div>
         <div class="map-body">
           <canvas id="map" role="img" aria-label="Schematic route diagram. Stop details appear in the journey cards."></canvas>
+          <canvas id="map-vehicles" aria-hidden="true"></canvas>
           <p id="map-empty">Search for a journey to see its stops.</p>
         </div>
-        <div class="map-caption"><span><i class="line-key"></i> Selected journey</span><span id="live-status" role="status">Stop-to-stop schematic</span></div>
+        <div class="map-caption"><span><i class="line-key"></i> Route simulation</span><span id="live-status" role="status">Stop-to-stop schematic</span></div>
       </section>
     </div>
     <section class="results" aria-labelledby="results-title">

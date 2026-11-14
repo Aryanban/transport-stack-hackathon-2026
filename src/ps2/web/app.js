@@ -8,8 +8,8 @@ const timeFormat = new Intl.DateTimeFormat("en-IN", {
   timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
 });
 const clock = (value) => timeFormat.format(new Date(value));
-let selection = null;
-let livePositions = [];
+const routeMap = new RouteMap(byId("map"), byId("map-vehicles"), byId("map-motion"));
+let liveRequest = 0;
 let liveTimer = null;
 
 async function request(path, params, signal) {
@@ -147,11 +147,15 @@ function journeyCard(option) {
     details.append(row);
   }
   const show = node("button", "Show on map");
+  show.className = "show-route";
+  show.setAttribute("aria-pressed", "false");
   show.type = "button";
   show.addEventListener("click", () => {
-    for (const item of byId("options").children) item.classList.toggle("selected", item === card);
-    selection = option;
-    draw();
+    for (const item of byId("options").children) {
+      item.classList.toggle("selected", item === card);
+      item.querySelector(".show-route").setAttribute("aria-pressed", String(item === card));
+    }
+    routeMap.setJourney(option);
     if (window.matchMedia("(max-width: 710px)").matches) byId("map-title").scrollIntoView({ block: "start" });
   });
   bottom.append(show);
@@ -170,8 +174,7 @@ async function plan(event) {
   submit.disabled = true;
   status.textContent = "Finding scheduled journeys…";
   byId("options").replaceChildren();
-  selection = null;
-  draw();
+  routeMap.setJourney(null);
   try {
     const result = await request("/api/journeys", {
       origin: stopIds.origin, destination: stopIds.destination,
@@ -179,10 +182,12 @@ async function plan(event) {
     });
     status.textContent = result.comfortReason || "";
     const cards = result.options.map(journeyCard);
-    if (cards.length) cards[0].classList.add("selected");
+    if (cards.length) {
+      cards[0].classList.add("selected");
+      cards[0].querySelector(".show-route").setAttribute("aria-pressed", "true");
+    }
     byId("options").replaceChildren(...cards);
-    selection = result.options[0] || null;
-    draw();
+    routeMap.setJourney(result.options[0] || null);
   } catch (error) {
     status.textContent = error.message;
   } finally {
@@ -190,90 +195,29 @@ async function plan(event) {
   }
 }
 
-function draw() {
-  const canvas = byId("map");
-  const bounds = canvas.getBoundingClientRect();
-  const width = bounds.width;
-  const height = bounds.height;
-  if (!width || !height) return;
-  const scale = window.devicePixelRatio || 1;
-  canvas.width = Math.round(width * scale);
-  canvas.height = Math.round(height * scale);
-  const ctx = canvas.getContext("2d");
-  ctx.scale(scale, scale);
-  const points = selection ? selection.legs.flatMap((leg) => leg.points) : [];
-  byId("map-empty").hidden = points.length > 0;
-  if (!points.length) return;
-  const lons = points.map((point) => point.lon);
-  const lats = points.map((point) => point.lat);
-  const minX = Math.min(...lons), minY = Math.min(...lats);
-  const maxX = Math.max(...lons), maxY = Math.max(...lats);
-  const lonScale = Math.cos(((minY + maxY) / 2) * Math.PI / 180);
-  const padding = Math.min(58, width / 6);
-  const unit = Math.min((width - 2 * padding) / Math.max(.004, (maxX - minX) * lonScale),
-    (height - 2 * padding) / Math.max(.004, maxY - minY));
-  const project = (point) => [width / 2 + (point.lon - (minX + maxX) / 2) * lonScale * unit,
-    height / 2 - (point.lat - (minY + maxY) / 2) * unit];
-
-  selection.legs.forEach((leg, index) => {
-    const coords = leg.points.map(project);
-    ctx.beginPath();
-    coords.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
-    ctx.lineWidth = 4;
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-    ctx.strokeStyle = index ? "#307481" : "#247454";
-    ctx.stroke();
-    coords.forEach(([x, y], i) => {
-      ctx.beginPath();
-      ctx.arc(x, y, i === 0 || i === coords.length - 1 ? 6 : 3, 0, 2 * Math.PI);
-      ctx.fillStyle = "#fff";
-      ctx.fill();
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    });
-  });
-  livePositions.forEach((point) => {
-    const [x, y] = project(point);
-    if (x < 5 || x > width - 5 || y < 5 || y > height - 5) return;
-    ctx.fillStyle = "#854629";
-    ctx.fillRect(x - 3, y - 3, 6, 6);
-  });
-  ctx.font = "600 12px Segoe UI, sans-serif";
-  ctx.fillStyle = "#20392c";
-  const endpoints = [points[0], points[points.length - 1]];
-  endpoints.forEach((point, index) => {
-    const [x, y] = project(point);
-    const labelWidth = Math.min(ctx.measureText(point.name).width, width - 14);
-    ctx.fillText(point.name, Math.min(Math.max(7, x - labelWidth / 2), width - labelWidth - 7),
-      index ? y + 20 : y - 12, width - 14);
-  });
-}
-
 async function refreshLive() {
+  const requestId = ++liveRequest;
   try {
     const result = await request("/api/vehicles");
-    if (liveTimer === null) return;
-    livePositions = result.positions;
+    if (liveTimer === null || requestId !== liveRequest) return;
+    routeMap.setLive(result.positions);
     byId("live-status").textContent = result.status === "live"
       ? "Live positions as of " + clock(result.timestamp * 1000) + " IST"
       : "Live positions currently unavailable";
   } catch {
-    if (liveTimer === null) return;
-    livePositions = [];
+    if (liveTimer === null || requestId !== liveRequest) return;
+    routeMap.setLive([]);
     byId("live-status").textContent = "Live positions currently unavailable";
   }
-  draw();
 }
 
 byId("live").addEventListener("click", () => {
   if (liveTimer !== null) {
     clearInterval(liveTimer);
     liveTimer = null;
-    livePositions = [];
+    routeMap.setLive([]);
     byId("live").textContent = "Show live buses";
     byId("live-status").textContent = "Stop-to-stop schematic";
-    draw();
     return;
   }
   liveTimer = setInterval(refreshLive, 30000);
@@ -285,7 +229,6 @@ byId("extra").addEventListener("input", () => {
   byId("extra-value").value = byId("extra").value + " min";
 });
 form.addEventListener("submit", plan);
-new ResizeObserver(draw).observe(byId("map").parentElement);
 
 async function initialize() {
   try {
