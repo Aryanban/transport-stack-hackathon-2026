@@ -128,6 +128,21 @@ function bindStop(id) {
 const chooseOrigin = bindStop("origin");
 const chooseDestination = bindStop("destination");
 
+window.setPlannerStop = async (fieldId, stopName) => {
+  try {
+    const hits = await request("/api/stops", { q: stopName });
+    if (hits && hits.length) {
+      if (fieldId === "origin") chooseOrigin(hits[0]);
+      else chooseDestination(hits[0]);
+      if (stopIds.origin && stopIds.destination) {
+        await plan();
+      }
+    }
+  } catch (e) {
+    console.warn("Could not set stop from popup:", e);
+  }
+};
+
 // 3. Crowding Status Pill Generator (Google Maps Style)
 function makeCrowdBadge(level) {
   const container = document.createElement("span");
@@ -214,6 +229,13 @@ function journeyCard(option, isFirst = false) {
     badge.innerHTML = `${svgIcon}<span>${leg.route}</span>`;
     badgeRow.appendChild(badge);
   });
+
+  // Estimated Transit Fare Pill (DTC & DMRC Tariff Ground Truth)
+  const isMulti = (option.transfers || 0) > 0;
+  const farePill = document.createElement("span");
+  farePill.className = "fare-pill";
+  farePill.textContent = isMulti ? "₹25 Fare" : "₹15 AC";
+  badgeRow.appendChild(farePill);
 
   top.appendChild(badgeRow);
   top.appendChild(makeCrowdBadge(option.crowd?.level));

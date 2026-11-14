@@ -55,6 +55,7 @@ def get_metro_network_geojson() -> Dict[str, Any]:
     rows = list(sheet.iter_rows(values_only=True))
 
     stations_by_code: Dict[str, Dict[str, Any]] = {}
+    stations_by_name: Dict[str, List[Dict[str, Any]]] = {}
     stations_by_line: Dict[str, List[Dict[str, Any]]] = {}
 
     for row in rows[1:]:
@@ -69,38 +70,50 @@ def get_metro_network_geojson() -> Dict[str, Any]:
         if not lat or not lon or not st_code or not line_code:
             continue
 
-        if st_code not in stations_by_code:
-            st_data = {
-                "code": st_code,
-                "name": name,
-                "line": line_code,
-                "type": st_type,
-                "interchange": interchange,
-                "lat": lat,
-                "lon": lon,
-            }
-            stations_by_code[st_code] = st_data
-            stations_by_line.setdefault(line_code, []).append(st_data)
+        st_data = {
+            "code": st_code,
+            "name": name,
+            "line": line_code,
+            "type": st_type,
+            "interchange": interchange,
+            "lat": lat,
+            "lon": lon,
+        }
+        stations_by_code[st_code] = st_data
+        stations_by_name.setdefault(name, []).append(st_data)
+        stations_by_line.setdefault(line_code, []).append(st_data)
 
     features: List[Dict[str, Any]] = []
 
-    # 1. Add Station Point Features
-    for st in stations_by_code.values():
-        line_info = LINE_METADATA.get(st["line"], {"name": f"Line {st['line']}", "color": "#2563EB"})
+    # 1. Add Station Point Features (Grouped by station name for interchanges)
+    for st_name, gate_list in stations_by_name.items():
+        base_st = gate_list[0]
+        line_names = sorted(set(
+            LINE_METADATA.get(g["line"], {}).get("name", f"Line {g['line']}")
+            for g in gate_list
+        ))
+        is_interchange = len(line_names) > 1 or any(g["interchange"] for g in gate_list)
+        prime_line = LINE_METADATA.get(base_st["line"], {"name": f"Line {base_st['line']}", "color": "#2563EB"})
+
         features.append({
             "type": "Feature",
             "properties": {
                 "type": "station",
-                "name": st["name"],
-                "code": st["code"],
-                "line": line_info["name"],
-                "color": line_info["color"],
-                "interchange": st["interchange"],
-                "station_type": st["type"]
+                "name": st_name,
+                "code": base_st["code"],
+                "line": prime_line["name"],
+                "color": prime_line["color"],
+                "lines": line_names,
+                "lines_str": " · ".join(line_names),
+                "interchange": is_interchange,
+                "station_type": base_st["type"],
+                "gate_count": len(gate_list),
+                "first_train": "05:30 AM",
+                "last_train": "11:15 PM"
             },
             "geometry": {
                 "type": "Point",
-                "coordinates": [st["lon"], st["lat"]]
+                "coordinates": [base_st["lon"], base_st["lat"]]
             }
         })
 

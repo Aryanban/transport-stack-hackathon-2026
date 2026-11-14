@@ -324,6 +324,104 @@ class TransitMapEngine {
       </svg>
     `;
     this.endMarker = new maplibregl.Marker({ element: endEl, anchor: "bottom" });
+
+    // 6. Interactive Click Inspector Popups (Mini Tokyo 3D / Google Maps Standard)
+    map.on("click", "metro-stations-halo", (e) => {
+      if (!e.features || !e.features.length) return;
+      const props = e.features[0].properties;
+      const coords = e.features[0].geometry.coordinates.slice();
+
+      const interchangeBadge = props.interchange === "true" || props.interchange === true
+        ? `<span class="popup-badge interchange">Interchange</span>`
+        : "";
+
+      const rawLines = typeof props.lines_str === "string" ? props.lines_str : props.line || "Metro";
+      const linesHtml = rawLines
+        .split("·")
+        .map((l) => `<span class="popup-line-chip">${l.trim()}</span>`)
+        .join(" ");
+
+      const html = `
+        <div class="transit-popup-card">
+          <div class="popup-header">
+            <strong>${props.name}</strong>
+            ${interchangeBadge}
+          </div>
+          <div class="popup-lines">${linesHtml}</div>
+          <div class="popup-meta">
+            <div>Structure: <span>${props.station_type || "Elevated"} · ${props.gate_count || 1} Gates</span></div>
+            <div>Timings: <span>${props.first_train || "05:30 AM"} – ${props.last_train || "11:15 PM"}</span></div>
+          </div>
+          <div class="popup-actions">
+            <button class="popup-btn" onclick="window.setPlannerStop('origin', '${props.name.replace(/'/g, "\\'")}')">Directions from</button>
+            <button class="popup-btn primary" onclick="window.setPlannerStop('destination', '${props.name.replace(/'/g, "\\'")}')">Directions to</button>
+          </div>
+        </div>
+      `;
+
+      new maplibregl.Popup({ offset: 12, closeButton: true, className: "gmaps-station-popup" })
+        .setLngLat(coords)
+        .setHTML(html)
+        .addTo(this.map);
+    });
+
+    map.on("click", "live-fleet-layer", (e) => {
+      if (!e.features || !e.features.length) return;
+      const props = e.features[0].properties;
+      const coords = e.features[0].geometry.coordinates.slice();
+
+      const html = `
+        <div class="transit-popup-card">
+          <div class="popup-header">
+            <span class="route-badge bus">Bus ${props.route || "DTC"}</span>
+            <span class="popup-badge live">Live GPS</span>
+          </div>
+          <div class="popup-title"><strong>Vehicle ${props.vehicle_id}</strong></div>
+          <div class="popup-meta">
+            <div>Live Speed: <strong>${props.speed || 0} km/h</strong></div>
+            <div>Source: <span>Delhi Transport Stack (DTS)</span></div>
+          </div>
+        </div>
+      `;
+
+      new maplibregl.Popup({ offset: 10, closeButton: true })
+        .setLngLat(coords)
+        .setHTML(html)
+        .addTo(this.map);
+    });
+
+    map.on("click", "metro-trains-body", (e) => {
+      if (!e.features || !e.features.length) return;
+      const props = e.features[0].properties;
+      const coords = e.features[0].geometry.coordinates.slice();
+
+      const html = `
+        <div class="transit-popup-card">
+          <div class="popup-header">
+            <span class="route-badge metro" style="background:${props.color}22; color:${props.color}; border:1px solid ${props.color}">
+              ${props.line || "Metro"}
+            </span>
+            <span class="popup-badge live">Headway Timed</span>
+          </div>
+          <div class="popup-title"><strong>Train ${props.train_id || "DMRC"}</strong></div>
+          <div class="popup-meta">
+            <div>Headway: <strong>Every 2.5 min</strong> (Peak 24 trains/hr)</div>
+            <div>Capacity: <strong>2,400 passengers</strong> (8-Coach)</div>
+          </div>
+        </div>
+      `;
+
+      new maplibregl.Popup({ offset: 10, closeButton: true })
+        .setLngLat(coords)
+        .setHTML(html)
+        .addTo(this.map);
+    });
+
+    // Pointer cursor on clickable transit features
+    ["metro-stations-halo", "live-fleet-layer", "metro-trains-body"].forEach((layerId) => {
+      map.on("mouseenter", layerId, () => { map.getCanvas().style.cursor = "pointer"; });
+      map.on("mouseleave", layerId, () => { map.getCanvas().style.cursor = ""; });
+    });
   }
 
   setJourney(journey) {
