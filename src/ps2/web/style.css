@@ -208,8 +208,68 @@ body {
 }
 
 .field-divider {
+  position: relative;
   height: 1px;
   background: #e0e0e0;
+  margin: 2px 0;
+}
+
+.btn-swap {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--g-border);
+  background: #ffffff;
+  color: var(--g-subtext);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  z-index: 5;
+  transition: transform 200ms ease, background-color 140ms ease, color 140ms ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btn-swap:hover {
+  background: var(--g-blue-surface);
+  color: var(--g-blue);
+  border-color: var(--g-blue);
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* Quick Departure Time Shortcuts */
+.time-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.time-chip {
+  border: 1px solid var(--g-border);
+  background: #ffffff;
+  color: var(--g-subtext);
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.time-chip:hover {
+  background: #f1f3f4;
+  color: var(--g-text);
+}
+
+.time-chip.active-time {
+  background: var(--g-blue-surface);
+  color: var(--g-blue);
+  border-color: var(--g-blue);
+  font-weight: 600;
 }
 
 /* Search Suggestions Dropdown */
@@ -588,7 +648,32 @@ th {
   height: 100%;
 }
 
-/* Floating Turn-by-Turn Navigation Banner (Google Maps Navigation Style) */
+/* Reference 3: Horizon Atmospheric Gradient */
+.map-viewport {
+  position: relative;
+  flex: 1;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.map-viewport::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 130px;
+  background: linear-gradient(to bottom, rgba(160, 205, 240, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 300ms ease;
+}
+
+body.theme-night .map-viewport::before {
+  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0) 100%);
+}
+
+/* Floating Turn-by-Turn Navigation Header (Google Maps Navigation Style - Ref 2) */
 .hud-nav-banner {
   position: absolute;
   top: 16px;
@@ -596,34 +681,276 @@ th {
   z-index: 10;
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: var(--g-nav-green);
+  justify-content: space-between;
+  gap: 16px;
+  background: #0f9d58;
   color: #ffffff;
-  padding: 8px 18px 8px 10px;
-  border-radius: 28px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-  pointer-events: none;
+  padding: 10px 14px;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.28);
+  pointer-events: auto;
+  max-width: 380px;
+  min-width: 260px;
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease;
 }
 
-.hud-arrow-circle {
+.hud-nav-banner[hidden] {
+  display: none !important;
+}
+
+.hud-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hud-maneuver-box {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  flex-shrink: 0;
 }
 
 .hud-nav-content strong {
   display: block;
-  font-size: 0.88rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.25;
+  letter-spacing: -0.2px;
 }
 
 .hud-nav-content span {
+  display: block;
+  font-size: 0.76rem;
+  opacity: 0.92;
+  margin-top: 2px;
+}
+
+.hud-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hud-icon-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  padding: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background-color 140ms ease;
+}
+
+.hud-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Floating Re-center Pill Button (Ref 2 bottom-left) */
+.floating-recenter-btn {
+  position: absolute;
+  bottom: 28px;
+  left: 20px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  color: var(--g-blue);
+  border: 1px solid var(--g-border);
+  padding: 10px 16px;
+  border-radius: 24px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.16);
+  cursor: pointer;
+  transition: all 160ms ease;
+  pointer-events: auto;
+}
+
+.floating-recenter-btn:hover {
+  background: var(--g-blue-surface);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.floating-recenter-btn[hidden] {
+  display: none !important;
+}
+
+/* Google Maps Bottom Trip Summary Card (Ref 2) */
+.hud-bottom-eta {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #ffffff;
+  color: var(--g-text);
+  padding: 10px 18px;
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--g-border);
+  pointer-events: auto;
+  transition: all 250ms ease;
+}
+
+.hud-bottom-eta[hidden] {
+  display: none !important;
+}
+
+.eta-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.eta-large {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #137333;
+  line-height: 1.0;
+  letter-spacing: -0.5px;
+}
+
+.eta-large .eta-unit {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 2px;
+}
+
+.eta-sub {
   font-size: 0.74rem;
-  opacity: 0.9;
+  color: var(--g-subtext);
+  margin-top: 4px;
+}
+
+.eta-center {
+  display: flex;
+  align-items: center;
+}
+
+.hud-crowd-chip {
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hud-crowd-chip.crowd-low {
+  background: #e6f4ea;
+  color: #137333;
+}
+
+.hud-crowd-chip.crowd-med {
+  background: #fef7e0;
+  color: #b06000;
+}
+
+.hud-crowd-chip.crowd-high {
+  background: #fce8e6;
+  color: #c5221f;
+}
+
+.btn-eta-close {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--g-subtext);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+}
+
+.btn-eta-close:hover {
+  background: #f1f3f4;
+  color: var(--g-text);
+}
+
+/* Reference 1: Orange Teardrop Destination Pin with Travel Time */
+.dest-eta-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
+  transform: translate(-50%, -100%);
+  transition: transform 180ms ease;
+  pointer-events: auto;
+}
+
+.dest-eta-pin:hover {
+  transform: translate(-50%, -105%) scale(1.08);
+}
+
+.dest-pin-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF5722 0%, #E64A19 100%);
+  border: 2.5px solid #FFFFFF;
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.dest-pin-time {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.5px;
+}
+
+.dest-pin-unit {
+  font-size: 8.5px;
+  font-weight: 700;
+  line-height: 1.0;
+  letter-spacing: 0.5px;
+  margin-top: 1px;
+}
+
+.dest-pin-tail {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #E64A19;
+  margin-top: -1px;
+}
+
+.dest-pin-anchor {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #202124;
+  margin-top: 1px;
+}
+
+body.theme-night .hud-bottom-eta,
+body.theme-night .floating-recenter-btn {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+body.theme-night .eta-large {
+  color: #4ade80;
 }
 
 /* Floating Map Controls Dock (Google Maps Bottom-Right Style) */
@@ -869,4 +1196,118 @@ th {
   background: #e6f4ea;
   padding: 2px 6px;
   border-radius: 4px;
+}
+
+/* Step Timeline in Route Details */
+.timeline-track {
+  position: relative;
+  padding-left: 22px;
+  margin: 10px 0 6px 4px;
+}
+
+.timeline-track::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background: var(--g-blue);
+  border-radius: 2px;
+}
+
+.timeline-step {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.timeline-node {
+  position: absolute;
+  left: -22px;
+  top: 4px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 2px solid var(--g-blue);
+  background: #ffffff;
+}
+
+.timeline-node.origin {
+  background: var(--g-blue);
+}
+
+.timeline-node.dest {
+  background: #ea4335;
+  border-color: #ea4335;
+}
+
+.timeline-content {
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.timeline-stop-name {
+  font-weight: 600;
+  color: var(--g-text);
+}
+
+.timeline-stop-time {
+  font-size: 0.72rem;
+  color: var(--g-subtext);
+}
+
+.timeline-occupancy-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: var(--g-subtext);
+}
+
+/* Night / Dark Theme for High-Contrast Digital Twin */
+body.theme-night {
+  --g-surface: #1e293b;
+  --g-bg: #0f172a;
+  --g-border: #334155;
+  --g-divider: #334155;
+  --g-text: #f8fafc;
+  --g-subtext: #94a3b8;
+  --g-blue-surface: #1e3a8a;
+}
+
+body.theme-night .search-box,
+body.theme-night .inputs-container,
+body.theme-night .transit-card,
+body.theme-night .suggestions,
+body.theme-night .maplibregl-popup-content,
+body.theme-night .control-group {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+body.theme-night .transit-card:hover {
+  background: #253349;
+}
+
+body.theme-night .transit-card.selected {
+  background: #1e2e4a;
+}
+
+body.theme-night .chip,
+body.theme-night .time-chip,
+body.theme-night .popup-btn {
+  background: #334155;
+  color: #f8fafc;
+  border-color: #475569;
+}
+
+body.theme-night .time-chip.active-time,
+body.theme-night .chip.active-chip {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+body.theme-night #map-container canvas {
+  filter: invert(88%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }

@@ -46,13 +46,27 @@
                 <div id="origin-results" class="suggestions" role="listbox" hidden></div>
               </div>
 
-              <div class="field-divider"></div>
+              <div class="field-divider">
+                <button type="button" id="btn-swap-stops" class="btn-swap" title="Reverse origin and destination">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                    <path d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/>
+                  </svg>
+                </button>
+              </div>
 
               <div class="stop-field destination-field">
                 <input id="destination" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="destination-results" placeholder="Choose destination" autocomplete="off" required>
                 <div id="destination-results" class="suggestions" role="listbox" hidden></div>
               </div>
             </div>
+          </div>
+
+          <!-- Quick Departure Time Shortcuts -->
+          <div class="time-presets" aria-label="Quick departure presets">
+            <button type="button" class="time-chip" data-time="now">Live Now</button>
+            <button type="button" class="time-chip" data-time="08:30">08:30 AM Peak</button>
+            <button type="button" class="time-chip active-time" data-time="18:00">06:00 PM Peak</button>
+            <button type="button" class="time-chip" data-time="22:00">10:00 PM Night</button>
           </div>
 
           <div class="trip-filters">
@@ -131,16 +145,47 @@
     <main class="map-viewport" id="map-viewport">
       <div id="map-container" class="map-canvas"></div>
 
-      <!-- Google Maps Style Floating Navigation Banner -->
+      <!-- Google Maps Style Turn-by-Turn Navigation Header (Ref 2) -->
       <div id="hud-nav-banner" class="hud-nav-banner" hidden>
-        <div class="hud-arrow-circle">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-          </svg>
+        <div class="hud-nav-left">
+          <div class="hud-maneuver-box">
+            <svg id="hud-maneuver-icon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+              <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+            </svg>
+          </div>
+          <div class="hud-nav-content">
+            <strong id="hud-next-stop">Golcha Cinema</strong>
+            <span id="hud-subtext">Toward Kashmere Gate · In 400m</span>
+          </div>
         </div>
-        <div class="hud-nav-content">
-          <strong id="hud-next-stop">Next: Subhash Park</strong>
-          <span id="hud-subtext">Bus 502 · In 4 min</span>
+        <div class="hud-nav-actions">
+          <button type="button" id="hud-sound-toggle" class="hud-icon-btn" title="Audio guidance">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Floating Re-center Pill Button (Ref 2 bottom-left) -->
+      <button type="button" id="btn-recenter" class="floating-recenter-btn" title="Re-center camera on vehicle" hidden>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/>
+        </svg>
+        <span>Re-center</span>
+      </button>
+
+      <!-- Google Maps Bottom Trip Summary Card (Ref 2) -->
+      <div id="hud-bottom-eta" class="hud-bottom-eta" hidden>
+        <div class="eta-left">
+          <div class="eta-large"><span id="hud-eta-min">11</span> <span class="eta-unit">min</span></div>
+          <div class="eta-sub"><span id="hud-eta-dist">3.8 km</span> · <span id="hud-eta-arrival">18:11</span></div>
+        </div>
+        <div class="eta-center">
+          <span id="hud-eta-crowd" class="hud-crowd-chip crowd-low">● Normal load</span>
+        </div>
+        <div class="eta-right">
+          <button type="button" id="btn-cancel-route" class="btn-eta-close" title="Clear route view">✕</button>
         </div>
       </div>
 
@@ -155,6 +200,9 @@
           </button>
           <button type="button" id="btn-toggle-live-fleet" class="btn-ctrl" title="Stream 3,600+ Real Live Buses Across Delhi">
             Live Fleet
+          </button>
+          <button type="button" id="btn-toggle-theme" class="btn-ctrl" title="Toggle Light / Dark Theme">
+            Theme
           </button>
         </div>
 

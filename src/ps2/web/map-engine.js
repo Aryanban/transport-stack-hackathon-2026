@@ -300,9 +300,10 @@ class TransitMapEngine {
     const el = document.createElement("div");
     el.className = "transit-vehicle-marker";
     el.innerHTML = `
+      <div class="vehicle-headlights"></div>
       <div class="vehicle-pulse"></div>
       <div class="vehicle-body">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
           <path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/>
         </svg>
       </div>
@@ -315,13 +316,16 @@ class TransitMapEngine {
     startEl.className = "gmaps-origin-marker";
     this.startMarker = new maplibregl.Marker({ element: startEl, anchor: "center" });
 
-    // Destination Marker (Google Red Pin)
+    // Destination Marker (Reference 1: Orange Teardrop with Travel Time)
     const endEl = document.createElement("div");
-    endEl.className = "gmaps-dest-marker";
+    endEl.className = "dest-eta-pin";
     endEl.innerHTML = `
-      <svg viewBox="0 0 24 34" width="24" height="34">
-        <path d="M12 0C5.37 0 0 5.37 0 12c0 9 12 22 12 22s12-13 12-22c0-6.63-5.37-12-12-12zm0 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" fill="#EA4335"/>
-      </svg>
+      <div class="dest-pin-badge">
+        <span class="dest-pin-time" id="dest-pin-time">--</span>
+        <span class="dest-pin-unit">MIN</span>
+      </div>
+      <div class="dest-pin-tail"></div>
+      <div class="dest-pin-anchor"></div>
     `;
     this.endMarker = new maplibregl.Marker({ element: endEl, anchor: "bottom" });
 
@@ -493,6 +497,39 @@ class TransitMapEngine {
     this.startMarker.setLngLat(startCoord).addTo(this.map);
     this.endMarker.setLngLat(endCoord).addTo(this.map);
 
+    const pinTime = this.endMarker.getElement().querySelector("#dest-pin-time");
+    if (pinTime) {
+      pinTime.textContent = Math.round(journey.minutes || 10);
+    }
+
+    // Show HUD Navigation and Bottom ETA Bar
+    const navBanner = document.getElementById("hud-nav-banner");
+    if (navBanner) navBanner.hidden = false;
+
+    const bottomEta = document.getElementById("hud-bottom-eta");
+    if (bottomEta) {
+      bottomEta.hidden = false;
+      const etaMin = document.getElementById("hud-eta-min");
+      const etaDist = document.getElementById("hud-eta-dist");
+      const etaArr = document.getElementById("hud-eta-arrival");
+      const etaCrowd = document.getElementById("hud-eta-crowd");
+      if (etaMin) etaMin.textContent = Math.round(journey.minutes || 10);
+      if (etaDist) etaDist.textContent = `${(journey.minutes * 0.35).toFixed(1)} km`;
+      if (etaArr) {
+        const arrDate = new Date(journey.arrival);
+        etaArr.textContent = isNaN(arrDate) ? "--:--" : arrDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
+      }
+      if (etaCrowd) {
+        const firstLeg = journey.legs?.[0];
+        const lvl = firstLeg?.crowd?.level || "Normal load";
+        etaCrowd.className = "hud-crowd-chip " + (lvl.includes("Standing") ? "crowd-high" : lvl.includes("Crowded") ? "crowd-med" : "crowd-low");
+        etaCrowd.textContent = `● ${lvl}`;
+      }
+    }
+
+    const btnRecenter = document.getElementById("btn-recenter");
+    if (btnRecenter) btnRecenter.hidden = false;
+
     // Frame the journey with smooth easing
     const bounds = this.routeCoords.reduce(
       (b, coord) => b.extend(coord),
@@ -527,6 +564,13 @@ class TransitMapEngine {
     this.startMarker?.remove();
     this.endMarker?.remove();
     this.vehicleMarker?.remove();
+
+    const navBanner = document.getElementById("hud-nav-banner");
+    if (navBanner) navBanner.hidden = true;
+    const bottomEta = document.getElementById("hud-bottom-eta");
+    if (bottomEta) bottomEta.hidden = true;
+    const btnRecenter = document.getElementById("btn-recenter");
+    if (btnRecenter) btnRecenter.hidden = true;
   }
 
   _startVehicleAnimation() {
@@ -596,13 +640,18 @@ class TransitMapEngine {
       }
       if (hudSub && this.currentJourney) {
         const firstLeg = this.currentJourney.legs[0];
+        const remainingMin = Math.max(1, Math.round((1 - this.animProgress) * this.currentJourney.minutes));
         if (this.matchedLiveVehicle) {
           const lv = this.matchedLiveVehicle;
           hudSub.textContent = "Live GPS: " + lv.vehicle_id + " · " + lv.speed_kmh + " km/h · " + Math.round(lv.age_seconds) + "s ago";
         } else {
-          const remainingMin = Math.max(1, Math.round((1 - this.animProgress) * this.currentJourney.minutes));
           hudSub.textContent = "Bus " + (firstLeg?.route || "502") + " · " + remainingMin + " min remaining (Timetable run)";
         }
+
+        const hudMin = document.getElementById("hud-eta-min");
+        const hudDist = document.getElementById("hud-eta-dist");
+        if (hudMin) hudMin.textContent = remainingMin;
+        if (hudDist) hudDist.textContent = `${Math.max(0.2, (remainingMin * 0.35)).toFixed(1)} km`;
       }
 
       // Smooth camera follow in Follow Mode
@@ -610,8 +659,8 @@ class TransitMapEngine {
         this.map.easeTo({
           center: [currentLon, currentLat],
           bearing: bearing,
-          pitch: 58,
-          zoom: 16.2,
+          pitch: 62,
+          zoom: 16.5,
           duration: 200,
         });
       }
@@ -758,5 +807,28 @@ class TransitMapEngine {
   toggleFollow() {
     this.followMode = !this.followMode;
     return this.followMode;
+  }
+
+  recenter() {
+    this.followMode = true;
+    const btnFollow = document.getElementById("btn-follow-vehicle");
+    if (btnFollow) btnFollow.classList.add("active");
+    if (this.vehicleMarker) {
+      const pos = this.vehicleMarker.getLngLat();
+      this.map.flyTo({
+        center: [pos.lng, pos.lat],
+        pitch: 62,
+        zoom: 16.5,
+        duration: 800
+      });
+    }
+  }
+
+  clearJourney() {
+    this._clearRoute();
+  }
+
+  setTheme(theme) {
+    this.currentTheme = theme;
   }
 }

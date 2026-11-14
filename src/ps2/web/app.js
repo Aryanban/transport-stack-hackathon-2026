@@ -264,33 +264,55 @@ function journeyCard(option, isFirst = false) {
   details.appendChild(summary);
 
   const legsContainer = document.createElement("div");
-  legsContainer.style.paddingTop = "8px";
+  legsContainer.style.paddingTop = "4px";
 
-  option.legs.forEach((leg) => {
-    const legRow = document.createElement("div");
-    legRow.style.marginBottom = "6px";
-    legRow.style.lineHeight = "1.4";
+  option.legs.forEach((leg, legIdx) => {
+    const isLastLeg = legIdx === option.legs.length - 1;
+    const track = document.createElement("div");
+    track.className = "timeline-track";
 
-    const legTitle = document.createElement("div");
-    legTitle.style.fontWeight = "600";
-    legTitle.style.color = "var(--g-text)";
-    legTitle.textContent = leg.route + " · " + Math.round(leg.rideMinutes) + " min";
+    // Boarding Stop Node
+    const startStep = document.createElement("div");
+    startStep.className = "timeline-step";
+    startStep.innerHTML = `
+      <div class="timeline-node origin"></div>
+      <div class="timeline-content">
+        <div class="timeline-stop-name">${leg.from.name}</div>
+        <div class="timeline-stop-time">Depart ${clock(leg.departure)} · Board ${leg.route}</div>
+      </div>
+    `;
+    track.appendChild(startStep);
 
-    const legPath = document.createElement("div");
-    legPath.textContent = clock(leg.departure) + " " + leg.from.name + " → " + clock(leg.arrival) + " " + leg.to.name;
-
-    legRow.appendChild(legTitle);
-    legRow.appendChild(legPath);
-
-    if (leg.crowd?.modeledPassengers) {
-      const stats = document.createElement("div");
-      stats.style.fontSize = "0.72rem";
-      stats.style.color = "var(--g-subtext)";
-      stats.textContent = "Modeled occupancy: ~" + Math.round(leg.crowd.modeledPassengers) + " passengers (" + leg.crowd.days + " day sample)";
-      legRow.appendChild(stats);
+    // Intermediate Stretch Note with Crowding
+    const pointsCount = (leg.points || []).length;
+    if (pointsCount > 2) {
+      const midStep = document.createElement("div");
+      midStep.className = "timeline-step";
+      midStep.style.margin = "6px 0";
+      const modeledInfo = leg.crowd?.modeledPassengers
+        ? ` · ~${Math.round(leg.crowd.modeledPassengers)} passengers (${leg.crowd.level})`
+        : "";
+      midStep.innerHTML = `
+        <div class="timeline-content" style="color:var(--g-subtext); font-size:0.72rem;">
+          Ride ${pointsCount - 1} stops (${Math.round(leg.rideMinutes)} min)${modeledInfo}
+        </div>
+      `;
+      track.appendChild(midStep);
     }
 
-    legsContainer.appendChild(legRow);
+    // Alighting Stop Node
+    const endStep = document.createElement("div");
+    endStep.className = "timeline-step";
+    endStep.innerHTML = `
+      <div class="timeline-node ${isLastLeg ? 'dest' : ''}"></div>
+      <div class="timeline-content">
+        <div class="timeline-stop-name">${leg.to.name}</div>
+        <div class="timeline-stop-time">Arrive ${clock(leg.arrival)} ${isLastLeg ? '· Destination reached' : '· Transfer connection'}</div>
+      </div>
+    `;
+    track.appendChild(endStep);
+
+    legsContainer.appendChild(track);
   });
 
   details.appendChild(legsContainer);
@@ -375,7 +397,64 @@ if (extraInput) {
   });
 }
 
-// 7. Floating 3D and Follow Camera Controls
+// 7. Interactive Controls & Buttons
+const btnSwap = byId("btn-swap-stops");
+if (btnSwap) {
+  btnSwap.addEventListener("click", async () => {
+    const originInput = byId("origin");
+    const destInput = byId("destination");
+    if (!originInput || !destInput) return;
+
+    const tempName = originInput.value;
+    originInput.value = destInput.value;
+    destInput.value = tempName;
+
+    // Resolve matching stop IDs for the reverse direction
+    try {
+      const origHits = await request("/api/stops", { q: originInput.value });
+      const destHits = await request("/api/stops", { q: destInput.value });
+      if (origHits && origHits.length) stopIds.origin = origHits[0].id;
+      if (destHits && destHits.length) stopIds.destination = destHits[0].id;
+    } catch (e) {
+      console.warn("Could not resolve swapped stop IDs:", e);
+    }
+
+    if (stopIds.origin && stopIds.destination) {
+      await plan();
+    }
+  });
+}
+
+// Quick Departure Time Chips
+document.querySelectorAll(".time-chip").forEach((chip) => {
+  chip.addEventListener("click", async () => {
+    document.querySelectorAll(".time-chip").forEach((c) => c.classList.remove("active-time"));
+    chip.classList.add("active-time");
+    const tVal = chip.dataset.time;
+    const depInput = byId("departure");
+    if (!depInput) return;
+
+    // Preserve the valid scheduled GTFS date
+    let baseDate = "2026-11-11";
+    if (depInput.value && depInput.value.includes("T")) {
+      baseDate = depInput.value.split("T")[0];
+    }
+
+    if (tVal === "now") {
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, "0");
+      const min = String(now.getMinutes()).padStart(2, "0");
+      depInput.value = `${baseDate}T${hh}:${min}`;
+    } else {
+      depInput.value = `${baseDate}T${tVal}`;
+    }
+
+    if (stopIds.origin && stopIds.destination) {
+      await plan();
+    }
+  });
+});
+
 const btnToggle3D = byId("btn-toggle-3d");
 if (btnToggle3D) {
   btnToggle3D.addEventListener("click", () => {
@@ -403,6 +482,50 @@ if (btnLiveFleet) {
       const isVisible = await transitMap.toggleLiveFleet();
       btnLiveFleet.classList.toggle("active", isVisible);
     }
+  });
+}
+
+const btnTheme = byId("btn-toggle-theme");
+if (btnTheme) {
+  btnTheme.addEventListener("click", () => {
+    const isNight = document.body.classList.toggle("theme-night");
+    btnTheme.classList.toggle("active", isNight);
+    if (transitMap) {
+      transitMap.setTheme(isNight ? "night" : "day");
+    }
+  });
+}
+
+const btnRecenter = byId("btn-recenter");
+if (btnRecenter) {
+  btnRecenter.addEventListener("click", () => {
+    if (transitMap) {
+      transitMap.recenter();
+    }
+  });
+}
+
+const btnCancelRoute = byId("btn-cancel-route");
+if (btnCancelRoute) {
+  btnCancelRoute.addEventListener("click", () => {
+    if (transitMap) {
+      transitMap.clearJourney();
+    }
+    const allCards = byId("options")?.children || [];
+    for (const c of allCards) {
+      c.classList.remove("selected");
+      c.setAttribute("aria-pressed", "false");
+    }
+  });
+}
+
+const btnSound = byId("hud-sound-toggle");
+if (btnSound) {
+  let isMuted = false;
+  btnSound.addEventListener("click", () => {
+    isMuted = !isMuted;
+    btnSound.style.opacity = isMuted ? "0.5" : "1.0";
+    btnSound.title = isMuted ? "Sound muted" : "Audio guidance active";
   });
 }
 
