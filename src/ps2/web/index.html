@@ -74,19 +74,11 @@
           </button>
         </form>
 
-        <!-- Quick Corridor Shortcuts (Clean Minimal Pills) -->
+        <!-- Quick Corridor Shortcuts (Dynamically Loaded from GTFS & Benchmark Models) -->
         <div class="quick-corridors">
           <span class="quick-title">Quick corridors</span>
-          <div class="chip-container">
-            <button type="button" class="chip active-chip" data-from="2070" data-from-name="Delhi Gate" data-to="1025" data-to-name="Kashmere Gate City Bus Terminal">
-              Delhi Gate to Kashmere Gate
-            </button>
-            <button type="button" class="chip" data-from="1000" data-from-name="Mehrauli Terminal" data-to="1010" data-to-name="INA Colony / Dilli Haat">
-              Mehrauli to INA Colony
-            </button>
-            <button type="button" class="chip" data-from="1007" data-from-name="AIIMS Hospital" data-to="1017" data-to-name="Shivaji Stadium / Connaught Place">
-              AIIMS to Connaught Place
-            </button>
+          <div class="chip-container" id="corridor-chips">
+            <!-- Dynamically populated from /api/corridors -->
           </div>
         </div>
       </section>
@@ -161,12 +153,15 @@
           <button type="button" id="btn-follow-vehicle" class="btn-ctrl" title="Lock Follow Camera on Vehicle">
             Follow
           </button>
+          <button type="button" id="btn-toggle-live-fleet" class="btn-ctrl" title="Stream 3,600+ Real Live Buses Across Delhi">
+            Live Fleet
+          </button>
         </div>
 
         <div class="control-group legend-group">
-          <span class="legend-chip"><i class="legend-dot metro-yellow"></i> Yellow Line</span>
-          <span class="legend-chip"><i class="legend-dot metro-blue"></i> Blue Line</span>
-          <span class="legend-chip"><i class="legend-dot bus-route"></i> Bus Route</span>
+          <span class="legend-chip"><i class="legend-dot metro-yellow"></i> Metro Network</span>
+          <span class="legend-chip"><i class="legend-dot bus-route"></i> Active Route</span>
+          <span class="legend-chip" id="fleet-live-pill"><i class="legend-dot live-dot"></i> <span id="fleet-count-text">Live Fleet</span></span>
         </div>
       </div>
     </main>

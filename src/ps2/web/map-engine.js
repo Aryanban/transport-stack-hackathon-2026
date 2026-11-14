@@ -25,6 +25,9 @@ class TransitMapEngine {
     this.animProgress = 0;
     this.animId = null;
     this.vehicleMarker = null;
+    this.liveFleetVisible = false;
+    this.liveFleetTimer = null;
+    this.matchedLiveVehicle = null;
 
     this._initMap();
   }
@@ -108,10 +111,10 @@ class TransitMapEngine {
       }, labelLayerId);
     }
 
-    // 2. Delhi Metro (DMRC) Network Layers
+    // 2. Delhi Metro (DMRC) Network Layers (Dynamically loaded from backend)
     map.addSource("delhi-metro-source", {
       type: "geojson",
-      data: "delhi_metro.geojson"
+      data: "api/metro/network"
     });
 
     // Elevated Metro Track Glow / Casing
@@ -232,7 +235,27 @@ class TransitMapEngine {
       }
     });
 
-    // 4. Moving Vehicle Marker Element
+    // 4. Live Fleet Streaming Across Delhi (3,600+ real GTFS-RT vehicles)
+    map.addSource("live-fleet-source", {
+      type: "geojson",
+      data: { type: "FeatureCollection", features: [] }
+    });
+
+    map.addLayer({
+      id: "live-fleet-layer",
+      type: "circle",
+      source: "live-fleet-source",
+      layout: { visibility: "none" },
+      paint: {
+        "circle-radius": 4,
+        "circle-color": "#0F9D58",
+        "circle-stroke-width": 1.5,
+        "circle-stroke-color": "#FFFFFF",
+        "circle-opacity": 0.9
+      }
+    });
+
+    // 5. Moving Vehicle Marker Element (Active Trip)
     const el = document.createElement("div");
     el.className = "transit-vehicle-marker";
     el.innerHTML = `
@@ -269,9 +292,17 @@ class TransitMapEngine {
     }
 
     this.currentJourney = journey;
+    this.matchedLiveVehicle = null;
+
     if (!journey || !journey.legs || !journey.legs.length) {
       this._clearRoute();
       return;
+    }
+
+    const firstLeg = journey.legs[0];
+    const routeParam = firstLeg.routeId || firstLeg.route;
+    if (routeParam) {
+      this._checkLiveVehicle(routeParam);
     }
 
     const allPoints = journey.legs.flatMap((l) => l.points || [l.from, l.to]);
@@ -425,8 +456,14 @@ class TransitMapEngine {
         hudNext.textContent = "Next: " + nextStop.name;
       }
       if (hudSub && this.currentJourney) {
-        const remainingMin = Math.max(1, Math.round((1 - this.animProgress) * this.currentJourney.minutes));
-        hudSub.textContent = "Bus " + (this.currentJourney.legs[0]?.route || "502") + " · " + remainingMin + " min remaining";
+        const firstLeg = this.currentJourney.legs[0];
+        if (this.matchedLiveVehicle) {
+          const lv = this.matchedLiveVehicle;
+          hudSub.textContent = "Live GPS: " + lv.vehicle_id + " · " + lv.speed_kmh + " km/h · " + Math.round(lv.age_seconds) + "s ago";
+        } else {
+          const remainingMin = Math.max(1, Math.round((1 - this.animProgress) * this.currentJourney.minutes));
+          hudSub.textContent = "Bus " + (firstLeg?.route || "502") + " · " + remainingMin + " min remaining (Timetable run)";
+        }
       }
 
       // Smooth camera follow in Follow Mode
@@ -444,6 +481,72 @@ class TransitMapEngine {
     };
 
     this.animId = requestAnimationFrame(animate);
+  }
+
+  async _checkLiveVehicle(routeId) {
+    try {
+      const clean = String(routeId).replace(/[^a-zA-Z0-9]/g, "");
+      const res = await fetch("api/vehicles?route=" + encodeURIComponent(clean));
+      const data = await res.json();
+      if (data && data.positions && data.positions.length > 0) {
+        this.matchedLiveVehicle = data.positions[0];
+      } else {
+        this.matchedLiveVehicle = null;
+      }
+    } catch {
+      this.matchedLiveVehicle = null;
+    }
+  }
+
+  async toggleLiveFleet() {
+    this.liveFleetVisible = !this.liveFleetVisible;
+    const visibility = this.liveFleetVisible ? "visible" : "none";
+    if (this.map && this.map.getLayer("live-fleet-layer")) {
+      this.map.setLayoutProperty("live-fleet-layer", "visibility", visibility);
+    }
+    if (this.liveFleetVisible) {
+      await this.refreshLiveFleet();
+      if (!this.liveFleetTimer) {
+        this.liveFleetTimer = setInterval(() => this.refreshLiveFleet(), 20000);
+      }
+    } else {
+      if (this.liveFleetTimer) {
+        clearInterval(this.liveFleetTimer);
+        this.liveFleetTimer = null;
+      }
+    }
+    return this.liveFleetVisible;
+  }
+
+  async refreshLiveFleet() {
+    try {
+      const res = await fetch("api/vehicles");
+      const data = await res.json();
+      if (data && data.positions && this.map && this.map.getSource("live-fleet-source")) {
+        const features = data.positions.map((p) => ({
+          type: "Feature",
+          properties: {
+            vehicle_id: p.vehicle_id,
+            speed: p.speed_kmh,
+            route: p.route_id
+          },
+          geometry: {
+            type: "Point",
+            coordinates: [p.lon, p.lat]
+          }
+        }));
+        this.map.getSource("live-fleet-source").setData({
+          type: "FeatureCollection",
+          features
+        });
+        const pillText = document.getElementById("fleet-count-text");
+        if (pillText && data.total_live_fleet) {
+          pillText.textContent = data.total_live_fleet.toLocaleString() + " Live Buses";
+        }
+      }
+    } catch (e) {
+      console.warn("Live fleet poll failed:", e);
+    }
   }
 
   toggle3D() {

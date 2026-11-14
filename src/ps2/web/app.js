@@ -374,26 +374,55 @@ if (btnFollowVehicle) {
   });
 }
 
-// 8. Quick Corridor Shortcuts
-document.querySelectorAll(".chip").forEach((chip) => {
-  chip.addEventListener("click", async () => {
-    document.querySelectorAll(".chip").forEach((c) => c.classList.remove("active-chip"));
-    chip.classList.add("active-chip");
-
-    const fromId = chip.dataset.from;
-    const fromName = chip.dataset.fromName;
-    const toId = chip.dataset.to;
-    const toName = chip.dataset.toName;
-
-    chooseOrigin({ id: fromId, name: fromName });
-    chooseDestination({ id: toId, name: toName });
-    await plan();
+const btnLiveFleet = byId("btn-toggle-live-fleet");
+if (btnLiveFleet) {
+  btnLiveFleet.addEventListener("click", async () => {
+    if (transitMap) {
+      const isVisible = await transitMap.toggleLiveFleet();
+      btnLiveFleet.classList.toggle("active", isVisible);
+    }
   });
-});
+}
+
+// 8. Dynamic Benchmark Corridor Shortcuts from Dataset
+async function loadCorridors() {
+  const container = byId("corridor-chips");
+  if (!container) return;
+  try {
+    const res = await request("/api/corridors");
+    if (!res.corridors || !res.corridors.length) return;
+    container.replaceChildren();
+
+    res.corridors.forEach((corr, index) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip" + (index === 0 ? " active-chip" : "");
+      chip.textContent = corr.label;
+      chip.dataset.from = corr.from.id;
+      chip.dataset.fromName = corr.from.name;
+      chip.dataset.to = corr.to.id;
+      chip.dataset.toName = corr.to.name;
+
+      chip.addEventListener("click", async () => {
+        container.querySelectorAll(".chip").forEach((c) => c.classList.remove("active-chip"));
+        chip.classList.add("active-chip");
+        chooseOrigin(corr.from);
+        chooseDestination(corr.to);
+        await plan();
+      });
+
+      container.appendChild(chip);
+    });
+  } catch (e) {
+    console.warn("Could not load dynamic corridors:", e);
+  }
+}
 
 // 9. Initial Configuration & Boot
 async function initialize() {
   try {
+    await loadCorridors();
+
     const config = await request("/api/config");
     const departureEl = byId("departure");
     if (departureEl && config.defaultTime) {

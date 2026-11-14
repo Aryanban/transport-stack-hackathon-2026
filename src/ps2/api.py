@@ -12,6 +12,7 @@ from fastapi.staticfiles import StaticFiles
 from .model import DEFAULT_PROFILES, ROOT, SegmentProfiles, tier
 from .ranking import recommend
 from .timetable import IST, load_feed, local_time
+from .metro_loader import get_metro_network_geojson
 
 app = FastAPI(title="Delhi Bus Planner · Transport Stack PS2", version="2.0")
 WEB = Path(__file__).with_name("web")
@@ -100,23 +101,99 @@ def live_client():
     return DelhiGTFSRealtimeClient(api_key=key, live_only=True)
 
 
+@app.get("/api/metro/network")
+def metro_network():
+    """Returns dynamically parsed DMRC Metro network GeoJSON with stations and lines."""
+    return get_metro_network_geojson()
+
+
+@app.get("/api/corridors")
+def corridors():
+    """Returns dynamic benchmark corridors extracted directly from the GTFS feed and ticket model."""
+    feed, profiles = state()
+    corridor_list = []
+    
+    candidate_routes = list(profiles.data.get("stops", {}).keys())
+    name_to_stop = {s["name"].lower(): s for s in feed.stops.values() if s["id"] in feed.departures}
+
+    for r in candidate_routes:
+        stops = profiles.data["stops"].get(r, [])
+        if len(stops) < 2:
+            continue
+        s_from_name = stops[0]
+        s_to_name = stops[-1]
+
+        from_matches = [s for name, s in name_to_stop.items() if s_from_name.lower() in name or name in s_from_name.lower()]
+        to_matches = [s for name, s in name_to_stop.items() if s_to_name.lower() in name or name in s_to_name.lower()]
+
+        if from_matches and to_matches:
+            from_stop = from_matches[0]
+            to_stop = to_matches[0]
+            corridor_list.append({
+                "route": r,
+                "label": f"{from_stop['name']} to {to_stop['name']}",
+                "from": {"id": from_stop["id"], "name": from_stop["name"]},
+                "to": {"id": to_stop["id"], "name": to_stop["name"]},
+                "stop_count": len(stops)
+            })
+
+    if not corridor_list:
+        corridor_list.append({
+            "route": "502DOWN",
+            "label": "Delhi Gate to Kashmere Gate",
+            "from": {"id": "2070", "name": "Delhi Gate"},
+            "to": {"id": "1025", "name": "Kashmere Gate City Bus Terminal"},
+            "stop_count": 9
+        })
+
+    return {"corridors": corridor_list}
+
+
 @app.get("/api/vehicles")
-def vehicles():
+def vehicles(route: str = Query("", description="Optional route filter e.g. '502' or '1995'")):
     if not (os.getenv("DTS_API_KEY") or os.getenv("DELHI_GTFS_RT_API_KEY")):
         return {"status": "disabled", "positions": []}
     try:
         records = live_client().fetch_vehicle_positions()
     except ImportError:
         return {"status": "unavailable", "positions": []}
+    
     now = datetime.now(IST).timestamp()
-    positions = [
-        {"lat": v["latitude"], "lon": v["longitude"], "timestamp": v["timestamp"]}
-        for v in records
-        if isinstance(v.get("timestamp"), (int, float)) and 0 <= now - v["timestamp"] <= 120
-        and v.get("source") == "live"
-    ]
-    return {"status": "live" if positions else "unavailable", "positions": positions,
-            "timestamp": max((v["timestamp"] for v in positions), default=None)}
+    clean_route = route.strip().upper().replace("BUS_", "")
+
+    positions = []
+    total_live = 0
+
+    for v in records:
+        ts = v.get("timestamp")
+        if not isinstance(ts, (int, float)) or not (0 <= now - ts <= 300) or v.get("source") != "live":
+            continue
+        
+        total_live += 1
+
+        v_route = str(v.get("route_id", "")).upper()
+        if clean_route:
+            if clean_route != v_route and clean_route not in v_route:
+                continue
+
+        positions.append({
+            "lat": v["latitude"],
+            "lon": v["longitude"],
+            "timestamp": ts,
+            "vehicle_id": v.get("vehicle_id", "Bus"),
+            "route_id": v.get("route_id", ""),
+            "speed_kmh": round(v.get("speed_kmh", 0.0), 1),
+            "bearing": v.get("bearing", 0.0),
+            "age_seconds": round(now - ts, 1)
+        })
+
+    return {
+        "status": "live" if total_live > 0 else "unavailable",
+        "positions": positions,
+        "count": len(positions),
+        "total_live_fleet": total_live,
+        "timestamp": max((p["timestamp"] for p in positions), default=None)
+    }
 
 
 app.mount("/", StaticFiles(directory=WEB, html=True), name="ps2-ui")

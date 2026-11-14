@@ -694,6 +694,7 @@ th {
 .legend-dot.metro-yellow { background: var(--metro-yellow); }
 .legend-dot.metro-blue { background: var(--metro-blue); }
 .legend-dot.bus-route { background: var(--g-blue); }
+.legend-dot.live-dot { background: #0f9d58; box-shadow: 0 0 6px rgba(15, 157, 88, 0.7); }
 
 /* Moving Vehicle Markers on Map */
 .transit-vehicle-marker {
