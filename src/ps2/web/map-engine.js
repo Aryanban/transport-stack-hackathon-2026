@@ -54,6 +54,7 @@ class TransitMapEngine {
     this.map.on("load", () => {
       this.isLoaded = true;
       this._setupLayers();
+      this._setupInteractions();
       if (this._pendingJourney) {
         this.setJourney(this._pendingJourney);
         this._pendingJourney = null;
@@ -71,9 +72,10 @@ class TransitMapEngine {
 
   _setupLayers() {
     const map = this.map;
+    const isNight = (this.currentTheme === "night");
 
     // 1. 3D Extruded Buildings (Real OpenStreetMap Building Heights across Delhi)
-    if (map.getSource("openmaptiles")) {
+    if (map.getSource("openmaptiles") && !map.getLayer("3d-buildings")) {
       const layers = map.getStyle().layers || [];
       let labelLayerId;
       for (const layer of layers) {
@@ -90,12 +92,19 @@ class TransitMapEngine {
         type: "fill-extrusion",
         minzoom: 12.5,
         paint: {
-          "fill-extrusion-color": [
-            "interpolate", ["linear"], ["get", "render_height"],
-            0, "#F2EFE9",
-            20, "#EAE5DC",
-            60, "#DDD6CA"
-          ],
+          "fill-extrusion-color": isNight
+            ? [
+                "interpolate", ["linear"], ["get", "render_height"],
+                0, "#131722",
+                20, "#1a2130",
+                60, "#252f44"
+              ]
+            : [
+                "interpolate", ["linear"], ["get", "render_height"],
+                0, "#F2EFE9",
+                20, "#EAE5DC",
+                60, "#DDD6CA"
+              ],
           "fill-extrusion-height": [
             "interpolate", ["linear"], ["zoom"],
             12.5, 0,
@@ -106,230 +115,308 @@ class TransitMapEngine {
             12.5, 0,
             14.5, ["get", "render_min_height"]
           ],
-          "fill-extrusion-opacity": 0.82
+          "fill-extrusion-opacity": isNight ? 0.92 : 0.82
         }
       }, labelLayerId);
     }
 
-    // 2. Delhi Metro (DMRC) Network Layers (Dynamically loaded from backend)
-    map.addSource("delhi-metro-source", {
-      type: "geojson",
-      data: "api/metro/network"
-    });
+    // 2. Delhi Metro (DMRC) Network Layers
+    if (!map.getSource("delhi-metro-source")) {
+      map.addSource("delhi-metro-source", {
+        type: "geojson",
+        data: "api/metro/network"
+      });
+    }
 
-    // Elevated Metro Track Glow / Casing
-    map.addLayer({
-      id: "metro-rail-glow",
-      type: "line",
-      source: "delhi-metro-source",
-      filter: ["==", ["get", "type"], "metro"],
-      paint: {
-        "line-color": ["get", "color"],
-        "line-width": 8,
-        "line-opacity": 0.35,
-        "line-blur": 3
-      }
-    });
+    if (!map.getLayer("metro-rail-glow")) {
+      map.addLayer({
+        id: "metro-rail-glow",
+        type: "line",
+        source: "delhi-metro-source",
+        filter: ["==", ["get", "type"], "metro"],
+        paint: {
+          "line-color": ["get", "color"],
+          "line-width": isNight ? 10 : 8,
+          "line-opacity": isNight ? 0.6 : 0.35,
+          "line-blur": isNight ? 5 : 3
+        }
+      });
+    }
 
-    // Elevated Metro Rail Viaduct Line
-    map.addLayer({
-      id: "metro-rail-line",
-      type: "line",
-      source: "delhi-metro-source",
-      filter: ["==", ["get", "type"], "metro"],
-      paint: {
-        "line-color": ["get", "color"],
-        "line-width": 4.5,
-        "line-opacity": 0.95
-      }
-    });
+    if (!map.getLayer("metro-rail-line")) {
+      map.addLayer({
+        id: "metro-rail-line",
+        type: "line",
+        source: "delhi-metro-source",
+        filter: ["==", ["get", "type"], "metro"],
+        paint: {
+          "line-color": ["get", "color"],
+          "line-width": 4.5,
+          "line-opacity": 0.95
+        }
+      });
+    }
 
-    // Metro Rail Track Ties Pattern
-    map.addLayer({
-      id: "metro-rail-ties",
-      type: "line",
-      source: "delhi-metro-source",
-      filter: ["==", ["get", "type"], "metro"],
-      paint: {
-        "line-color": "#FFFFFF",
-        "line-width": 2.5,
-        "line-dasharray": [1.5, 2.5],
-        "line-opacity": 0.8
-      }
-    });
+    if (!map.getLayer("metro-rail-ties")) {
+      map.addLayer({
+        id: "metro-rail-ties",
+        type: "line",
+        source: "delhi-metro-source",
+        filter: ["==", ["get", "type"], "metro"],
+        paint: {
+          "line-color": isNight ? "#E2E8F0" : "#FFFFFF",
+          "line-width": 2.5,
+          "line-dasharray": [1.5, 2.5],
+          "line-opacity": 0.8
+        }
+      });
+    }
 
-    // Metro Station Nodes
-    map.addLayer({
-      id: "metro-stations-halo",
-      type: "circle",
-      source: "delhi-metro-source",
-      filter: ["==", ["get", "type"], "station"],
-      paint: {
-        "circle-radius": ["case", ["get", "interchange"], 7.5, 5],
-        "circle-color": "#FFFFFF",
-        "circle-stroke-width": 2.5,
-        "circle-stroke-color": ["case", ["get", "interchange"], "#D97706", "#2563EB"]
-      }
-    });
+    if (!map.getLayer("metro-stations-halo")) {
+      map.addLayer({
+        id: "metro-stations-halo",
+        type: "circle",
+        source: "delhi-metro-source",
+        filter: ["==", ["get", "type"], "station"],
+        paint: {
+          "circle-radius": ["case", ["get", "interchange"], 7.5, 5],
+          "circle-color": isNight ? "#0F172A" : "#FFFFFF",
+          "circle-stroke-width": 2.5,
+          "circle-stroke-color": ["case", ["get", "interchange"], "#F59E0B", isNight ? "#38BDF8" : "#2563EB"]
+        }
+      });
+    }
 
-    // 2b. Moving Metro Train Markers (Dynamic Headway Simulation along DMRC Tracks)
-    map.addSource("metro-trains-source", {
-      type: "geojson",
-      data: { type: "FeatureCollection", features: [] }
-    });
+    // 2b. Moving Metro Train Markers (Dynamic Headway Simulation)
+    if (!map.getSource("metro-trains-source")) {
+      map.addSource("metro-trains-source", {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: [] }
+      });
+    }
 
-    map.addLayer({
-      id: "metro-trains-glow",
-      type: "circle",
-      source: "metro-trains-source",
-      paint: {
-        "circle-radius": 9,
-        "circle-color": ["get", "color"],
-        "circle-opacity": 0.4,
-        "circle-blur": 1
-      }
-    });
+    if (!map.getLayer("metro-trains-glow")) {
+      map.addLayer({
+        id: "metro-trains-glow",
+        type: "circle",
+        source: "metro-trains-source",
+        paint: {
+          "circle-radius": isNight ? 12 : 9,
+          "circle-color": ["get", "color"],
+          "circle-opacity": isNight ? 0.65 : 0.4,
+          "circle-blur": 2
+        }
+      });
+    }
 
-    map.addLayer({
-      id: "metro-trains-body",
-      type: "circle",
-      source: "metro-trains-source",
-      paint: {
-        "circle-radius": 5,
-        "circle-color": ["get", "color"],
-        "circle-stroke-width": 2,
-        "circle-stroke-color": "#FFFFFF"
-      }
-    });
+    if (!map.getLayer("metro-trains-body")) {
+      map.addLayer({
+        id: "metro-trains-body",
+        type: "circle",
+        source: "metro-trains-source",
+        paint: {
+          "circle-radius": 5,
+          "circle-color": ["get", "color"],
+          "circle-stroke-width": 2,
+          "circle-stroke-color": "#FFFFFF"
+        }
+      });
+    }
 
     // Fetch dynamic metro tracks for continuous train interpolation
-    fetch("api/metro/network")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data && data.features) {
-          this.metroLines = data.features.filter((f) => f.properties.type === "metro");
-          this._startMetroTrainLoop();
-        }
-      })
-      .catch((e) => console.warn("Could not load metro network for train loop:", e));
+    if (!this.metroLines) {
+      fetch("api/metro/network")
+        .then((r) => r.json())
+        .then((data) => {
+          if (data && data.features) {
+            this.metroLines = data.features.filter((f) => f.properties.type === "metro");
+            this._startMetroTrainLoop();
+          }
+        })
+        .catch((e) => console.warn("Could not load metro network for train loop:", e));
+    }
 
     // 3. Active Journey Route Polyline
-    map.addSource("active-route-source", {
-      type: "geojson",
-      data: { type: "FeatureCollection", features: [] }
-    });
+    if (!map.getSource("active-route-source")) {
+      map.addSource("active-route-source", {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: [] }
+      });
+    }
 
-    // Route Outer Casing
-    map.addLayer({
-      id: "route-casing",
-      type: "line",
-      source: "active-route-source",
-      layout: { "line-join": "round", "line-cap": "round" },
-      paint: {
-        "line-color": "#FFFFFF",
-        "line-width": 9,
-        "line-opacity": 0.95
-      }
-    });
+    if (!map.getLayer("route-glow")) {
+      map.addLayer({
+        id: "route-glow",
+        type: "line",
+        source: "active-route-source",
+        layout: { "line-join": "round", "line-cap": "round" },
+        paint: {
+          "line-color": ["coalesce", ["get", "crowdColor"], isNight ? "#00E5FF" : "#1A73E8"],
+          "line-width": isNight ? 14 : 10,
+          "line-opacity": isNight ? 0.45 : 0.25,
+          "line-blur": 6
+        }
+      });
+    }
 
-    // Route Primary Line with Dynamic Crowding Color
-    map.addLayer({
-      id: "route-core",
-      type: "line",
-      source: "active-route-source",
-      layout: { "line-join": "round", "line-cap": "round" },
-      paint: {
-        "line-color": ["coalesce", ["get", "crowdColor"], "#1A73E8"],
-        "line-width": 6,
-        "line-opacity": 1.0
-      }
-    });
+    if (!map.getLayer("route-casing")) {
+      map.addLayer({
+        id: "route-casing",
+        type: "line",
+        source: "active-route-source",
+        layout: { "line-join": "round", "line-cap": "round" },
+        paint: {
+          "line-color": isNight ? "#090A0F" : "#FFFFFF",
+          "line-width": 8.5,
+          "line-opacity": 0.95
+        }
+      });
+    }
 
-    // Route Directional Chevrons
-    map.addLayer({
-      id: "route-chevrons",
-      type: "line",
-      source: "active-route-source",
-      paint: {
-        "line-color": "#FFFFFF",
-        "line-width": 2.0,
-        "line-dasharray": [1.5, 2.5],
-        "line-opacity": 0.85
-      }
-    });
+    if (!map.getLayer("route-core")) {
+      map.addLayer({
+        id: "route-core",
+        type: "line",
+        source: "active-route-source",
+        layout: { "line-join": "round", "line-cap": "round" },
+        paint: {
+          "line-color": ["coalesce", ["get", "crowdColor"], isNight ? "#00D2FF" : "#1A73E8"],
+          "line-width": 6,
+          "line-opacity": 1.0
+        }
+      });
+    }
 
-    // Intermediate Stop Circles
-    map.addSource("route-stops-source", {
-      type: "geojson",
-      data: { type: "FeatureCollection", features: [] }
-    });
+    if (!map.getLayer("route-chevrons")) {
+      map.addLayer({
+        id: "route-chevrons",
+        type: "line",
+        source: "active-route-source",
+        paint: {
+          "line-color": "#FFFFFF",
+          "line-width": 2.2,
+          "line-dasharray": [1.4, 2.4],
+          "line-opacity": 0.9
+        }
+      });
+    }
 
-    map.addLayer({
-      id: "route-stops",
-      type: "circle",
-      source: "route-stops-source",
-      paint: {
-        "circle-radius": 4.5,
-        "circle-color": "#FFFFFF",
-        "circle-stroke-width": 2.0,
-        "circle-stroke-color": "#374151"
-      }
-    });
+    if (!map.getSource("route-stops-source")) {
+      map.addSource("route-stops-source", {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: [] }
+      });
+    }
 
-    // 4. Live Fleet Streaming Across Delhi (3,600+ real GTFS-RT vehicles)
-    map.addSource("live-fleet-source", {
-      type: "geojson",
-      data: { type: "FeatureCollection", features: [] }
-    });
+    if (!map.getLayer("route-stops")) {
+      map.addLayer({
+        id: "route-stops",
+        type: "circle",
+        source: "route-stops-source",
+        paint: {
+          "circle-radius": 4.5,
+          "circle-color": isNight ? "#090A0F" : "#FFFFFF",
+          "circle-stroke-width": 2.0,
+          "circle-stroke-color": isNight ? "#38BDF8" : "#374151"
+        }
+      });
+    }
 
-    map.addLayer({
-      id: "live-fleet-layer",
-      type: "circle",
-      source: "live-fleet-source",
-      layout: { visibility: "none" },
-      paint: {
-        "circle-radius": 4,
-        "circle-color": "#0F9D58",
-        "circle-stroke-width": 1.5,
-        "circle-stroke-color": "#FFFFFF",
-        "circle-opacity": 0.9
-      }
-    });
+    // 4. Live Fleet Streaming Across Delhi
+    if (!map.getSource("live-fleet-source")) {
+      map.addSource("live-fleet-source", {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: [] }
+      });
+    }
 
-    // 5. Moving Vehicle Marker Element (Active Trip)
-    const el = document.createElement("div");
-    el.className = "transit-vehicle-marker";
-    el.innerHTML = `
-      <div class="vehicle-headlights"></div>
-      <div class="vehicle-pulse"></div>
-      <div class="vehicle-body">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-          <path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/>
-        </svg>
-      </div>
-    `;
+    if (!map.getLayer("live-fleet-glow")) {
+      map.addLayer({
+        id: "live-fleet-glow",
+        type: "circle",
+        source: "live-fleet-source",
+        layout: { visibility: this.liveFleetVisible ? "visible" : "none" },
+        paint: {
+          "circle-radius": isNight ? 7 : 5,
+          "circle-color": isNight ? "#00E5FF" : "#0F9D58",
+          "circle-opacity": isNight ? 0.5 : 0.3,
+          "circle-blur": 1.5
+        }
+      });
+    }
 
-    this.vehicleMarker = new maplibregl.Marker({ element: el, anchor: "center" });
+    if (!map.getLayer("live-fleet-layer")) {
+      map.addLayer({
+        id: "live-fleet-layer",
+        type: "circle",
+        source: "live-fleet-source",
+        layout: { visibility: this.liveFleetVisible ? "visible" : "none" },
+        paint: {
+          "circle-radius": isNight ? 3.8 : 4,
+          "circle-color": isNight ? "#00E676" : "#0F9D58",
+          "circle-stroke-width": 1.5,
+          "circle-stroke-color": isNight ? "#042F2E" : "#FFFFFF",
+          "circle-opacity": 0.95
+        }
+      });
+    }
 
-    // Origin Marker (Google Blue Circle)
-    const startEl = document.createElement("div");
-    startEl.className = "gmaps-origin-marker";
-    this.startMarker = new maplibregl.Marker({ element: startEl, anchor: "center" });
+    // 5. Moving Vehicle Marker Element (Active Trip - 3D Animated Motion Graphics Model)
+    if (!this.vehicleMarker) {
+      const el = document.createElement("div");
+      el.className = "transit-vehicle-marker";
+      el.innerHTML = `
+        <div class="vehicle-hud-speed" id="vehicle-floating-speed">38 km/h</div>
+        <div class="vehicle-3d-wrapper">
+          <div class="vehicle-headlight-beams">
+            <div class="beam beam-left"></div>
+            <div class="beam beam-right"></div>
+          </div>
+          <div class="vehicle-underglow"></div>
+          <div class="vehicle-chassis">
+            <div class="windshield-front"></div>
+            <div class="chassis-roof"></div>
+            <div class="front-led-dots">
+              <span class="headlight-dot left"></span>
+              <span class="headlight-dot right"></span>
+            </div>
+            <div class="taillight-leds">
+              <span class="tail-dot"></span>
+              <span class="tail-dot"></span>
+            </div>
+          </div>
+        </div>
+      `;
 
-    // Destination Marker (Reference 1: Orange Teardrop with Travel Time)
-    const endEl = document.createElement("div");
-    endEl.className = "dest-eta-pin";
-    endEl.innerHTML = `
-      <div class="dest-pin-badge">
-        <span class="dest-pin-time" id="dest-pin-time">--</span>
-        <span class="dest-pin-unit">MIN</span>
-      </div>
-      <div class="dest-pin-tail"></div>
-      <div class="dest-pin-anchor"></div>
-    `;
-    this.endMarker = new maplibregl.Marker({ element: endEl, anchor: "bottom" });
+      this.vehicleMarker = new maplibregl.Marker({ element: el, anchor: "center" });
 
-    // 6. Interactive Click Inspector Popups (Mini Tokyo 3D / Google Maps Standard)
+      // Origin Marker (Google Blue Circle)
+      const startEl = document.createElement("div");
+      startEl.className = "gmaps-origin-marker";
+      this.startMarker = new maplibregl.Marker({ element: startEl, anchor: "center" });
+
+      // Destination Marker (Reference 1: Orange Teardrop with Travel Time & Pulse)
+      const endEl = document.createElement("div");
+      endEl.className = "dest-eta-pin";
+      endEl.innerHTML = `
+        <div class="dest-pin-ripple"></div>
+        <div class="dest-pin-badge">
+          <span class="dest-pin-time" id="dest-pin-time">--</span>
+          <span class="dest-pin-unit">MIN</span>
+        </div>
+        <div class="dest-pin-tail"></div>
+        <div class="dest-pin-anchor"></div>
+      `;
+      this.endMarker = new maplibregl.Marker({ element: endEl, anchor: "bottom" });
+    }
+  }
+
+  _setupInteractions() {
+    const map = this.map;
+    if (this._interactionsSetup) return;
+    this._interactionsSetup = true;
+
+    // Interactive Click Inspector Popups (Mini Tokyo 3D / Google Maps Standard)
     map.on("click", "metro-stations-halo", (e) => {
       if (!e.features || !e.features.length) return;
       const props = e.features[0].properties;
@@ -436,6 +523,7 @@ class TransitMapEngine {
 
     this.currentJourney = journey;
     this.matchedLiveVehicle = null;
+    this._cameraBearing = undefined;
 
     if (!journey || !journey.legs || !journey.legs.length) {
       this._clearRoute();
@@ -623,9 +711,20 @@ class TransitMapEngine {
       const dLat = p2[1] - p1[1];
       const bearing = (Math.atan2(dLon, dLat) * 180) / Math.PI;
 
-      const bodyEl = this.vehicleMarker.getElement().querySelector(".vehicle-body");
+      const bodyEl = this.vehicleMarker.getElement().querySelector(".vehicle-3d-wrapper");
       if (bodyEl) {
         bodyEl.style.transform = `rotate(${bearing}deg)`;
+      }
+
+      // Update floating vehicle speed HUD
+      const speedHud = this.vehicleMarker.getElement().querySelector("#vehicle-floating-speed");
+      if (speedHud) {
+        if (this.matchedLiveVehicle && this.matchedLiveVehicle.speed_kmh !== undefined) {
+          speedHud.textContent = `${this.matchedLiveVehicle.speed_kmh} km/h`;
+        } else {
+          const simulatedSpeed = Math.round(36 + Math.sin(this.animProgress * Math.PI * 6) * 9);
+          speedHud.textContent = `${simulatedSpeed} km/h`;
+        }
       }
 
       // Update HUD banner with next stop info
@@ -654,14 +753,28 @@ class TransitMapEngine {
         if (hudDist) hudDist.textContent = `${Math.max(0.2, (remainingMin * 0.35)).toFixed(1)} km`;
       }
 
-      // Smooth camera follow in Follow Mode
+      // Smooth camera follow in Follow Mode (Drone Chase Camera with look-ahead & banking)
       if (this.followMode) {
+        if (this._cameraBearing === undefined) {
+          this._cameraBearing = bearing;
+        }
+        // Smooth shortest-arc bearing interpolation (cinematic banking)
+        let diff = ((bearing - this._cameraBearing + 540) % 360) - 180;
+        this._cameraBearing += diff * 0.08;
+
+        // Dynamic Look-Ahead Offset (places the car in lower third, road ahead in view)
+        const lookAheadDist = 0.0016; // ~160 meters ahead
+        const rad = (this._cameraBearing * Math.PI) / 180;
+        const targetLon = currentLon + Math.sin(rad) * lookAheadDist;
+        const targetLat = currentLat + Math.cos(rad) * lookAheadDist;
+
         this.map.easeTo({
-          center: [currentLon, currentLat],
-          bearing: bearing,
-          pitch: 62,
-          zoom: 16.5,
-          duration: 200,
+          center: [targetLon, targetLat],
+          bearing: this._cameraBearing,
+          pitch: 64,
+          zoom: 16.6,
+          duration: 160,
+          easing: (t) => t
         });
       }
 
@@ -815,10 +928,15 @@ class TransitMapEngine {
     if (btnFollow) btnFollow.classList.add("active");
     if (this.vehicleMarker) {
       const pos = this.vehicleMarker.getLngLat();
+      const bearing = (this._cameraBearing !== undefined) ? this._cameraBearing : 0;
+      const rad = (bearing * Math.PI) / 180;
+      const targetLon = pos.lng + Math.sin(rad) * 0.0016;
+      const targetLat = pos.lat + Math.cos(rad) * 0.0016;
       this.map.flyTo({
-        center: [pos.lng, pos.lat],
-        pitch: 62,
-        zoom: 16.5,
+        center: [targetLon, targetLat],
+        pitch: 64,
+        zoom: 16.6,
+        bearing: bearing,
         duration: 800
       });
     }
@@ -830,5 +948,29 @@ class TransitMapEngine {
 
   setTheme(theme) {
     this.currentTheme = theme;
+    const styleUrl = theme === "night"
+      ? "https://tiles.openfreemap.org/styles/dark"
+      : "https://tiles.openfreemap.org/styles/liberty";
+
+    const savedJourney = this.currentJourney;
+    const wasLiveFleet = this.liveFleetVisible;
+
+    this.map.setStyle(styleUrl);
+    this.map.once("style.load", () => {
+      this._setupLayers();
+      if (savedJourney) {
+        this.setJourney(savedJourney);
+      }
+      if (wasLiveFleet) {
+        this.liveFleetVisible = true;
+        if (this.map.getLayer("live-fleet-layer")) {
+          this.map.setLayoutProperty("live-fleet-layer", "visibility", "visible");
+        }
+        if (this.map.getLayer("live-fleet-glow")) {
+          this.map.setLayoutProperty("live-fleet-glow", "visibility", "visible");
+        }
+        this.refreshLiveFleet();
+      }
+    });
   }
 }

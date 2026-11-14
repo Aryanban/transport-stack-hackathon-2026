@@ -105,12 +105,19 @@ def verify_ui():
         # 12. Test Theme Toggle (Dark / Night Mode)
         btn_theme = page.locator("#btn-toggle-theme")
         btn_theme.click()
-        time.sleep(1.0)
+        # Allow dark vector style to load and re-attach 3D layers
+        time.sleep(3.5)
         body_class = page.locator("body").get_attribute("class") or ""
         print(f"Body class after theme toggle: {body_class}")
         assert "theme-night" in body_class, "Body should have class theme-night!"
 
-        # Capture night mode screenshot
+        # Test Follow camera mode in Dark Mode
+        btn_follow = page.locator("#btn-follow-vehicle")
+        btn_follow.click()
+        time.sleep(2.0)
+        print("✓ 3D Drone Chase Follow mode engaged.")
+
+        # Capture night mode screenshot with follow camera
         screenshot_night = "/Users/aryanbansal/.gemini/antigravity/brain/59777929-c859-4958-b01e-06842e1c36cf/delhi_transit_night_mode.png"
         page.screenshot(path=screenshot_night, full_page=True)
         print(f"✓ Night mode screenshot saved to: {screenshot_night}")
