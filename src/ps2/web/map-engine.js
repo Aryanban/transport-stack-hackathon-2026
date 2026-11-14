@@ -172,6 +172,47 @@ class TransitMapEngine {
       }
     });
 
+    // 2b. Moving Metro Train Markers (Dynamic Headway Simulation along DMRC Tracks)
+    map.addSource("metro-trains-source", {
+      type: "geojson",
+      data: { type: "FeatureCollection", features: [] }
+    });
+
+    map.addLayer({
+      id: "metro-trains-glow",
+      type: "circle",
+      source: "metro-trains-source",
+      paint: {
+        "circle-radius": 9,
+        "circle-color": ["get", "color"],
+        "circle-opacity": 0.4,
+        "circle-blur": 1
+      }
+    });
+
+    map.addLayer({
+      id: "metro-trains-body",
+      type: "circle",
+      source: "metro-trains-source",
+      paint: {
+        "circle-radius": 5,
+        "circle-color": ["get", "color"],
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#FFFFFF"
+      }
+    });
+
+    // Fetch dynamic metro tracks for continuous train interpolation
+    fetch("api/metro/network")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && data.features) {
+          this.metroLines = data.features.filter((f) => f.properties.type === "metro");
+          this._startMetroTrainLoop();
+        }
+      })
+      .catch((e) => console.warn("Could not load metro network for train loop:", e));
+
     // 3. Active Journey Route Polyline
     map.addSource("active-route-source", {
       type: "geojson",
@@ -547,6 +588,63 @@ class TransitMapEngine {
     } catch (e) {
       console.warn("Live fleet poll failed:", e);
     }
+  }
+
+  _startMetroTrainLoop() {
+    if (this._metroTrainInterval) clearInterval(this._metroTrainInterval);
+
+    const updateTrains = () => {
+      if (!this.map || !this.metroLines || !this.map.getSource("metro-trains-source")) return;
+
+      const now = performance.now() / 1000;
+      const trainFeatures = [];
+
+      this.metroLines.forEach((line) => {
+        const coords = line.geometry?.coordinates;
+        if (!coords || coords.length < 2) return;
+
+        const color = line.properties?.color || "#FFD700";
+        const lineName = line.properties?.name || "Metro Line";
+        const totalSegments = coords.length - 1;
+
+        const trainsOnLine = Math.min(6, Math.max(2, Math.floor(coords.length / 5)));
+        for (let i = 0; i < trainsOnLine; i++) {
+          const phaseOffset = i / trainsOnLine;
+          const progress = (now * 0.015 + phaseOffset) % 1.0;
+          const globalPos = progress * totalSegments;
+          const segIndex = Math.max(0, Math.min(Math.floor(globalPos), totalSegments - 1));
+          const segProgress = Math.max(0, Math.min(globalPos - segIndex, 1));
+
+          const p1 = coords[segIndex];
+          const p2 = coords[segIndex + 1];
+          if (!p1 || !p2 || !p1[0] || !p2[0]) continue;
+
+          const lon = p1[0] + (p2[0] - p1[0]) * segProgress;
+          const lat = p1[1] + (p2[1] - p1[1]) * segProgress;
+
+          trainFeatures.push({
+            type: "Feature",
+            properties: {
+              line: lineName,
+              color: color,
+              train_id: `${lineName.replace(/\s+/g, "")}-${i + 1}`
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [lon, lat]
+            }
+          });
+        }
+      });
+
+      this.map.getSource("metro-trains-source").setData({
+        type: "FeatureCollection",
+        features: trainFeatures
+      });
+    };
+
+    updateTrains();
+    this._metroTrainInterval = setInterval(updateTrains, 1000);
   }
 
   toggle3D() {
