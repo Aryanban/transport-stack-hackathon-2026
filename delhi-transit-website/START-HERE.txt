@@ -1,0 +1,19 @@
+Delhi Transit website
+
+The ZIP contains the Round 3 source with the changes already applied.
+Open a terminal in delhi-transit-website and install the dependencies:
+
+    python -m pip install -r requirements.txt
+
+Run the website:
+
+    python -m uvicorn src.api:app --host 127.0.0.1 --port 8000
+
+Open http://127.0.0.1:8000/ps2/ in your browser.
+
+Website files: src/ps2/web/index.html, style.css, app.js, map-engine.js.
+Backend: src/ps2/api.py. Tests: python -m pytest tests -q.
+
+The live fleet is optional. Configure DTS_API_KEY locally to enable it.
+For current bus-to-Metro timetable routing, set PS2_METRO_GTFS to a current
+GTFS directory or ZIP. The included Metro feed is a sample.

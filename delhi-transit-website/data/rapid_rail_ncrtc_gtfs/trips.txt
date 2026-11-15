@@ -1,0 +1,9 @@
+route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_id,block_id,shape_id,wheelchair_accessible,bikes_allowed
+54FE139F,1,097FE0,,,,,shp_3_2,0,0
+91C19067,1,09E304,,,,,shp_3_1,0,0
+54FE139F,1,0C8C84,,,,,shp_3_2,0,0
+54FE139F,1,FAE3EA,,,,,shp_3_2,0,0
+54FE139F,1,FB2414,,,,,shp_3_2,0,0
+91C19067,1,FC385C,,,,,shp_3_1,0,0
+91C19067,1,FE3722,,,,,shp_3_1,0,0
+91C19067,1,FFEEC8,,,,,shp_3_1,0,0

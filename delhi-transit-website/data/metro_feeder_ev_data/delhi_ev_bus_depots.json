@@ -1,0 +1,72 @@
+[
+  {
+    "depot_id": "DEPOT_01",
+    "name": "Rohini Sector 22 Depot",
+    "lat": 28.718,
+    "lon": 77.0639,
+    "bus_capacity": 100,
+    "chargers_120kw": 25,
+    "chargers_60kw": 15,
+    "transformer_mva": 5.0
+  },
+  {
+    "depot_id": "DEPOT_02",
+    "name": "Millennium Park Depot (Sarai Kale Khan)",
+    "lat": 28.5911,
+    "lon": 77.2612,
+    "bus_capacity": 150,
+    "chargers_120kw": 40,
+    "chargers_60kw": 20,
+    "transformer_mva": 8.0
+  },
+  {
+    "depot_id": "DEPOT_03",
+    "name": "Rajghat Depot",
+    "lat": 28.641,
+    "lon": 77.249,
+    "bus_capacity": 80,
+    "chargers_120kw": 20,
+    "chargers_60kw": 10,
+    "transformer_mva": 4.0
+  },
+  {
+    "depot_id": "DEPOT_04",
+    "name": "Mayapuri Depot",
+    "lat": 28.6382,
+    "lon": 77.119,
+    "bus_capacity": 70,
+    "chargers_120kw": 18,
+    "chargers_60kw": 10,
+    "transformer_mva": 3.5
+  },
+  {
+    "depot_id": "DEPOT_05",
+    "name": "Sukhdev Vihar Depot",
+    "lat": 28.562,
+    "lon": 77.284,
+    "bus_capacity": 60,
+    "chargers_120kw": 15,
+    "chargers_60kw": 8,
+    "transformer_mva": 3.0
+  },
+  {
+    "depot_id": "DEPOT_06",
+    "name": "Subhash Nagar Depot",
+    "lat": 28.6412,
+    "lon": 77.108,
+    "bus_capacity": 50,
+    "chargers_120kw": 12,
+    "chargers_60kw": 8,
+    "transformer_mva": 2.5
+  },
+  {
+    "depot_id": "DEPOT_07",
+    "name": "Kushak Nallah Depot",
+    "lat": 28.579,
+    "lon": 77.221,
+    "bus_capacity": 80,
+    "chargers_120kw": 20,
+    "chargers_60kw": 10,
+    "transformer_mva": 4.0
+  }
+]

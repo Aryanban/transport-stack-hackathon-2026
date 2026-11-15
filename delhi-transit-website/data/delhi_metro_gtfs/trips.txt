@@ -1,0 +1,13 @@
+route_id,service_id,trip_id,trip_headsign,trip_short_name,direction_id,block_id,shape_id,wheelchair_accessible,bikes_allowed
+0,weekday,0,,,,,shp_1_30,0,0
+0,weekday,1,,,,,shp_1_30,0,0
+2,weekday,1000,,,,,shp_1_13,0,0
+19,saturday,10000,,,,,shp_1_33,0,0
+19,saturday,10001,,,,,shp_1_33,0,0
+19,saturday,10002,,,,,shp_1_33,0,0
+19,saturday,10010,,,,,shp_1_33,0,0
+18,weekday,9487,,,,,shp_1_6,0,0
+18,weekday,9488,,,,,shp_1_6,0,0
+18,weekday,9489,,,,,shp_1_6,0,0
+18,weekday,9490,,,,,shp_1_6,0,0
+18,weekday,9491,,,,,shp_1_6,0,0

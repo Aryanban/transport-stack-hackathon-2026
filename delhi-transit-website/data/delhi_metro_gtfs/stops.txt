@@ -1,0 +1,9 @@
+stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon
+1,,Dilshad Garden,,28.675991,77.321495
+2,,Jhilmil,,28.675648,77.312393
+3,,Mansrover park,,28.675352,77.301178
+516,,Pari Chowk,,28.463331,77.508308
+517,,Alpha 1,,28.470879,77.512718
+518,,Delta 1,,28.478374,77.525581
+519,,GNIDA Office,,28.484531,77.536621
+520,,Depot Station,,28.488651,77.544075

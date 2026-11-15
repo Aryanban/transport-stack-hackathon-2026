@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delhi Transit · Multimodal 3D Journey Planner</title>
+  <link rel="stylesheet" href="vendor/maplibre-gl.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="vendor/maplibre-gl.js"></script>
+  <script src="map-engine.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <!-- Google Maps / Apple Maps Style Multimodal Transit Application -->
+  <div class="app-layout">
+    
+    <!-- Floating Directions & Journey Selection Panel -->
+    <aside class="directions-panel" aria-label="Transit Directions and Crowding Analysis">
+      <header class="panel-header">
+        <div class="brand-row">
+          <div class="brand-mark">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1>Delhi Transit</h1>
+            <span class="brand-status">Bus journey planner · Delhi Metro map</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Search Inputs (Google Maps Route Selector Style) -->
+      <section class="search-box">
+        <form id="planner" class="route-form">
+          <div class="inputs-container">
+            <div class="input-track" aria-hidden="true">
+              <span class="track-circle"></span>
+              <span class="track-line"></span>
+              <span class="track-square"></span>
+            </div>
+            
+            <div class="input-fields">
+              <div class="stop-field origin-field">
+                <input id="origin" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="origin-results" placeholder="Choose starting point" autocomplete="off" required>
+                <div id="origin-results" class="suggestions" role="listbox" hidden></div>
+              </div>
+
+              <div class="field-divider">
+                <button type="button" id="btn-swap-stops" class="btn-swap" title="Reverse origin and destination">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                    <path d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="stop-field destination-field">
+                <input id="destination" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="destination-results" placeholder="Choose destination" autocomplete="off" required>
+                <div id="destination-results" class="suggestions" role="listbox" hidden></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Departure Time Shortcuts -->
+          <div class="time-presets" aria-label="Quick departure presets">
+            <button type="button" class="time-chip" data-time="now">Depart now</button>
+            <button type="button" class="time-chip" data-time="08:30">08:30 AM Peak</button>
+            <button type="button" class="time-chip active-time" data-time="18:00">06:00 PM Peak</button>
+            <button type="button" class="time-chip" data-time="22:00">10:00 PM Night</button>
+          </div>
+
+          <div class="trip-filters">
+            <div class="filter-group">
+              <label for="departure">Depart at</label>
+              <input id="departure" type="datetime-local" required>
+            </div>
+            <div class="filter-group">
+              <label for="extra">Crowd flexibility: <output for="extra" id="extra-value">15 min</output></label>
+              <input id="extra" type="range" min="0" max="60" step="5" value="15">
+            </div>
+          </div>
+
+          <button class="btn-search" type="submit">
+            <span>Find Routes</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+            </svg>
+          </button>
+        </form>
+
+        <!-- Quick Corridor Shortcuts (Dynamically Loaded from GTFS & Benchmark Models) -->
+        <div class="quick-corridors">
+          <span class="quick-title">Quick corridors</span>
+          <div class="chip-container" id="corridor-chips">
+            <!-- Dynamically populated from /api/corridors -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Journey Results List -->
+      <section class="results-container" aria-live="polite">
+        <div class="results-header">
+          <span class="results-title">Route options</span>
+          <span id="source" class="results-meta"></span>
+        </div>
+        <div id="status" class="results-status" role="status"></div>
+        <div id="options" class="journey-cards-list"></div>
+      </section>
+
+      <!-- Corridor Capacity Audit Footer -->
+      <footer class="panel-footer">
+        <details class="corridor-audit-details">
+          <summary>Corridor occupancy benchmarks</summary>
+          <div class="corridor-audit-body">
+            <p id="validation" class="audit-summary">Loading validation metrics…</p>
+            <form id="corridor-form" class="corridor-picker">
+              <select id="corridor" aria-label="Route Corridor"></select>
+              <select id="corridor-hour" aria-label="Hour of Departure"></select>
+              <select id="corridor-day" aria-label="Day Type">
+                <option value="false">Weekday</option>
+                <option value="true">Weekend</option>
+              </select>
+              <button type="submit" class="btn-audit">Audit</button>
+            </form>
+            <p id="corridor-status" class="corridor-status"></p>
+            <div class="audit-table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Stretch</th>
+                    <th>Crowding</th>
+                    <th>Load</th>
+                    <th>Days</th>
+                  </tr>
+                </thead>
+                <tbody id="segments"></tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+      </footer>
+    </aside>
+
+    <!-- Full-Bleed 3D Geospatial Map Canvas -->
+    <main class="map-viewport" id="map-viewport">
+      <div id="map-container" class="map-canvas"></div>
+      <p id="map-source-status" role="status" class="map-source-status"></p>
+
+      <!-- Google Maps Style Turn-by-Turn Navigation Header (Ref 2) -->
+      <div id="hud-nav-banner" class="hud-nav-banner" hidden>
+        <div class="hud-nav-left">
+          <div class="hud-maneuver-box">
+            <svg id="hud-maneuver-icon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+              <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+            </svg>
+          </div>
+          <div class="hud-nav-content">
+            <strong id="hud-next-stop">Journey preview</strong>
+            <span id="hud-subtext">Scheduled route preview</span>
+          </div>
+        </div>
+        <div class="hud-nav-actions">
+          <button type="button" id="hud-sound-toggle" class="hud-icon-btn" title="Pause route preview" aria-label="Pause route preview" aria-pressed="false">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M6 5h4v14H6zm8 0h4v14h-4z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Floating Re-center Pill Button (Ref 2 bottom-left) -->
+      <button type="button" id="btn-recenter" class="floating-recenter-btn" title="Re-center camera on vehicle" hidden>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/>
+        </svg>
+        <span>Re-center</span>
+      </button>
+
+      <!-- Google Maps Bottom Trip Summary Card (Ref 2) -->
+      <div id="hud-bottom-eta" class="hud-bottom-eta" hidden>
+        <div class="eta-left">
+          <div class="eta-large"><span id="hud-eta-min">—</span> <span class="eta-unit">min</span></div>
+          <div class="eta-sub"><span id="hud-eta-dist">—</span> · <span id="hud-eta-arrival">—</span></div>
+        </div>
+        <div class="eta-center">
+          <span id="hud-eta-crowd" class="hud-crowd-chip crowd-low">Crowding unavailable</span>
+        </div>
+        <div class="eta-right">
+          <button type="button" id="btn-cancel-route" class="btn-eta-close" title="Clear route view">✕</button>
+        </div>
+      </div>
+
+      <!-- Floating Map Control Pills (Minimalist Google Maps standard) -->
+      <div class="map-floating-controls">
+        <div class="control-group">
+          <button type="button" id="btn-toggle-3d" class="btn-ctrl active" title="Toggle 3D Perspective">
+            3D
+          </button>
+          <button type="button" id="btn-follow-vehicle" class="btn-ctrl" title="Lock Follow Camera on Vehicle">
+            Follow
+          </button>
+          <button type="button" id="btn-toggle-live-fleet" class="btn-ctrl" title="Show fresh reported bus positions">
+            Live Fleet
+          </button>
+          <button type="button" id="btn-toggle-theme" class="btn-ctrl" title="Toggle Light / Dark Theme">
+            Theme
+          </button>
+        </div>
+
+        <div class="control-group legend-group">
+          <span class="legend-chip"><i class="legend-dot metro-yellow"></i> Metro Network</span>
+          <span class="legend-chip"><i class="legend-dot bus-route"></i> Active Route</span>
+          <span class="legend-chip" id="fleet-live-pill"><i class="legend-dot live-dot"></i> <span id="fleet-count-text">Live Fleet</span></span>
+        </div>
+      </div>
+    </main>
+
+  </div>
+</body>
+</html>
