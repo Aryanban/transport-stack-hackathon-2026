@@ -1,10 +1,12 @@
 """
 Comprehensive E2E Frontend Location Matrix & Route Verification Script
 Uses Playwright to simulate user journeys across various Delhi-NCR transit corridors:
-1. North-South Arterial (Delhi Gate -> Kashmere Gate)
-2. Directional Reverse Corridor via Swap Button (Kashmere Gate -> Delhi Gate)
-3. South Arterial Transfer Corridor (Mehrauli Terminal -> Delhi Gate)
-4. Autocomplete Search & Cross-City Routing (Kashmere Gate -> DDA Flats Kalkaji)
+1. Default Dynamic Featured Corridor (102UP: Old Delhi Railway Station -> Hansraj College)
+2. Directional Reverse Corridor via Swap Button (Hansraj College -> Old Delhi Railway Station)
+3. Central Arterial Corridor Chip (449UP: ISBT Kashmiri Gate -> Delhi Gate)
+4. Trans-Yamuna East Arterial Chip (534UP: Anand Vihar ISBT Terminal -> Ashirwad Apartment)
+5. Ring Road North Arterial Chip (761DOWN: Azadpur Terminal -> Wazirpur DTC Depot)
+6. Cross-City Autocomplete Search (Kashmere Gate -> DDA Flats Kalkaji)
 
 Validates:
 - MapLibre GL 3D Canvas & Route Polylines
@@ -36,22 +38,24 @@ def verify_all_locations():
         page.on("pageerror", lambda err: console_errors.append(str(err)))
 
         # -------------------------------------------------------------------------
-        # Scenario 1: Default North-South Arterial (Delhi Gate -> Kashmere Gate ISBT)
+        # Scenario 1: Default Dynamic Featured Corridor (102UP)
         # -------------------------------------------------------------------------
-        print("\n--- Scenario 1: North-South Arterial (Delhi Gate -> Kashmere Gate ISBT) ---")
+        print("\n--- Scenario 1: Default Dynamic Featured Corridor ---")
         page.goto("http://127.0.0.1:8000/ps2/", wait_until="networkidle")
         page.wait_for_selector("#map-container canvas", timeout=15000)
         print("✓ MapLibre 3D canvas loaded.")
 
         page.wait_for_selector(".transit-card", timeout=10000)
         cards = page.query_selector_all(".transit-card")
-        print(f"✓ Found {len(cards)} transit options for Delhi Gate -> Kashmere Gate.")
+        orig_val = page.locator("#origin").input_value()
+        dest_val = page.locator("#destination").input_value()
+        print(f"✓ Default Route Loaded: '{orig_val}' -> '{dest_val}' with {len(cards)} options.")
         assert len(cards) > 0, "No transit cards found!"
 
         # Verify Ref 2 HUD Turn-by-Turn Banner
         page.wait_for_selector("#hud-nav-banner:not([hidden])", timeout=8000)
         hud_next = page.locator("#hud-next-stop").inner_text()
-        print(f"✓ HUD Banner Next Stop: '{hud_next}'")
+        print(f"✓ HUD Banner: '{hud_next}'")
         assert len(hud_next) > 0
 
         # Verify Ref 2 HUD Bottom ETA Card
@@ -67,7 +71,7 @@ def verify_all_locations():
         print(f"✓ Map Destination Pin ETA: {pin_time} MIN")
         assert len(pin_time) > 0
 
-        shot1 = f"{ARTIFACTS_DIR}/ps2_corridor_delhi_to_kashmere.png"
+        shot1 = f"{ARTIFACTS_DIR}/ps2_corridor_default.png"
         page.screenshot(path=shot1, full_page=True)
         print(f"✓ Screenshot captured: {shot1}")
 
@@ -94,41 +98,80 @@ def verify_all_locations():
         eta_dist_swap = page.locator("#hud-eta-dist").inner_text()
         print(f"✓ Reverse Route Calculated: {eta_min_swap} mins | {eta_dist_swap}")
 
-        shot2 = f"{ARTIFACTS_DIR}/ps2_corridor_swap_kashmere_to_delhi.png"
+        shot2 = f"{ARTIFACTS_DIR}/ps2_corridor_swap.png"
         page.screenshot(path=shot2, full_page=True)
         print(f"✓ Screenshot captured: {shot2}")
 
         # -------------------------------------------------------------------------
-        # Scenario 3: South Arterial Multi-Leg Transfer (Mehrauli Terminal -> Delhi Gate)
+        # Scenario 3: Central Arterial Corridor Chip (449UP: ISBT -> Delhi Gate)
         # -------------------------------------------------------------------------
-        print("\n--- Scenario 3: South Arterial Transfer (Mehrauli Terminal -> Delhi Gate) ---")
-        mehrauli_chip = page.locator("#corridor-chips button.chip", has_text="Mehrauli")
-        assert mehrauli_chip.count() > 0, "Expected Mehrauli corridor shortcut chip!"
-        mehrauli_chip.first.click()
+        print("\n--- Scenario 3: Central Arterial Corridor Chip (449UP: ISBT -> Delhi Gate) ---")
+        chip_isbt = page.locator("#corridor-chips button.chip", has_text="Delhi Gate")
+        assert chip_isbt.count() > 0, "Expected ISBT to Delhi Gate corridor chip!"
+        chip_isbt.first.click()
 
-        time.sleep(2.5)
-        page.wait_for_selector(".transit-card", timeout=12000)
-        cards_mehrauli = page.query_selector_all(".transit-card")
-        print(f"✓ Found {len(cards_mehrauli)} route options for Mehrauli -> Delhi Gate.")
+        time.sleep(2.0)
+        page.wait_for_selector(".transit-card", timeout=10000)
+        cards_isbt = page.query_selector_all(".transit-card")
+        print(f"✓ Found {len(cards_isbt)} route options for ISBT -> Delhi Gate.")
+        assert len(cards_isbt) > 0
 
-        # Check for transfer badge or multi-leg markers
-        card_text = cards_mehrauli[0].inner_text()
-        print(f"Top Route Summary:\n{card_text[:180]}...")
-        
-        eta_dist_m = page.locator("#hud-eta-dist").inner_text()
-        eta_min_m = page.locator("#hud-eta-min").inner_text()
-        print(f"✓ HUD Multi-leg Metric: {eta_min_m} mins | {eta_dist_m}")
-        dist_num = float(eta_dist_m.replace("km", "").strip())
-        assert dist_num >= 14.0, f"Expected distance >= 14.0 km for Mehrauli, got {dist_num} km"
+        eta_dist_isbt = page.locator("#hud-eta-dist").inner_text()
+        eta_min_isbt = page.locator("#hud-eta-min").inner_text()
+        print(f"✓ HUD Arterial Metric: {eta_min_isbt} mins | {eta_dist_isbt}")
 
-        shot3 = f"{ARTIFACTS_DIR}/ps2_corridor_mehrauli_to_delhi.png"
+        shot3 = f"{ARTIFACTS_DIR}/ps2_corridor_isbt_to_delhi_gate.png"
         page.screenshot(path=shot3, full_page=True)
         print(f"✓ Screenshot captured: {shot3}")
 
         # -------------------------------------------------------------------------
-        # Scenario 4: Cross-City Autocomplete Search (Kashmere Gate -> DDA Flats Kalkaji)
+        # Scenario 4: Trans-Yamuna East Arterial Chip (534UP: Anand Vihar ISBT)
         # -------------------------------------------------------------------------
-        print("\n--- Scenario 4: Cross-City Autocomplete Search (Kashmere Gate -> DDA Flats Kalkaji) ---")
+        print("\n--- Scenario 4: Trans-Yamuna East Arterial Chip (534UP: Anand Vihar) ---")
+        chip_anand = page.locator("#corridor-chips button.chip", has_text="Anand Vihar")
+        assert chip_anand.count() > 0, "Expected Anand Vihar corridor chip!"
+        chip_anand.first.click()
+
+        time.sleep(2.0)
+        page.wait_for_selector(".transit-card", timeout=10000)
+        cards_anand = page.query_selector_all(".transit-card")
+        print(f"✓ Found {len(cards_anand)} route options for Anand Vihar ISBT corridor.")
+        assert len(cards_anand) > 0
+
+        eta_dist_anand = page.locator("#hud-eta-dist").inner_text()
+        eta_min_anand = page.locator("#hud-eta-min").inner_text()
+        print(f"✓ HUD East Metric: {eta_min_anand} mins | {eta_dist_anand}")
+
+        shot4 = f"{ARTIFACTS_DIR}/ps2_corridor_anand_vihar.png"
+        page.screenshot(path=shot4, full_page=True)
+        print(f"✓ Screenshot captured: {shot4}")
+
+        # -------------------------------------------------------------------------
+        # Scenario 5: Ring Road North Arterial Chip (761DOWN: Azadpur Terminal)
+        # -------------------------------------------------------------------------
+        print("\n--- Scenario 5: Ring Road North Arterial Chip (761DOWN: Azadpur Terminal) ---")
+        chip_azadpur = page.locator("#corridor-chips button.chip", has_text="Azadpur")
+        assert chip_azadpur.count() > 0, "Expected Azadpur corridor chip!"
+        chip_azadpur.first.click()
+
+        time.sleep(2.0)
+        page.wait_for_selector(".transit-card", timeout=10000)
+        cards_azadpur = page.query_selector_all(".transit-card")
+        print(f"✓ Found {len(cards_azadpur)} route options for Azadpur corridor.")
+        assert len(cards_azadpur) > 0
+
+        eta_dist_azad = page.locator("#hud-eta-dist").inner_text()
+        eta_min_azad = page.locator("#hud-eta-min").inner_text()
+        print(f"✓ HUD North Metric: {eta_min_azad} mins | {eta_dist_azad}")
+
+        shot5 = f"{ARTIFACTS_DIR}/ps2_corridor_azadpur.png"
+        page.screenshot(path=shot5, full_page=True)
+        print(f"✓ Screenshot captured: {shot5}")
+
+        # -------------------------------------------------------------------------
+        # Scenario 6: Cross-City Autocomplete Search (Kashmere Gate -> DDA Flats Kalkaji)
+        # -------------------------------------------------------------------------
+        print("\n--- Scenario 6: Cross-City Autocomplete Search (Kashmere Gate -> DDA Flats Kalkaji) ---")
         
         # 1. Type in Origin
         page.locator("#origin").click()
@@ -180,9 +223,9 @@ def verify_all_locations():
         dist_num_k = float(eta_dist_k.replace("km", "").strip())
         assert dist_num_k >= 14.0, f"Expected distance >= 14.0 km for Kalkaji, got {dist_num_k} km"
 
-        shot4 = f"{ARTIFACTS_DIR}/ps2_autocomplete_kashmere_to_kalkaji.png"
-        page.screenshot(path=shot4, full_page=True)
-        print(f"✓ Screenshot captured: {shot4}")
+        shot6 = f"{ARTIFACTS_DIR}/ps2_autocomplete_kashmere_to_kalkaji.png"
+        page.screenshot(path=shot6, full_page=True)
+        print(f"✓ Screenshot captured: {shot6}")
 
         # -------------------------------------------------------------------------
         # Critical Console Error Verification

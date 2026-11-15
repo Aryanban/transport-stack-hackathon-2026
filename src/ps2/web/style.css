@@ -1076,33 +1076,6 @@ body.theme-night .vehicle-hud-speed {
   overflow: visible;
 }
 
-/* Dynamic Projected Headlight Beams Throwing Forward from Front Bumper */
-.vehicle-headlight-beams {
-  position: absolute;
-  bottom: calc(100% - 3px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 76px;
-  height: 90px;
-  display: flex;
-  justify-content: space-between;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.beam {
-  width: 34px;
-  height: 90px;
-  background: linear-gradient(to top, rgba(255, 252, 220, 0.85) 0%, rgba(255, 255, 255, 0.35) 40%, rgba(255, 255, 255, 0) 100%);
-  clip-path: polygon(32% 100%, 68% 100%, 100% 0, 0 0);
-  filter: blur(2.5px);
-}
-
-body.theme-night .beam {
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.95) 0%, rgba(56, 189, 248, 0.6) 35%, rgba(56, 189, 248, 0) 100%);
-  filter: blur(2.5px);
-}
-
 /* Neon Underbody Ground Glow */
 .vehicle-underglow {
   position: absolute;
@@ -1445,9 +1418,9 @@ body.theme-night .tail-dot {
    Obsidian, Zinc, Frosted Glass, Muted Glowing Accents, Zero Poppy Neons
    ========================================================================== */
 body.theme-night {
-  --g-bg: #090a0f;
-  --g-surface: #101217;
-  --g-card-bg: #14171f;
+  --g-bg: #0b0f19;
+  --g-surface: #0f172a;
+  --g-card-bg: #142037;
   --g-border: rgba(255, 255, 255, 0.08);
   --g-border-hover: rgba(255, 255, 255, 0.16);
   --g-divider: rgba(255, 255, 255, 0.06);
@@ -1483,7 +1456,7 @@ body.theme-night {
 
 /* Frosted Obsidian Glass Directions Panel */
 body.theme-night .directions-panel {
-  background: rgba(16, 18, 24, 0.9);
+  background: rgba(15, 23, 42, .9);
   backdrop-filter: blur(28px) saturate(190%);
   -webkit-backdrop-filter: blur(28px) saturate(190%);
   border: 1px solid var(--g-border);
@@ -1644,7 +1617,7 @@ body.theme-night .hud-maneuver-box {
 
 /* Bottom ETA Card in Subtle Dark */
 body.theme-night .hud-bottom-eta {
-  background: rgba(17, 20, 28, 0.92);
+  background: rgba(15, 23, 42, .92);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--g-border);
@@ -1657,7 +1630,7 @@ body.theme-night .eta-large {
 }
 
 body.theme-night .floating-recenter-btn {
-  background: rgba(17, 20, 28, 0.92);
+  background: rgba(15, 23, 42, .92);
   backdrop-filter: blur(20px);
   border: 1px solid var(--g-border);
   color: #60a5fa;
@@ -1744,7 +1717,7 @@ body.theme-night table td {
 }
 
 body.theme-night .map-viewport {
-  background: #090a0f;
+  background: #0b0f19;
 }
 
 body.theme-night .results-title {
@@ -1796,3 +1769,74 @@ body.theme-night .transit-card-details {
   color: #8e95a5;
   border-top-color: var(--g-divider);
 }
+
+.map-source-status {
+  position: absolute;
+  z-index: 3;
+  right: 16px;
+  top: 16px;
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: var(--g-surface);
+  color: var(--g-text);
+  font-size: .73rem;
+  margin: 0;
+}
+.map-source-status:empty { display: none; }
+.hud-icon-btn, .btn-eta-close, .btn-ctrl, .floating-recenter-btn {
+  min-height: 44px;
+  min-width: 44px;
+}
+.btn-ctrl:focus-visible, .floating-recenter-btn:focus-visible, .hud-icon-btn:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 3px;
+}
+.hud-nav-banner { max-width: min(380px, calc(100% - 32px)); min-width: 0; }
+.hud-bottom-eta { max-width: calc(100% - 28px); width: max-content; }
+.eta-large, .eta-sub { white-space: nowrap; }
+.hud-crowd-chip.crowd-unknown { background: var(--g-card-bg); color: var(--g-subtext); }
+.vehicle-3d-wrapper { transition: none; }
+@media (min-width: 1051px) {
+  .hud-bottom-eta { bottom: 70px; }
+}
+@media (max-width: 1050px) {
+  .map-floating-controls { bottom: 12px; right: 10px; }
+  .legend-group { display: none; }
+  .hud-bottom-eta { bottom: 68px; gap: 9px; padding: 6px 10px; }
+  .floating-recenter-btn { bottom: 12px; left: 10px; }
+}
+@media (max-width: 480px) {
+  .map-source-status { top: 110px; right: 10px; }
+  .hud-nav-banner { top: 8px; left: 8px; padding: 5px 8px; }
+  .btn-ctrl { padding-inline: 8px; }
+  .floating-recenter-btn span { display: none; }
+  .hud-crowd-chip { padding-inline: 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dest-pin-ripple, .vehicle-underglow { animation: none; }
+}
+
+
+.vehicle-chassis {
+  overflow: visible;
+  transform-style: preserve-3d;
+  transform: perspective(80px) rotateX(var(--model-tilt, 0deg)) rotateY(-12deg);
+}
+.chassis-side {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  width: 5px;
+  border: 1px solid #56758b;
+  background: repeating-linear-gradient(to bottom, #172b3e 0 5px, #4f879b 5px 8px);
+  pointer-events: none;
+}
+.chassis-side-left { left: -3px; transform: rotateY(62deg); }
+.chassis-side-right { right: -3px; transform: rotateY(-62deg); }
+
+body.theme-night .maplibregl-ctrl-attrib {
+  background: #0f172ae8;
+  color: #bdc9da;
+}
+body.theme-night .maplibregl-ctrl-attrib a { color: #bdc9da; }
+body.theme-night .maplibregl-ctrl-attrib-button { background-color: #b9c8da; }

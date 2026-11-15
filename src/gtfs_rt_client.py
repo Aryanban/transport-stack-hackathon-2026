@@ -135,7 +135,7 @@ class DelhiGTFSRealtimeClient:
             for entity in feed.entity:
                 if entity.HasField("vehicle") and entity.vehicle.HasField("position"):
                     v = entity.vehicle
-                    speed_kmh = round(v.position.speed * 3.6, 1) if v.position.HasField("speed") else 0.0
+                    speed_kmh = round(v.position.speed * 3.6, 1) if v.position.HasField("speed") else None
                     vehicles.append({
                         "vehicle_id": v.vehicle.id if v.vehicle.HasField("id") else f"BUS_{entity.id}",
                         "route_id": v.trip.route_id if v.trip.HasField("route_id") else "UNKNOWN",
@@ -184,7 +184,7 @@ class DelhiGTFSRealtimeClient:
         if not vehicles:
             return {"active_vehicles": 0, "avg_speed_kmh": 0.0, "routes_active": 0}
         
-        speeds = [v["speed_kmh"] for v in vehicles if v["speed_kmh"] > 0]
+        speeds = [v["speed_kmh"] for v in vehicles if (v["speed_kmh"] or 0) > 0]
         routes = set(v["route_id"] for v in vehicles if v["route_id"] != "UNKNOWN")
         avg_speed = round(sum(speeds) / len(speeds), 1) if speeds else 0.0
         

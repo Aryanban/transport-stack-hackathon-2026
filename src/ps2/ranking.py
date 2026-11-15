@@ -11,6 +11,8 @@ def _journey(feed, legs, start, get_crowd, score):
         details.append({
             "route": feed.routes[leg.trip.route],
             "routeId": leg.trip.route,
+            "mode": leg.trip.mode,
+            "walkMinutes": leg.walk_minutes,
             "tripId": leg.trip.id,
             "serviceDate": leg.service_date.isoformat(),
             "from": feed.stops[points[0].stop],

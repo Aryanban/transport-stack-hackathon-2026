@@ -11,7 +11,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .model import DEFAULT_PROFILES, ROOT, SegmentProfiles, tier
 from .ranking import recommend
-from .timetable import IST, load_feed, local_time
+from .timetable import IST, combine_feeds, load_feed, local_time
 from .metro_loader import get_metro_network_geojson
 
 app = FastAPI(title="Delhi Bus Planner · Transport Stack PS2", version="2.0")
@@ -22,6 +22,9 @@ SOURCE_LOCK = Lock()
 @lru_cache(maxsize=1)
 def _load_state():
     feed = load_feed(os.getenv("PS2_GTFS", str(ROOT / "data" / "delhi_buses_gtfs")))
+    metro_path = os.getenv("PS2_METRO_GTFS")
+    if metro_path:
+        feed = combine_feeds(feed, load_feed(metro_path, mode="metro"))
     path = Path(os.getenv("PS2_PROFILES", str(DEFAULT_PROFILES)))
     profiles = SegmentProfiles(json.loads(path.read_text(encoding="utf-8")))
     return feed, profiles
@@ -35,11 +38,14 @@ def state():
 @app.get("/api/config")
 def config():
     feed, profiles = state()
+    featured = corridor_options(feed, profiles)
     return {
         "demo": False, "sample": True, "source": profiles.source, "mode": "segment",
+        "metroRouting": bool(os.getenv("PS2_METRO_GTFS")),
         "liveConfigured": bool(os.getenv("DTS_API_KEY") or os.getenv("DELHI_GTFS_RT_API_KEY")),
-        "defaultTime": "2026-11-11T18:00",
-        "origin": feed.stops.get("2070"), "destination": feed.stops.get("1025"),
+        "defaultTime": datetime.now(IST).replace(hour=18, minute=0).strftime("%Y-%m-%dT%H:%M"),
+        "origin": featured[0]["from"] if featured else None,
+        "destination": featured[0]["to"] if featured else None,
     }
 
 
@@ -123,36 +129,40 @@ def to_title_case(text: str) -> str:
     return " ".join(result)
 
 
+def corridor_options(feed, profiles):
+    candidates = []
+    for pattern in sorted(feed.patterns):
+        route, _, stops = pattern
+        if route not in profiles.anchors:
+            continue
+        projected = profiles.project(pattern)
+        for start in projected:
+            if start - 1 in projected:
+                continue
+            stop = start
+            while stop in projected and stop - start < 6:
+                stop += 1
+            if stop - start < 2:
+                continue
+            candidates.append((-(stop - start), route, stops[start], stops[stop]))
+    featured = []
+    routes = set()
+    for distance, route, start, stop in sorted(candidates):
+        if route in routes:
+            continue
+        origin, destination = (dict(feed.stops[key]) for key in (start, stop))
+        origin["name"] = to_title_case(origin["name"])
+        destination["name"] = to_title_case(destination["name"])
+        featured.append({"route": feed.routes[route], "label": f"{origin['name']} to {destination['name']}",
+                         "from": origin, "to": destination, "stop_count": 1 - distance})
+        routes.add(route)
+    return featured
+
+
 @app.get("/api/corridors")
 def corridors():
-    """Returns benchmark corridors with guaranteed journeys extracted from the GTFS feed and ticket model."""
-    feed, profiles = state()
-    corridor_list = []
-
-    curated_pairs = [
-        {"route": "502UP", "from_id": "2070", "to_id": "1025"},
-        {"route": "429DOWN", "from_id": "1025", "to_id": "10052"},
-        {"route": "502UP", "from_id": "7910", "to_id": "2070"},
-        {"route": "761DOWN", "from_id": "336", "to_id": "1025"},
-    ]
-
-    for c in curated_pairs:
-        from_stop = feed.stops.get(c["from_id"])
-        to_stop = feed.stops.get(c["to_id"])
-        if from_stop and to_stop:
-            from_clean = to_title_case(from_stop["name"])
-            to_clean = to_title_case(to_stop["name"])
-            corridor_list.append({
-                "route": c["route"],
-                "label": f"{from_clean} to {to_clean}",
-                "from": {"id": from_stop["id"], "name": from_clean},
-                "to": {"id": to_stop["id"], "name": to_clean},
-                "stop_count": 18
-            })
-
-    return {"corridors": corridor_list}
-
-    return {"corridors": corridor_list}
+    """Suggest distinct stretches with stop order and crowd coverage from the feed."""
+    return {"corridors": corridor_options(*state())}
 
 
 @app.get("/api/vehicles")
@@ -168,14 +178,19 @@ def vehicles(route: str = Query("", description="Optional route filter e.g. '502
     clean_route = route.strip().upper().replace("BUS_", "")
 
     positions = []
-    total_live = 0
+    live_ids = set()
 
     for v in records:
         ts = v.get("timestamp")
         if not isinstance(ts, (int, float)) or not (0 <= now - ts <= 300) or v.get("source") != "live":
             continue
         
-        total_live += 1
+        vehicle_id = v.get("vehicle_id")
+        if not vehicle_id or vehicle_id in live_ids:
+            continue
+        if not (-90 <= v["latitude"] <= 90 and -180 <= v["longitude"] <= 180):
+            continue
+        live_ids.add(vehicle_id)
 
         v_route = str(v.get("route_id", "")).upper()
         if clean_route:
@@ -186,18 +201,19 @@ def vehicles(route: str = Query("", description="Optional route filter e.g. '502
             "lat": v["latitude"],
             "lon": v["longitude"],
             "timestamp": ts,
-            "vehicle_id": v.get("vehicle_id", "Bus"),
+            "vehicle_id": vehicle_id,
             "route_id": v.get("route_id", ""),
-            "speed_kmh": round(v.get("speed_kmh", 0.0), 1),
+            "speed_kmh": v.get("speed_kmh"),
+            "trip_id": v.get("trip_id", ""),
             "bearing": v.get("bearing", 0.0),
             "age_seconds": round(now - ts, 1)
         })
 
     return {
-        "status": "live" if total_live > 0 else "unavailable",
+        "status": "live" if live_ids else "unavailable",
         "positions": positions,
         "count": len(positions),
-        "total_live_fleet": total_live,
+        "total_live_fleet": len(live_ids),
         "timestamp": max((p["timestamp"] for p in positions), default=None)
     }
 

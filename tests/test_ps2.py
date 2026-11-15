@@ -46,3 +46,32 @@ class ProblemTwoTests(unittest.TestCase):
         import os
         with patch.dict(os.environ, {"DTS_API_KEY": "", "DELHI_GTFS_RT_API_KEY": ""}):
             self.assertEqual(vehicles(), {"status": "disabled", "positions": []})
+
+
+def test_multimodal_transfer_waits_for_walk_and_boarding_buffer():
+    from datetime import date
+    from src.ps2.timetable import Feed, StopTime, Trip, combine_feeds, local_time
+
+    day = date(2026, 11, 14)
+    calendar = {"daily": (day, day, (True,) * 7)}
+    bus_stops = {"a": {"id": "a", "lat": 28.600, "lon": 77.20},
+                 "b": {"id": "b", "lat": 28.610, "lon": 77.20}}
+    metro_stops = {"metro:x": {"id": "metro:x", "lat": 28.611, "lon": 77.20},
+                   "metro:y": {"id": "metro:y", "lat": 28.625, "lon": 77.20}}
+    bus_trip = Trip("b1", "B", "", "daily", (StopTime("a", 28800, 28800, 1),
+                                             StopTime("b", 29400, 29400, 2)))
+    def metro_trip(trip, start):
+        return Trip(trip, "metro:R", "", "metro:daily",
+                    (StopTime("metro:x", start, start, 1),
+                     StopTime("metro:y", start + 360, start + 360, 2)), "metro")
+
+    bus = Feed(bus_stops, {"B": "Bus"}, {"b1": bus_trip}, calendar, {})
+    metro = Feed(metro_stops, {"metro:R": "Metro"},
+                 {key: metro_trip(key, stamp) for key, stamp in (("early", 29700), ("valid", 29820))},
+                 {"metro:daily": calendar["daily"]}, {})
+    result = combine_feeds(bus, metro).journeys("a", "metro:y", local_time("2026-11-14T08:00"))
+    assert len(result) == 1
+    first, second = result[0]
+    assert first.trip.mode == "bus" and second.trip.mode == "metro"
+    assert second.trip.id == "valid"
+    assert second.walk_minutes == 2

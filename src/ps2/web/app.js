@@ -162,7 +162,7 @@ function makeCrowdBadge(level) {
     container.classList.add("high");
     textNode.textContent = "Crowded";
   } else {
-    textNode.textContent = "Normal load";
+    textNode.textContent = "Crowd data unavailable";
   }
   container.appendChild(textNode);
   return container;
@@ -175,22 +175,7 @@ function updateVisualizers(option) {
     transitMap.setJourney(option);
   }
 
-  const navBanner = byId("hud-nav-banner");
-  if (navBanner && option && option.legs && option.legs.length) {
-    const firstLeg = option.legs[0];
-    const points = firstLeg.points || [];
-    const nextStopName = points.length > 1 ? points[1].name : firstLeg.to.name;
-    const isMetro = String(firstLeg.route).toLowerCase().includes("line") || String(firstLeg.route).toLowerCase().includes("metro");
-    const routePrefix = isMetro ? "Metro " : "Bus ";
 
-    const hudNext = byId("hud-next-stop");
-    const hudSub = byId("hud-subtext");
-    if (hudNext) hudNext.textContent = "Next: " + nextStopName;
-    if (hudSub) hudSub.textContent = routePrefix + firstLeg.route + " · " + Math.round(option.minutes) + " min duration";
-    navBanner.hidden = false;
-  } else if (navBanner) {
-    navBanner.hidden = true;
-  }
 }
 
 // 5. Google Maps / Apple Maps Style Transit Option Card
@@ -218,7 +203,7 @@ function journeyCard(option, isFirst = false) {
       badgeRow.appendChild(arrow);
     }
     const badge = document.createElement("span");
-    const isMetro = String(leg.route).toLowerCase().includes("line");
+    const isMetro = leg.mode === "metro";
     badge.className = "route-badge " + (isMetro ? "metro" : "bus");
 
     // Clean SVG icon for bus or metro
@@ -226,16 +211,10 @@ function journeyCard(option, isFirst = false) {
       ? `<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2c-4.42 0-8 .5-8 4v10c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4zm0 2c3.5 0 6 .4 6 2v2H6V6c0-1.6 2.5-2 6-2zm-5 13c-.83 0-1.5-.67-1.5-1.5S6.17 14 7 14s1.5.67 1.5 1.5S7.83 17 7 17zm10 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>`
       : `<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/></svg>`;
 
-    badge.innerHTML = `${svgIcon}<span>${leg.route}</span>`;
+    badge.innerHTML = svgIcon;
+    badge.append(node("span", leg.route));
     badgeRow.appendChild(badge);
   });
-
-  // Estimated Transit Fare Pill (DTC & DMRC Tariff Ground Truth)
-  const isMulti = (option.transfers || 0) > 0;
-  const farePill = document.createElement("span");
-  farePill.className = "fare-pill";
-  farePill.textContent = isMulti ? "₹25 Fare" : "₹15 AC";
-  badgeRow.appendChild(farePill);
 
   top.appendChild(badgeRow);
   top.appendChild(makeCrowdBadge(option.crowd?.level));
@@ -277,10 +256,13 @@ function journeyCard(option, isFirst = false) {
     startStep.innerHTML = `
       <div class="timeline-node origin"></div>
       <div class="timeline-content">
-        <div class="timeline-stop-name">${leg.from.name}</div>
-        <div class="timeline-stop-time">Depart ${clock(leg.departure)} · Board ${leg.route}</div>
+        <div class="timeline-stop-name"></div>
+        <div class="timeline-stop-time">Depart ${clock(leg.departure)}</div>
       </div>
     `;
+    startStep.querySelector(".timeline-stop-name").textContent = leg.from.name;
+    startStep.querySelector(".timeline-stop-time").textContent += " · Board " + leg.route;
+    if (leg.walkMinutes) track.append(node("p", "Walk about " + leg.walkMinutes + " min to transfer"));
     track.appendChild(startStep);
 
     // Intermediate Stretch Note with Crowding
@@ -294,9 +276,10 @@ function journeyCard(option, isFirst = false) {
         : "";
       midStep.innerHTML = `
         <div class="timeline-content" style="color:var(--g-subtext); font-size:0.72rem;">
-          Ride ${pointsCount - 1} stops (${Math.round(leg.rideMinutes)} min)${modeledInfo}
+          Ride ${pointsCount - 1} stops (${Math.round(leg.rideMinutes)} min)
         </div>
       `;
+      midStep.firstElementChild.textContent = `Ride ${pointsCount - 1} stops (${Math.round(leg.rideMinutes)} min)${modeledInfo}`;
       track.appendChild(midStep);
     }
 
@@ -306,10 +289,11 @@ function journeyCard(option, isFirst = false) {
     endStep.innerHTML = `
       <div class="timeline-node ${isLastLeg ? 'dest' : ''}"></div>
       <div class="timeline-content">
-        <div class="timeline-stop-name">${leg.to.name}</div>
+        <div class="timeline-stop-name"></div>
         <div class="timeline-stop-time">Arrive ${clock(leg.arrival)} ${isLastLeg ? '· Destination reached' : '· Transfer connection'}</div>
       </div>
     `;
+    endStep.querySelector(".timeline-stop-name").textContent = leg.to.name;
     track.appendChild(endStep);
 
     legsContainer.appendChild(track);
@@ -409,16 +393,7 @@ if (btnSwap) {
     originInput.value = destInput.value;
     destInput.value = tempName;
 
-    // Resolve matching stop IDs for the reverse direction
-    try {
-      const origHits = await request("/api/stops", { q: originInput.value });
-      const destHits = await request("/api/stops", { q: destInput.value });
-      if (origHits && origHits.length) stopIds.origin = origHits[0].id;
-      if (destHits && destHits.length) stopIds.destination = destHits[0].id;
-    } catch (e) {
-      console.warn("Could not resolve swapped stop IDs:", e);
-    }
-
+    [stopIds.origin, stopIds.destination] = [stopIds.destination, stopIds.origin];
     if (stopIds.origin && stopIds.destination) {
       await plan();
     }
@@ -434,20 +409,15 @@ document.querySelectorAll(".time-chip").forEach((chip) => {
     const depInput = byId("departure");
     if (!depInput) return;
 
-    // Preserve the valid scheduled GTFS date
-    let baseDate = "2026-11-11";
-    if (depInput.value && depInput.value.includes("T")) {
-      baseDate = depInput.value.split("T")[0];
-    }
-
-    if (tVal === "now") {
-      const now = new Date();
-      const hh = String(now.getHours()).padStart(2, "0");
-      const min = String(now.getMinutes()).padStart(2, "0");
-      depInput.value = `${baseDate}T${hh}:${min}`;
-    } else {
-      depInput.value = `${baseDate}T${tVal}`;
-    }
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+    }).formatToParts(new Date());
+    const now = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+    const today = `${now.year}-${now.month}-${now.day}`;
+    const baseDate = depInput.value.split("T")[0] || today;
+    depInput.value = tVal === "now"
+      ? `${today}T${now.hour}:${now.minute}` : `${baseDate}T${tVal}`;
 
     if (stopIds.origin && stopIds.destination) {
       await plan();
@@ -470,6 +440,7 @@ if (btnFollowVehicle) {
   btnFollowVehicle.addEventListener("click", () => {
     if (transitMap) {
       const isFollow = transitMap.toggleFollow();
+      btnFollowVehicle.setAttribute("aria-pressed", String(isFollow));
       btnFollowVehicle.classList.toggle("active", isFollow);
     }
   });
@@ -519,15 +490,17 @@ if (btnCancelRoute) {
   });
 }
 
-const btnSound = byId("hud-sound-toggle");
-if (btnSound) {
-  let isMuted = false;
-  btnSound.addEventListener("click", () => {
-    isMuted = !isMuted;
-    btnSound.style.opacity = isMuted ? "0.5" : "1.0";
-    btnSound.title = isMuted ? "Sound muted" : "Audio guidance active";
-  });
-}
+const previewToggle = byId("hud-sound-toggle");
+previewToggle?.addEventListener("click", () => {
+  if (!transitMap || transitMap.reducedMotion.matches) return;
+  transitMap.previewPaused = !transitMap.previewPaused;
+  const label = transitMap.previewPaused ? "Resume route preview" : "Pause route preview";
+  previewToggle.setAttribute("aria-label", label);
+  previewToggle.setAttribute("aria-pressed", String(transitMap.previewPaused));
+  previewToggle.title = label;
+  previewToggle.querySelector("path").setAttribute("d", transitMap.previewPaused
+    ? "M8 5v14l11-7z" : "M6 5h4v14H6zm8 0h4v14h-4z");
+});
 
 // 8. Dynamic Benchmark Corridor Shortcuts from Dataset
 async function loadCorridors() {
@@ -569,6 +542,7 @@ async function initialize() {
     await loadCorridors();
 
     const config = await request("/api/config");
+    if (config.metroRouting) document.querySelector(".brand-status").textContent = "Bus and Metro journey planner";
     const departureEl = byId("departure");
     if (departureEl && config.defaultTime) {
       departureEl.value = config.defaultTime;

@@ -47,6 +47,7 @@ class Trip:
     direction: str
     service: str
     times: tuple
+    mode: str = "bus"
 
     @property
     def pattern(self):
@@ -61,6 +62,7 @@ class Leg:
     end: int
     departure: datetime
     arrival: datetime
+    walk_minutes: int = 0
 
 
 class Feed:
@@ -76,6 +78,7 @@ class Feed:
         self.trip_patterns = {}
         canonical_patterns = {}
         self.max_day_offset = 0
+        self.interchanges = {}
         for trip in trips.values():
             pattern = trip.pattern
             pattern = canonical_patterns.setdefault(pattern, pattern)
@@ -135,15 +138,19 @@ class Feed:
                 if point.stop == destination:
                     direct.append((leg,))
                     break
-                if point.stop != origin and point.stop in self.departures:
-                    connections[point.stop].append(leg)
+                if point.stop != origin:
+                    if point.stop in self.departures:
+                        connections[point.stop, 0].append(leg)
+                    for transfer, walk in self.interchanges.get(point.stop, ()):
+                        connections[transfer, walk].append(leg)
 
         options = list(direct)
         buffer = timedelta(minutes=transfer_minutes)
         # Index second legs once per transfer stop. This also preserves later,
         # less crowded departures on the same route.
-        for stop, first_legs in connections.items():
-            earliest = min(leg.arrival for leg in first_legs) + buffer
+        for (stop, walk), first_legs in connections.items():
+            transfer_buffer = buffer + timedelta(minutes=walk)
+            earliest = min(leg.arrival for leg in first_legs) + transfer_buffer
             second_legs = []
             for trip, day, first, midnight, departure in self.boardings(stop, earliest, deadline):
                 for last in range(first + 1, len(trip.times)):
@@ -156,34 +163,44 @@ class Feed:
             second_legs.sort(key=lambda leg: leg.departure)
             departures = [leg.departure for leg in second_legs]
             for first in first_legs:
-                ready = first.arrival + buffer
+                ready = first.arrival + transfer_buffer
                 for i in range(bisect_left(departures, ready), len(second_legs)):
                     second = second_legs[i]
                     if self.trip_patterns[second.trip.id] != self.trip_patterns[first.trip.id]:
-                        options.append((first, second))
+                        if walk:
+                            second = Leg(second.trip, second.service_date, second.start, second.end,
+                                         second.departure, second.arrival, walk)
+                        if not walk or first.trip.mode != second.trip.mode:
+                            options.append((first, second))
         return options
 
 
-def load_feed(filename):
+def load_feed(filename, *, mode="bus"):
     filename = Path(filename)
     if filename.is_dir():
-        return _load(lambda name, required=False: _folder_rows(filename, name, required))
+        return _load(lambda name, required=False: _folder_rows(filename, name, required), mode)
     with zipfile.ZipFile(filename) as archive:
         members = {Path(name).name: name for name in archive.namelist() if not name.endswith("/")}
-        return _load(lambda name, required=False: _rows(archive, members, name, required))
+        return _load(lambda name, required=False: _rows(archive, members, name, required), mode)
 
 
-def _load(read):
+def _load(read, mode):
     if any(read("frequencies.txt")):
         raise ValueError("Frequency-based GTFS trips need schedule expansion before import.")
+    prefix = "metro:" if mode == "metro" else ""
     stops = {row["stop_id"]: {"id": row["stop_id"], "name": row["stop_name"],
                              "lat": float(row["stop_lat"]), "lon": float(row["stop_lon"])}
              for row in read("stops.txt", required=True)
              if row.get("location_type", "") in ("", "0") and row.get("stop_lat") and row.get("stop_lon")}
-    routes = {row["route_id"]: row.get("route_short_name") or row.get("route_long_name") or row["route_id"]
-              for row in read("routes.txt", required=True)
-              if row.get("route_type") == "3" or row.get("route_type", "").isdigit()
-              and 700 <= int(row["route_type"]) <= 799}
+    routes = {}
+    for row in read("routes.txt", required=True):
+        route_type = row.get("route_type", "")
+        name = row.get("route_short_name") or row.get("route_long_name") or row["route_id"]
+        if mode == "metro":
+            if route_type == "1":
+                routes[row["route_id"]] = row.get("route_long_name") or name
+        elif route_type == "3" or route_type.isdigit() and 700 <= int(route_type) <= 799:
+            routes[row["route_id"]] = name
     metadata = {row["trip_id"]: row for row in read("trips.txt", required=True)
                 if row["route_id"] in routes}
     trip_times = defaultdict(list)
@@ -198,7 +215,7 @@ def _load(read):
             continue
         arrives = seconds(arrival or departure)
         leaves = arrives if not departure or arrival == departure else seconds(departure)
-        trip_times[trip_id].append(StopTime(sys.intern(row["stop_id"]), arrives,
+        trip_times[trip_id].append(StopTime(sys.intern(prefix + row["stop_id"]), arrives,
                                            leaves, int(row["stop_sequence"]),
                                            row.get("pickup_type", "") in ("", "0"),
                                            row.get("drop_off_type", "") in ("", "0")))
@@ -212,16 +229,43 @@ def _load(read):
                 for a, b in zip(points, points[1:])):
             continue
         row = metadata[trip_id]
-        trips[trip_id] = Trip(trip_id, row["route_id"], row.get("direction_id", ""), row["service_id"], tuple(points))
+        trips[trip_id] = Trip(prefix + trip_id, prefix + row["route_id"], row.get("direction_id", ""),
+                              prefix + row["service_id"], tuple(points), mode)
     weekdays = "monday tuesday wednesday thursday friday saturday sunday".split()
-    calendars = {row["service_id"]: (gtfs_date(row["start_date"]), gtfs_date(row["end_date"]),
+    calendars = {prefix + row["service_id"]: (gtfs_date(row["start_date"]), gtfs_date(row["end_date"]),
                                       tuple(row[key] == "1" for key in weekdays))
                  for row in read("calendar.txt")}
-    exceptions = {(row["service_id"], gtfs_date(row["date"])): row["exception_type"] == "1"
+    exceptions = {(prefix + row["service_id"], gtfs_date(row["date"])): row["exception_type"] == "1"
                   for row in read("calendar_dates.txt")}
     if not trips or not (calendars or exceptions):
-        raise ValueError("No usable scheduled bus trips or service calendar found in the GTFS ZIP.")
-    return Feed(stops, routes, trips, calendars, exceptions)
+        raise ValueError("No usable scheduled trips or service calendar found in the GTFS feed.")
+    return Feed({prefix + key: {**value, "id": prefix + key} for key, value in stops.items()},
+                {prefix + key: value for key, value in routes.items()},
+                {trip.id: trip for trip in trips.values()}, calendars, exceptions)
+
+
+def combine_feeds(bus, metro):
+    """Link stops across modes only when the estimated walk is short."""
+    from ..data_loader import haversine_distance_km
+
+    combined = Feed(bus.stops | metro.stops, bus.routes | metro.routes, bus.trips | metro.trips,
+                    bus.calendars | metro.calendars, bus.exceptions | metro.exceptions)
+    rail_stops = {point.stop for trip in metro.trips.values() for point in trip.times}
+    for rail in metro.stops.values():
+        if rail["id"] not in rail_stops:
+            continue
+        nearby = []
+        for stop in bus.stops.values():
+            if abs(stop["lat"] - rail["lat"]) > .005 or abs(stop["lon"] - rail["lon"]) > .006:
+                continue
+            length = haversine_distance_km(rail["lat"], rail["lon"], stop["lat"], stop["lon"])
+            if length <= .35:
+                nearby.append((length, stop["id"]))
+        for length, stop in sorted(nearby)[:4]:
+            minutes = max(1, math.ceil(length * 1.25 / 4.5 * 60))
+            combined.interchanges.setdefault(rail["id"], []).append((stop, minutes))
+            combined.interchanges.setdefault(stop, []).append((rail["id"], minutes))
+    return combined
 
 
 def _folder_rows(folder, name, required):
