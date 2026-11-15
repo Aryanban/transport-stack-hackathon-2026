@@ -887,7 +887,7 @@ class TransitMapEngine {
           etaCrowd.className = "hud-crowd-chip crowd-unknown";
           etaCrowd.textContent = "Crowd data unavailable";
         } else {
-          etaCrowd.className = "hud-crowd-chip " + (lvl.includes("Standing") ? "crowd-high" : lvl.includes("Crowded") ? "crowd-med" : "crowd-low");
+          etaCrowd.className = "hud-crowd-chip " + (lvl.includes("Crowded") || lvl.includes("Heavily") ? "crowd-high" : (lvl.includes("Standing") ? "crowd-med" : "crowd-low"));
           etaCrowd.textContent = `● ${lvl}`;
         }
       }

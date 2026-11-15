@@ -430,6 +430,59 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-wrap: wrap;
+}
+
+.option-label-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.option-label-badge.fastest {
+  background: #e8f0fe;
+  color: #1a73e8;
+}
+.option-label-badge.comfort {
+  background: #e6f4ea;
+  color: #137333;
+  border: 1px solid #ceead6;
+}
+.option-label-badge.alt {
+  background: #f1f3f4;
+  color: #5f6368;
+}
+
+.duration-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.perceived-time-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.70rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-top: 3px;
+  width: fit-content;
+}
+.perceived-time-pill.high {
+  background: #fce8e6;
+  color: #c5221f;
+}
+.perceived-time-pill.moderate {
+  background: #fef7e0;
+  color: #b06000;
+}
+.perceived-time-pill.low {
+  background: #e6f4ea;
+  color: #137333;
 }
 
 .route-badge {

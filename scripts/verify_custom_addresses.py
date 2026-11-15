@@ -68,18 +68,18 @@ def test_custom_routing():
         print("3. Testing Saket -> Rohini...")
         page.fill("#origin", "saket")
         page.wait_for_timeout(600)
-        saket_item = page.locator("#origin-results .autocomplete-item").first
+        saket_item = page.locator("#origin-results button").first
         if saket_item.is_visible():
             saket_item.click()
             
         page.fill("#destination", "rohini")
         page.wait_for_timeout(600)
-        rohini_item = page.locator("#destination-results .autocomplete-item").first
+        rohini_item = page.locator("#destination-results button").first
         if rohini_item.is_visible():
             rohini_item.click()
             
         page.locator("#planner button[type=submit]").click(force=True)
-        page.wait_for_timeout(2500)
+        page.wait_for_timeout(3000)
         expect(page.locator(".transit-card").first).to_be_visible(timeout=15_000)
         cards_saket = page.locator(".transit-card").all()
         print(f"   Successfully found {len(cards_saket)} transit options for Saket -> Rohini!")

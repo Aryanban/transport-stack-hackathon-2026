@@ -193,6 +193,15 @@ function journeyCard(option, isFirst = false) {
   const badgeRow = document.createElement("div");
   badgeRow.className = "badge-row";
 
+  if (option.label) {
+    const labelChip = document.createElement("span");
+    const isComfort = option.label.toLowerCase().includes("less") || option.label.toLowerCase().includes("comfort");
+    const isFastest = option.label.toLowerCase().includes("fastest");
+    labelChip.className = "option-label-badge " + (isComfort ? "comfort" : (isFastest ? "fastest" : "alt"));
+    labelChip.textContent = option.label + (option.extraMinutes ? ` (+${Math.round(option.extraMinutes)}m)` : "");
+    badgeRow.appendChild(labelChip);
+  }
+
   // Build badges for each leg
   option.legs.forEach((leg, i) => {
     if (i > 0) {
@@ -223,16 +232,29 @@ function journeyCard(option, isFirst = false) {
   const main = document.createElement("div");
   main.className = "transit-card-main";
 
+  const durationBox = document.createElement("div");
+  durationBox.className = "duration-box";
+
   const duration = document.createElement("span");
   duration.className = "duration-text";
   duration.textContent = Math.round(option.minutes) + " min";
+  durationBox.appendChild(duration);
+
+  if (option.perceivedMinutes && Math.round(option.perceivedMinutes) > Math.round(option.minutes) + 2) {
+    const perceived = document.createElement("div");
+    const lvl = option.crowd?.level || "";
+    perceived.className = "perceived-time-pill " + (lvl.includes("Heavily") || lvl.includes("Crowded") ? "high" : "moderate");
+    perceived.title = "Hensher-Wardman perceived travel time (psychological time penalty under standing/crowded conditions)";
+    perceived.textContent = `Feels like ~${Math.round(option.perceivedMinutes)} min (${lvl})`;
+    durationBox.appendChild(perceived);
+  }
 
   const timeWindow = document.createElement("span");
   timeWindow.className = "time-window";
   const transferText = option.transfers ? option.transfers + " transfer" : "Direct";
   timeWindow.textContent = clock(option.departure) + " – " + clock(option.arrival) + " · " + transferText;
 
-  main.appendChild(duration);
+  main.appendChild(durationBox);
   main.appendChild(timeWindow);
 
   // Collapsible Legs Details
@@ -274,12 +296,13 @@ function journeyCard(option, isFirst = false) {
       const modeledInfo = leg.crowd?.modeledPassengers
         ? ` · ~${Math.round(leg.crowd.modeledPassengers)} passengers (${leg.crowd.level})`
         : "";
+      const pinkPass = leg.crowd?.pinkPassExpanded ? ` · incl. ~35% Pink Pass` : "";
       midStep.innerHTML = `
-        <div class="timeline-content" style="color:var(--g-subtext); font-size:0.72rem;">
+        <div class="timeline-content" style="color:var(--g-subtext); font-size:0.72rem; line-height:1.4;">
           Ride ${pointsCount - 1} stops (${Math.round(leg.rideMinutes)} min)
         </div>
       `;
-      midStep.firstElementChild.textContent = `Ride ${pointsCount - 1} stops (${Math.round(leg.rideMinutes)} min)${modeledInfo}`;
+      midStep.firstElementChild.textContent = `Ride ${pointsCount - 1} stops (${Math.round(leg.rideMinutes)} min)${modeledInfo}${pinkPass}`;
       track.appendChild(midStep);
     }
 
