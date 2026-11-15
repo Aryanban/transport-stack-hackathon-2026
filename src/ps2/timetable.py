@@ -78,7 +78,7 @@ class Feed:
         self.trip_patterns = {}
         canonical_patterns = {}
         self.max_day_offset = 0
-        self.interchanges = {}
+        self.interchanges = defaultdict(list)
         for trip in trips.values():
             pattern = trip.pattern
             pattern = canonical_patterns.setdefault(pattern, pattern)
@@ -90,6 +90,30 @@ class Feed:
             self.max_day_offset = max(self.max_day_offset, trip.times[-1].arrival // DAY)
         for rows in self.departures.values():
             rows.sort()
+
+        # Precompute spatial walkable interchanges between nearby transit stops (<= 380m)
+        interchanges_dict = defaultdict(dict)
+        grid = defaultdict(list)
+        for s in stops.values():
+            if "lat" in s and "lon" in s and s.get("lat") is not None and s.get("lon") is not None:
+                grid[int(s["lat"] * 100), int(s["lon"] * 100)].append(s)
+        for s1 in stops.values():
+            if "lat" not in s1 or s1.get("lat") is None:
+                continue
+            gx, gy = int(s1["lat"] * 100), int(s1["lon"] * 100)
+            for dx in (-1, 0, 1):
+                for dy in (-1, 0, 1):
+                    for s2 in grid.get((gx + dx, gy + dy), ()):
+                        if s1["id"] != s2["id"]:
+                            dlat = s1["lat"] - s2["lat"]
+                            dlon = s1["lon"] - s2["lon"]
+                            if abs(dlat) <= 0.0035 and abs(dlon) <= 0.004:
+                                d = math.hypot(dlat * 111.0, dlon * 97.0)
+                                if d <= 0.38:
+                                    walk_min = max(1, math.ceil(d / 4.5 * 60))
+                                    if s2["id"] not in interchanges_dict[s1["id"]] or walk_min < interchanges_dict[s1["id"]][s2["id"]]:
+                                        interchanges_dict[s1["id"]][s2["id"]] = walk_min
+        self.interchanges = defaultdict(list, {k: list(v.items()) for k, v in interchanges_dict.items()})
 
     def active(self, service, day):
         if self.demo:
@@ -123,31 +147,56 @@ class Feed:
         return Leg(trip, day, first, last, departure,
                    midnight + timedelta(seconds=trip.times[last].arrival))
 
-    def journeys(self, origin, destination, start, *, limit_hours=3, transfer_minutes=4):
-        deadline = start + timedelta(hours=limit_hours)
+    def _find_journeys(self, origin, destination, start, deadline, transfer_minutes, allow_nearby=False):
+        dest_stops = {destination: 0}
+        if allow_nearby:
+            for nbr, w in self.interchanges.get(destination, ()):
+                if w <= 8:
+                    dest_stops[nbr] = w
+
+        origin_stops = {origin: 0}
+        if allow_nearby:
+            for nbr, w in self.interchanges.get(origin, ()):
+                if w <= 8:
+                    origin_stops[nbr] = w
+
         direct = []
         connections = defaultdict(list)
-        for trip, day, first, midnight, departure in self.boardings(origin, start, deadline):
-            for last in range(first + 1, len(trip.times)):
-                point = trip.times[last]
-                if not point.dropoff:
-                    continue
-                leg = self.make_leg(trip, day, first, last, midnight, departure)
-                if leg.arrival > deadline:
-                    break
-                if point.stop == destination:
-                    direct.append((leg,))
-                    break
-                if point.stop != origin:
-                    if point.stop in self.departures:
-                        connections[point.stop, 0].append(leg)
-                    for transfer, walk in self.interchanges.get(point.stop, ()):
-                        connections[transfer, walk].append(leg)
+        seen_connections = set()
+
+        for o_stop, o_walk in origin_stops.items():
+            o_start = start + timedelta(minutes=o_walk)
+            for trip, day, first, midnight, departure in self.boardings(o_stop, o_start, deadline):
+                for last in range(first + 1, len(trip.times)):
+                    point = trip.times[last]
+                    if not point.dropoff:
+                        continue
+                    leg = self.make_leg(trip, day, first, last, midnight, departure)
+                    if leg.arrival > deadline:
+                        break
+                    if point.stop in dest_stops:
+                        w = dest_stops[point.stop]
+                        if o_walk or w:
+                            leg = Leg(leg.trip, leg.service_date, leg.start, leg.end, leg.departure,
+                                      leg.arrival + timedelta(minutes=w), leg.walk_minutes + o_walk + w)
+                        direct.append((leg,))
+                        break
+                    if point.stop != o_stop:
+                        if point.stop in self.departures:
+                            ckey = (point.stop, 0, leg.trip.id, leg.start, leg.end)
+                            if ckey not in seen_connections:
+                                seen_connections.add(ckey)
+                                connections[point.stop, 0].append(leg)
+                        for transfer, walk in self.interchanges.get(point.stop, ()):
+                            if transfer != point.stop and transfer in self.departures:
+                                ckey = (transfer, walk, leg.trip.id, leg.start, leg.end)
+                                if ckey not in seen_connections:
+                                    seen_connections.add(ckey)
+                                    connections[transfer, walk].append(leg)
 
         options = list(direct)
+        seen_options = {(tuple(l.trip.id for l in opt), opt[0].departure, opt[-1].arrival) for opt in options}
         buffer = timedelta(minutes=transfer_minutes)
-        # Index second legs once per transfer stop. This also preserves later,
-        # less crowded departures on the same route.
         for (stop, walk), first_legs in connections.items():
             transfer_buffer = buffer + timedelta(minutes=walk)
             earliest = min(leg.arrival for leg in first_legs) + transfer_buffer
@@ -155,24 +204,41 @@ class Feed:
             for trip, day, first, midnight, departure in self.boardings(stop, earliest, deadline):
                 for last in range(first + 1, len(trip.times)):
                     point = trip.times[last]
-                    if point.stop == destination and point.dropoff:
+                    if point.stop in dest_stops and point.dropoff:
+                        w = dest_stops[point.stop]
                         leg = self.make_leg(trip, day, first, last, midnight, departure)
                         if leg.arrival <= deadline:
+                            if w:
+                                leg = Leg(leg.trip, leg.service_date, leg.start, leg.end, leg.departure,
+                                          leg.arrival + timedelta(minutes=w), leg.walk_minutes + w)
                             second_legs.append(leg)
                         break
             second_legs.sort(key=lambda leg: leg.departure)
             departures = [leg.departure for leg in second_legs]
             for first in first_legs:
                 ready = first.arrival + transfer_buffer
-                for i in range(bisect_left(departures, ready), len(second_legs)):
+                start_idx = bisect_left(departures, ready)
+                for i in range(start_idx, min(len(second_legs), start_idx + 8)):
                     second = second_legs[i]
                     if self.trip_patterns[second.trip.id] != self.trip_patterns[first.trip.id]:
                         if walk:
                             second = Leg(second.trip, second.service_date, second.start, second.end,
-                                         second.departure, second.arrival, walk)
-                        if not walk or first.trip.mode != second.trip.mode:
-                            options.append((first, second))
+                                         second.departure, second.arrival, second.walk_minutes + walk)
+                        opt = (first, second)
+                        opt_key = (tuple(l.trip.id for l in opt), opt[0].departure, opt[-1].arrival)
+                        if opt_key not in seen_options:
+                            seen_options.add(opt_key)
+                            options.append(opt)
         return options
+
+    def journeys(self, origin, destination, start, *, limit_hours=4, transfer_minutes=4):
+        deadline = start + timedelta(hours=limit_hours)
+        # 1. Direct and transfer journeys strictly between the exact origin and destination stops
+        exact_opts = self._find_journeys(origin, destination, start, deadline, transfer_minutes, allow_nearby=False)
+        if exact_opts:
+            return exact_opts
+        # 2. If no route connects exact stops (e.g. opposite-side stops or adjacent terminals), allow nearby walkable stops
+        return self._find_journeys(origin, destination, start, deadline, transfer_minutes, allow_nearby=True)
 
 
 def load_feed(filename, *, mode="bus"):
@@ -263,8 +329,10 @@ def combine_feeds(bus, metro):
                 nearby.append((length, stop["id"]))
         for length, stop in sorted(nearby)[:4]:
             minutes = max(1, math.ceil(length * 1.25 / 4.5 * 60))
-            combined.interchanges.setdefault(rail["id"], []).append((stop, minutes))
-            combined.interchanges.setdefault(stop, []).append((rail["id"], minutes))
+            if not any(nbr == stop for nbr, _ in combined.interchanges[rail["id"]]):
+                combined.interchanges[rail["id"]].append((stop, minutes))
+            if not any(nbr == rail["id"] for nbr, _ in combined.interchanges[stop]):
+                combined.interchanges[stop].append((rail["id"], minutes))
     return combined
 
 

@@ -1,6 +1,8 @@
 """FastAPI entry point for the bus-only PS2 planner."""
 import json
 import os
+import re
+import difflib
 from functools import lru_cache
 from datetime import datetime
 from pathlib import Path
@@ -17,6 +19,27 @@ from .metro_loader import get_metro_network_geojson
 app = FastAPI(title="Delhi Bus Planner · Transport Stack PS2", version="2.0")
 WEB = Path(__file__).with_name("web")
 SOURCE_LOCK = Lock()
+
+
+def _normalize_stop_text(text: str) -> str:
+    t = text.lower()
+    t = re.sub(r"\bsector\b", "sec", t)
+    t = re.sub(r"\bterminal\b", "t", t)
+    t = re.sub(r"\brailway station\b", "rly stn", t)
+    t = re.sub(r"\bmetro station\b", "metro", t)
+    t = re.sub(r"\bcrossing\b", "xing", t)
+    t = re.sub(r"\broad\b", "rd", t)
+    t = re.sub(r"\bhospital\b", "hosp", t)
+    t = re.sub(r"\bnagar\b", "ngr", t)
+    t = re.sub(r"[^a-z0-9\s]", " ", t)
+    return " ".join(t.split())
+
+
+@lru_cache(maxsize=1)
+def _stop_search_cache(feed_id):
+    feed, _ = state()
+    valid = [s for s in feed.stops.values() if s["id"] in feed.departures]
+    return [(s, _normalize_stop_text(s["name"]), _normalize_stop_text(s["name"]).replace(" ", "")) for s in valid]
 
 
 @lru_cache(maxsize=1)
@@ -55,11 +78,43 @@ def stops(q: str = Query("", max_length=80)):
     if not term:
         return []
     feed, _ = state()
-    hits = [stop for stop in feed.stops.values()
-            if stop["id"] in feed.departures and (term in stop["name"].casefold() or term == stop["id"])]
-    hits.sort(key=lambda stop: (term != stop["id"], not stop["name"].casefold().startswith(term),
-                                stop["name"], stop["id"]))
-    return hits[:12]
+    cache = _stop_search_cache(id(feed))
+    q_norm = _normalize_stop_text(q)
+    q_compact = q_norm.replace(" ", "")
+    q_tokens = q_norm.split()
+
+    scored = []
+    for s, t_norm, t_compact in cache:
+        if term == s["id"]:
+            scored.append((100.0, s))
+            continue
+        if t_norm.startswith(q_norm):
+            scored.append((90.0, s))
+            continue
+        if q_norm in t_norm:
+            scored.append((80.0, s))
+            continue
+        if len(q_compact) >= 4 and (q_compact in t_compact or t_compact in q_compact):
+            scored.append((70.0, s))
+            continue
+        if q_tokens and all(any(qt in tt for tt in t_norm.split()) for qt in q_tokens):
+            scored.append((65.0, s))
+            continue
+        if len(q_compact) >= 4:
+            ratio = difflib.SequenceMatcher(None, q_compact, t_compact).ratio()
+            if ratio >= 0.65:
+                scored.append((50.0 * ratio, s))
+            elif q_tokens and len(q_tokens) >= 2:
+                t_tokens = t_norm.split()
+                if t_tokens:
+                    first_ratio = difflib.SequenceMatcher(None, q_tokens[0], t_tokens[0]).ratio()
+                    if first_ratio >= 0.75:
+                        rem_match = sum(1 for qt in q_tokens[1:] if any(qt in tt for tt in t_tokens[1:]))
+                        if rem_match > 0:
+                            scored.append((35.0 + 15.0 * rem_match, s))
+
+    scored.sort(key=lambda x: (-x[0], x[1]["name"], x[1]["id"]))
+    return [s for _, s in scored[:12]]
 
 
 @app.get("/api/journeys")

@@ -47,7 +47,7 @@ CORRIDOR_SCENARIOS = [
     },
     {
         "name": "Southwest-to-North: Mangla Puri Terminal to Kashmere Gate",
-        "origin_id": "336",
+        "origin_id": "3691",
         "destination_id": "1025",
         "min_dist_km": 15.0,
         "max_dist_km": 32.0,

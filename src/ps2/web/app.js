@@ -339,6 +339,28 @@ async function plan(event) {
   const submit = form?.querySelector("button[type=submit]");
   if (submit?.disabled) return;
 
+  const originInput = byId("origin");
+  const destInput = byId("destination");
+
+  // Auto-resolve typed names/addresses if user pressed Enter or Submit without clicking dropdown
+  if (!stopIds.origin && originInput?.value.trim()) {
+    try {
+      const hits = await request("/api/stops", { q: originInput.value.trim() });
+      if (hits && hits.length > 0) {
+        chooseOrigin(hits[0]);
+      }
+    } catch (_) {}
+  }
+
+  if (!stopIds.destination && destInput?.value.trim()) {
+    try {
+      const hits = await request("/api/stops", { q: destInput.value.trim() });
+      if (hits && hits.length > 0) {
+        chooseDestination(hits[0]);
+      }
+    } catch (_) {}
+  }
+
   if (!stopIds.origin || !stopIds.destination) {
     if (statusEl) statusEl.textContent = "Choose both stops from the search suggestions.";
     return;
