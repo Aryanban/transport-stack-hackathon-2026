@@ -102,13 +102,23 @@ def verify_all_locations():
         page.screenshot(path=shot2, full_page=True)
         print(f"✓ Screenshot captured: {shot2}")
 
+        # Verify Quick Corridors are completely removed
+        assert page.locator("#corridor-chips").count() == 0, "Quick corridor chips should be removed!"
+        assert page.locator(".quick-corridors").count() == 0, "Quick corridors container should be removed!"
+
         # -------------------------------------------------------------------------
-        # Scenario 3: Central Arterial Corridor Chip (449UP: ISBT -> Delhi Gate)
+        # Scenario 3: Central Arterial Corridor (ISBT -> Delhi Gate)
         # -------------------------------------------------------------------------
-        print("\n--- Scenario 3: Central Arterial Corridor Chip (449UP: ISBT -> Delhi Gate) ---")
-        chip_isbt = page.locator("#corridor-chips button.chip", has_text="Delhi Gate")
-        assert chip_isbt.count() > 0, "Expected ISBT to Delhi Gate corridor chip!"
-        chip_isbt.first.click()
+        print("\n--- Scenario 3: Central Arterial Corridor (ISBT -> Delhi Gate) ---")
+        page.fill("#origin", "Kashmere Gate City Bus Terminal")
+        page.wait_for_timeout(400)
+        orig_sug = page.locator("#origin-results .autocomplete-item").first
+        if orig_sug.is_visible(): orig_sug.click()
+        page.fill("#destination", "Delhi Gate")
+        page.wait_for_timeout(400)
+        dest_sug = page.locator("#destination-results .autocomplete-item").first
+        if dest_sug.is_visible(): dest_sug.click()
+        page.locator("#planner button[type=submit]").click(force=True)
 
         time.sleep(2.0)
         page.wait_for_selector(".transit-card", timeout=10000)
@@ -125,12 +135,18 @@ def verify_all_locations():
         print(f"✓ Screenshot captured: {shot3}")
 
         # -------------------------------------------------------------------------
-        # Scenario 4: Trans-Yamuna East Arterial Chip (534UP: Anand Vihar ISBT)
+        # Scenario 4: Trans-Yamuna East Arterial (Anand Vihar ISBT)
         # -------------------------------------------------------------------------
-        print("\n--- Scenario 4: Trans-Yamuna East Arterial Chip (534UP: Anand Vihar) ---")
-        chip_anand = page.locator("#corridor-chips button.chip", has_text="Anand Vihar")
-        assert chip_anand.count() > 0, "Expected Anand Vihar corridor chip!"
-        chip_anand.first.click()
+        print("\n--- Scenario 4: Trans-Yamuna East Arterial (Anand Vihar ISBT) ---")
+        page.fill("#origin", "Anand Vihar ISBT Main Road")
+        page.wait_for_timeout(400)
+        orig_sug = page.locator("#origin-results .autocomplete-item").first
+        if orig_sug.is_visible(): orig_sug.click()
+        page.fill("#destination", "Maharani Bagh")
+        page.wait_for_timeout(400)
+        dest_sug = page.locator("#destination-results .autocomplete-item").first
+        if dest_sug.is_visible(): dest_sug.click()
+        page.locator("#planner button[type=submit]").click(force=True)
 
         time.sleep(2.0)
         page.wait_for_selector(".transit-card", timeout=10000)
@@ -147,12 +163,18 @@ def verify_all_locations():
         print(f"✓ Screenshot captured: {shot4}")
 
         # -------------------------------------------------------------------------
-        # Scenario 5: Ring Road North Arterial Chip (761DOWN: Azadpur Terminal)
+        # Scenario 5: Ring Road North Arterial (Azadpur Terminal)
         # -------------------------------------------------------------------------
-        print("\n--- Scenario 5: Ring Road North Arterial Chip (761DOWN: Azadpur Terminal) ---")
-        chip_azadpur = page.locator("#corridor-chips button.chip", has_text="Azadpur")
-        assert chip_azadpur.count() > 0, "Expected Azadpur corridor chip!"
-        chip_azadpur.first.click()
+        print("\n--- Scenario 5: Ring Road North Arterial (Azadpur Terminal) ---")
+        page.fill("#origin", "Azadpur Terminal")
+        page.wait_for_timeout(400)
+        orig_sug = page.locator("#origin-results .autocomplete-item").first
+        if orig_sug.is_visible(): orig_sug.click()
+        page.fill("#destination", "Punjabi Bagh")
+        page.wait_for_timeout(400)
+        dest_sug = page.locator("#destination-results .autocomplete-item").first
+        if dest_sug.is_visible(): dest_sug.click()
+        page.locator("#planner button[type=submit]").click(force=True)
 
         time.sleep(2.0)
         page.wait_for_selector(".transit-card", timeout=10000)

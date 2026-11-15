@@ -39,7 +39,9 @@ def verify_ui(args):
         expect(page.locator("#hud-subtext")).to_contain_text("Scheduled route preview")
         expect(page.locator("#hud-eta-dist")).to_contain_text("km")
         expect(page.locator("#vehicle-floating-speed")).to_have_text("Preview")
-        expect(page.locator("#corridor-chips .chip").first).to_be_visible()
+        # Quick corridors should be completely removed
+        expect(page.locator("#corridor-chips")).to_have_count(0)
+        expect(page.locator(".quick-corridors")).to_have_count(0)
 
         # Theme toggle button should be completely removed
         expect(page.locator("#btn-toggle-theme")).to_have_count(0)
@@ -55,8 +57,9 @@ def verify_ui(args):
         expect(page.locator("#origin")).to_have_value(destination)
         expect(page.locator("#destination")).to_have_value(origin)
         expect(page.locator("#planner button[type=submit]")).to_be_enabled(timeout=20_000)
-        page.locator("#corridor-chips .chip").first.click()
+        page.locator("#btn-swap-stops").click()
         expect(page.locator("#origin")).to_have_value(origin)
+        expect(page.locator("#destination")).to_have_value(destination)
         expect(page.locator("#hud-bottom-eta")).to_be_visible()
         page.locator("#btn-toggle-live-fleet").click()
         expect(page.locator("#fleet-count-text")).to_have_text(
