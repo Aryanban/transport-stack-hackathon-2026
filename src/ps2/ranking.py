@@ -149,6 +149,51 @@ def signature(legs):
                   tuple(point.stop for point in leg.trip.times[leg.start:leg.end + 1])) for leg in legs)
 
 
+def _get_corridor_waypoints(feed, start_pt, end_pt, max_waypoints=8):
+    from ..data_loader import haversine_distance_km
+    import math
+
+    total_dist = haversine_distance_km(start_pt["lat"], start_pt["lon"], end_pt["lat"], end_pt["lon"])
+    if total_dist <= 1.0:
+        return [start_pt, end_pt]
+
+    ax, ay = start_pt["lon"], start_pt["lat"]
+    bx, by = end_pt["lon"], end_pt["lat"]
+    dx, dy = bx - ax, by - ay
+    mag_sq = dx * dx + dy * dy
+    if mag_sq == 0:
+        return [start_pt, end_pt]
+
+    candidates = []
+    for s in feed.stops.values():
+        px, py = s["lon"], s["lat"]
+        # Projection factor t along line segment AB (0.0 to 1.0)
+        t = ((px - ax) * dx + (py - ay) * dy) / mag_sq
+        if 0.05 < t < 0.95:
+            cx, cy = ax + t * dx, ay + t * dy
+            perp_dist = math.hypot(px - cx, py - cy)
+            if perp_dist < 0.0075:  # within ~800m of corridor trajectory
+                candidates.append((t, s))
+
+    # Strictly monotonic order along direction of travel (zero zigzag)
+    candidates.sort(key=lambda x: x[0])
+    if not candidates:
+        steps = max(3, max_waypoints)
+        pts = [start_pt]
+        for i in range(1, steps):
+            frac = i / steps
+            pts.append({
+                "id": f"wp_{i}", "name": "En route",
+                "lat": ay + dy * frac, "lon": ax + dx * frac,
+            })
+        pts.append(end_pt)
+        return pts
+
+    step = max(1, len(candidates) // max_waypoints)
+    sampled = [s for _, s in candidates[::step][:max_waypoints]]
+    return [start_pt] + sampled + [end_pt]
+
+
 def synthesize_transit_itinerary(feed, profiles, origin_id, dest_id, start_dt):
     s1 = feed.stops.get(origin_id)
     s2 = feed.stops.get(dest_id)
@@ -156,6 +201,8 @@ def synthesize_transit_itinerary(feed, profiles, origin_id, dest_id, start_dt):
         return []
 
     from ..data_loader import haversine_distance_km
+    from ..traffic_model import BusTrafficModel
+    traffic_model = BusTrafficModel()
 
     # Key Delhi transit hubs with active connecting lines
     hubs = [
@@ -188,14 +235,23 @@ def synthesize_transit_itinerary(feed, profiles, origin_id, dest_id, start_dt):
         d1 = haversine_distance_km(s1["lat"], s1["lon"], hub["lat"], hub["lon"])
         d2 = haversine_distance_km(hub["lat"], hub["lon"], s2["lat"], s2["lon"])
 
-        speed_kmh = 22.0
-        t1_min = max(8, round(d1 / speed_kmh * 60))
-        t2_min = max(8, round(d2 / speed_kmh * 60))
-        transfer_min = 4 + (idx * 2)
-
         dep1 = start_dt + timedelta(minutes=4 + idx * 3)
+        h1 = dep1.hour
+        stops1_count = max(4, round(d1 / 0.55))
+        base_speed1 = traffic_model.get_expected_speed(h1)
+        corridor_speed1 = max(18.0, base_speed1 * (1.35 if ("Ring" in hub["name"] or "Dhaula" in hub["name"]) else 1.15))
+        dwell_min1 = (stops1_count * 20.0) / 60.0
+        t1_min = max(8.0, round((d1 / corridor_speed1) * 60.0 + dwell_min1))
         arr1 = dep1 + timedelta(minutes=t1_min)
+
+        transfer_min = 4 + (idx * 2)
         dep2 = arr1 + timedelta(minutes=transfer_min)
+        h2 = dep2.hour
+        stops2_count = max(4, round(d2 / 0.55))
+        base_speed2 = traffic_model.get_expected_speed(h2)
+        corridor_speed2 = max(18.0, base_speed2 * (1.30 if ("Azadpur" in hub["name"] or "Punjabi" in hub["name"]) else 1.15))
+        dwell_min2 = (stops2_count * 20.0) / 60.0
+        t2_min = max(8.0, round((d2 / corridor_speed2) * 60.0 + dwell_min2))
         arr2 = dep2 + timedelta(minutes=t2_min)
 
         r1 = orig_routes[idx % len(orig_routes)] if orig_routes else hub["route"]
@@ -203,18 +259,8 @@ def synthesize_transit_itinerary(feed, profiles, origin_id, dest_id, start_dt):
 
         hub_stop = {"id": f"hub_{idx}", "name": hub["name"], "lat": hub["lat"], "lon": hub["lon"]}
 
-        pts1 = [
-            s1,
-            {"id": f"wp1_{idx}", "name": f"Via {r1}", "lat": (s1["lat"] * 2 + hub["lat"]) / 3, "lon": (s1["lon"] * 2 + hub["lon"]) / 3},
-            {"id": f"wp2_{idx}", "name": f"Approaching {hub['name']}", "lat": (s1["lat"] + hub["lat"] * 2) / 3, "lon": (s1["lon"] + hub["lon"] * 2) / 3},
-            hub_stop,
-        ]
-        pts2 = [
-            hub_stop,
-            {"id": f"wp3_{idx}", "name": f"Via {r2}", "lat": (hub["lat"] * 2 + s2["lat"]) / 3, "lon": (hub["lon"] * 2 + s2["lon"]) / 3},
-            {"id": f"wp4_{idx}", "name": f"Approaching {s2['name']}", "lat": (hub["lat"] + s2["lat"] * 2) / 3, "lon": (hub["lon"] + s2["lon"] * 2) / 3},
-            s2,
-        ]
+        pts1 = _get_corridor_waypoints(feed, s1, hub_stop, max_waypoints=8)
+        pts2 = _get_corridor_waypoints(feed, hub_stop, s2, max_waypoints=8)
 
         crowd_tier1 = "Seats available" if idx == 2 else ("Standing room" if idx == 1 else "Moderate")
         crowd_tier2 = "Seats available" if idx == 2 else "Standing room"
@@ -258,3 +304,4 @@ def synthesize_transit_itinerary(feed, profiles, origin_id, dest_id, start_dt):
         options.append(opt)
 
     return options
+

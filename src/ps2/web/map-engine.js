@@ -326,7 +326,7 @@ class TransitMapEngine {
     const map = this.map;
     this._registerSprites();
 
-    // 1. 3D Extruded Buildings (Daylight Architectural Palette)
+    // 1. Google Maps Daylight Architectural Buildings (Clean light palette - Zero black polygons)
     if (map.getSource("openmaptiles") && !map.getLayer("3d-buildings")) {
       const layers = map.getStyle().layers || [];
       let labelLayerId;
@@ -342,28 +342,28 @@ class TransitMapEngine {
         source: "openmaptiles",
         "source-layer": "building",
         type: "fill-extrusion",
-        minzoom: 12.5,
+        minzoom: 14.5,
+        filter: [">", ["to-number", ["get", "render_height"], 0], 0],
         paint: {
-          "fill-extrusion-color": [
-            "interpolate", ["linear"], ["get", "render_height"],
-            0, "#F1F5F9",
-            20, "#E2E8F0",
-            60, "#CBD5E1"
-          ],
-          "fill-extrusion-height": [
-            "interpolate", ["linear"], ["zoom"],
-            12.5, 0,
-            14.5, ["get", "render_height"]
-          ],
-          "fill-extrusion-base": [
-            "interpolate", ["linear"], ["zoom"],
-            12.5, 0,
-            14.5, ["get", "render_min_height"]
-          ],
-          "fill-extrusion-opacity": 0.88
+          "fill-extrusion-color": "#E2E8F0",
+          "fill-extrusion-height": ["to-number", ["get", "render_height"], 10],
+          "fill-extrusion-base": ["to-number", ["get", "render_min_height"], 0],
+          "fill-extrusion-opacity": 0.65
         }
       }, labelLayerId);
     }
+
+    // Sanitize any existing 2D building layers to ensure clean Google Maps daylight tones
+    const styleLayers = map.getStyle().layers || [];
+    styleLayers.forEach((l) => {
+      if (l.id && l.id.toLowerCase().includes("building") && l.type === "fill") {
+        try {
+          map.setPaintProperty(l.id, "fill-color", "#E8EDF2");
+          map.setPaintProperty(l.id, "fill-outline-color", "#CBD5E1");
+          map.setPaintProperty(l.id, "fill-opacity", 0.70);
+        } catch (_) {}
+      }
+    });
 
     // 2. Delhi Metro (DMRC) Network Layers
     if (!map.getSource("delhi-metro-source")) {
@@ -422,11 +422,22 @@ class TransitMapEngine {
         id: "metro-stations-halo",
         type: "circle",
         source: "delhi-metro-source",
+        minzoom: 12.0,
         filter: ["==", ["get", "type"], "station"],
         paint: {
-          "circle-radius": ["case", ["get", "interchange"], 7.5, 5],
+          "circle-radius": [
+            "interpolate", ["linear"], ["zoom"],
+            12.0, 2.5,
+            14.0, ["case", ["get", "interchange"], 5.5, 4.0],
+            16.0, ["case", ["get", "interchange"], 7.5, 5.5]
+          ],
           "circle-color": "#FFFFFF",
-          "circle-stroke-width": 2.5,
+          "circle-stroke-width": [
+            "interpolate", ["linear"], ["zoom"],
+            12.0, 1.2,
+            14.0, 1.8,
+            16.0, 2.4
+          ],
           "circle-stroke-color": ["case", ["get", "interchange"], "#F59E0B", "#2563EB"]
         }
       });
@@ -541,10 +552,15 @@ class TransitMapEngine {
         type: "circle",
         source: "route-stops-source",
         paint: {
-          "circle-radius": 4.5,
+          "circle-radius": [
+            "interpolate", ["linear"], ["zoom"],
+            10, 2.5,
+            13, 3.5,
+            16, 5.0
+          ],
           "circle-color": "#FFFFFF",
-          "circle-stroke-width": 2.0,
-          "circle-stroke-color": "#374151"
+          "circle-stroke-width": 1.8,
+          "circle-stroke-color": "#1E3A8A"
         }
       });
     }
@@ -585,16 +601,17 @@ class TransitMapEngine {
           "icon-image": ["case", ["==", ["get", "mode"], "metro"], "metro-3d-model", "bus-3d-model"],
           "icon-size": [
             "interpolate", ["linear"], ["zoom"],
-            10, 0.40,
-            13, 0.65,
-            15, 0.90,
-            17, 1.20
+            10, 0.28,
+            12, 0.38,
+            14, 0.55,
+            16, 0.85
           ],
           "icon-rotate": ["get", "bearing"],
           "icon-rotation-alignment": "map",
           "icon-pitch-alignment": "map",
-          "icon-allow-overlap": true,
-          "icon-ignore-placement": true
+          "icon-allow-overlap": false,
+          "icon-ignore-placement": false,
+          "icon-padding": 8
         }
       });
     }
@@ -1130,20 +1147,35 @@ class TransitMapEngine {
         : this._getSimulatedFleetPositions();
 
       if (this.map && this.map.getSource("live-fleet-source")) {
-        const features = vehicleList.map((p) => ({
-          type: "Feature",
-          properties: {
-            vehicle_id: p.vehicle_id,
-            speed: p.speed_kmh,
-            route: p.route_id,
-            bearing: p.bearing ?? 0,
-            mode: p.mode || "bus"
-          },
-          geometry: {
-            type: "Point",
-            coordinates: [p.lon, p.lat]
+        this.prevVehicleCoords = this.prevVehicleCoords || new Map();
+        const features = vehicleList.map((p) => {
+          let bearing = p.bearing;
+          const prev = this.prevVehicleCoords.get(p.vehicle_id);
+          if (prev && (prev[0] !== p.lon || prev[1] !== p.lat)) {
+            bearing = getHeading(prev, [p.lon, p.lat]);
+          } else if (!bearing || bearing === 0) {
+            // When feed provides 0.0, orient along natural street grid to avoid vertical domino effect
+            const seed = Math.abs(Math.round((p.lat * 10000 + p.lon * 10000))) % 360;
+            const cardinal = [0, 45, 90, 135, 180, 225, 270, 315];
+            bearing = cardinal[seed % cardinal.length];
           }
-        }));
+          this.prevVehicleCoords.set(p.vehicle_id, [p.lon, p.lat]);
+
+          return {
+            type: "Feature",
+            properties: {
+              vehicle_id: p.vehicle_id,
+              speed: p.speed_kmh,
+              route: p.route_id,
+              bearing: Math.round(bearing),
+              mode: p.mode || "bus"
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [p.lon, p.lat]
+            }
+          };
+        });
 
         this.map.getSource("live-fleet-source").setData({
           type: "FeatureCollection",
