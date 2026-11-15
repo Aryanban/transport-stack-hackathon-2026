@@ -670,10 +670,6 @@ th {
   transition: opacity 300ms ease;
 }
 
-body.theme-night .map-viewport::before {
-  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0) 100%);
-}
-
 /* Floating Turn-by-Turn Navigation Header (Google Maps Navigation Style - Ref 2) */
 .hud-nav-banner {
   position: absolute;
@@ -943,17 +939,6 @@ body.theme-night .map-viewport::before {
   margin-top: 1px;
 }
 
-body.theme-night .hud-bottom-eta,
-body.theme-night .floating-recenter-btn {
-  background: #1e293b;
-  color: #f8fafc;
-  border-color: #334155;
-}
-
-body.theme-night .eta-large {
-  color: #4ade80;
-}
-
 /* Floating Map Controls Dock (Google Maps Bottom-Right Style) */
 .map-floating-controls {
   position: absolute;
@@ -1022,7 +1007,13 @@ body.theme-night .eta-large {
 .legend-dot.metro-yellow { background: var(--metro-yellow); }
 .legend-dot.metro-blue { background: var(--metro-blue); }
 .legend-dot.bus-route { background: var(--g-blue); }
-.legend-dot.live-dot { background: #0f9d58; box-shadow: 0 0 6px rgba(15, 157, 88, 0.7); }
+.legend-dot.bus-icon-dot {
+  background: #00A389;
+  border-radius: 2px;
+  width: 12px;
+  height: 8px;
+  box-shadow: 0 0 6px rgba(0, 163, 137, 0.4);
+}
 
 /* Moving 3D Animated Motion Graphics Vehicle Marker */
 .transit-vehicle-marker {
@@ -1058,13 +1049,6 @@ body.theme-night .eta-large {
   letter-spacing: 0.02em;
 }
 
-body.theme-night .vehicle-hud-speed {
-  background: rgba(10, 13, 20, 0.95);
-  color: #38bdf8;
-  border-color: rgba(56, 189, 248, 0.5);
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3), 0 4px 12px rgba(0, 0, 0, 0.6);
-}
-
 .vehicle-3d-wrapper {
   position: relative;
   width: 24px;
@@ -1088,11 +1072,6 @@ body.theme-night .vehicle-hud-speed {
   z-index: 1;
 }
 
-body.theme-night .vehicle-underglow {
-  background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.65) 0%, rgba(56, 189, 248, 0) 80%);
-  box-shadow: 0 0 18px rgba(56, 189, 248, 0.5);
-}
-
 @keyframes underglow-pulse {
   from { opacity: 0.6; transform: scale(0.92); }
   to { opacity: 1.0; transform: scale(1.08); }
@@ -1111,12 +1090,6 @@ body.theme-night .vehicle-underglow {
   z-index: 2;
 }
 
-body.theme-night .vehicle-chassis {
-  background: linear-gradient(180deg, #1e2432 0%, #0d1117 100%);
-  border: 1.5px solid #38bdf8;
-  box-shadow: 0 0 14px rgba(56, 189, 248, 0.4), 0 4px 14px rgba(0, 0, 0, 0.8);
-}
-
 .windshield-front {
   position: absolute;
   top: 3px;
@@ -1127,10 +1100,6 @@ body.theme-night .vehicle-chassis {
   border-radius: 4px 4px 1px 1px;
 }
 
-body.theme-night .windshield-front {
-  background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
-}
-
 .chassis-roof {
   position: absolute;
   top: 13px;
@@ -1139,10 +1108,6 @@ body.theme-night .windshield-front {
   height: 13px;
   background: rgba(0, 0, 0, 0.08);
   border-radius: 2px;
-}
-
-body.theme-night .chassis-roof {
-  background: rgba(255, 255, 255, 0.06);
 }
 
 /* Front Headlight LED Dots on Chassis */
@@ -1163,10 +1128,6 @@ body.theme-night .chassis-roof {
   box-shadow: 0 0 4px #ffffff;
 }
 
-body.theme-night .headlight-dot {
-  box-shadow: 0 0 6px #ffffff, 0 0 10px #38bdf8;
-}
-
 .taillight-leds {
   position: absolute;
   bottom: 1px;
@@ -1182,10 +1143,6 @@ body.theme-night .headlight-dot {
   background: #ef4444;
   border-radius: 1px;
   box-shadow: 0 0 4px #ef4444;
-}
-
-body.theme-night .tail-dot {
-  box-shadow: 0 0 6px #ef4444, 0 0 10px rgba(239, 68, 68, 0.6);
 }
 
 /* Destination Pin Ambient Ripple Animation */
@@ -1413,363 +1370,6 @@ body.theme-night .tail-dot {
   color: var(--g-subtext);
 }
 
-/* ==========================================================================
-   Luxury Subtle Dark Theme (Linear / Apple Pro / Vercel Aesthetic)
-   Obsidian, Zinc, Frosted Glass, Muted Glowing Accents, Zero Poppy Neons
-   ========================================================================== */
-body.theme-night {
-  --g-bg: #0b0f19;
-  --g-surface: #0f172a;
-  --g-card-bg: #142037;
-  --g-border: rgba(255, 255, 255, 0.08);
-  --g-border-hover: rgba(255, 255, 255, 0.16);
-  --g-divider: rgba(255, 255, 255, 0.06);
-  --g-text: #f4f4f6;
-  --g-subtext: #8e95a5;
-  --g-blue: #3b82f6;
-  --g-blue-hover: #2563eb;
-  --g-blue-surface: rgba(59, 130, 246, 0.15);
-  --g-nav-green: rgba(8, 26, 18, 0.92);
-
-  /* Crowd Status in Night Mode */
-  --crowd-low-text: #34d399;
-  --crowd-low-bg: rgba(16, 185, 129, 0.15);
-  --crowd-low-dot: #10b981;
-
-  --crowd-mid-text: #fbbf24;
-  --crowd-mid-bg: rgba(245, 158, 11, 0.15);
-  --crowd-mid-dot: #f59e0b;
-
-  --crowd-high-text: #f87171;
-  --crowd-high-bg: rgba(239, 68, 68, 0.15);
-  --crowd-high-dot: #ef4444;
-
-  /* Shadows with deep ambient occlusion */
-  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-float: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-body.theme-night {
-  background: var(--g-bg);
-  color: var(--g-text);
-}
-
-/* Frosted Obsidian Glass Directions Panel */
-body.theme-night .directions-panel {
-  background: rgba(15, 23, 42, .9);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
-  border: 1px solid var(--g-border);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-body.theme-night .panel-header {
-  border-bottom: 1px solid var(--g-divider);
-}
-
-body.theme-night .brand-text h1 {
-  color: #f4f4f6;
-}
-
-body.theme-night .inputs-container {
-  background: rgba(24, 28, 38, 0.7);
-  border: 1px solid var(--g-border);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-body.theme-night .inputs-container:focus-within {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25), inset 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-body.theme-night .field-divider {
-  background: var(--g-divider);
-}
-
-body.theme-night .btn-swap {
-  background: #181c26;
-  border-color: var(--g-border);
-  color: #8e95a5;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-}
-
-body.theme-night .btn-swap:hover {
-  background: rgba(59, 130, 246, 0.2);
-  color: #60a5fa;
-  border-color: #3b82f6;
-}
-
-body.theme-night input[type="text"],
-body.theme-night input[type="datetime-local"],
-body.theme-night input#origin,
-body.theme-night input#destination {
-  color: #f4f4f6;
-  background: transparent;
-}
-
-body.theme-night input::placeholder {
-  color: #636b7c;
-}
-
-/* Chips in Subtle Dark Mode */
-body.theme-night .chip,
-body.theme-night .time-chip {
-  background: rgba(255, 255, 255, 0.04);
-  color: #9499a8;
-  border: 1px solid var(--g-border);
-  transition: all 140ms ease;
-}
-
-body.theme-night .chip:hover,
-body.theme-night .time-chip:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #f4f4f6;
-  border-color: var(--g-border-hover);
-}
-
-body.theme-night .time-chip.active-time,
-body.theme-night .chip.active-chip {
-  background: rgba(59, 130, 246, 0.2);
-  color: #93c5fd;
-  border-color: #3b82f6;
-  box-shadow: 0 0 14px rgba(59, 130, 246, 0.3);
-  font-weight: 600;
-}
-
-/* Journey Cards in Subtle Dark Mode */
-body.theme-night .transit-card {
-  background: rgba(22, 25, 34, 0.75);
-  border: 1px solid var(--g-border);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-body.theme-night .transit-card:hover {
-  background: rgba(28, 33, 44, 0.9);
-  border-color: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
-}
-
-body.theme-night .transit-card.selected {
-  background: linear-gradient(135deg, rgba(26, 38, 58, 0.92) 0%, rgba(18, 25, 38, 0.92) 100%);
-  border-color: #3b82f6;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(59, 130, 246, 0.4);
-}
-
-body.theme-night .transit-card.selected .card-duration {
-  color: #60a5fa;
-}
-
-body.theme-night .suggestions {
-  background: #141720;
-  border: 1px solid var(--g-border);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
-}
-
-body.theme-night .suggestions button {
-  color: #f4f4f6;
-}
-
-body.theme-night .suggestions button:hover,
-body.theme-night .suggestions button[aria-selected="true"] {
-  background: rgba(59, 130, 246, 0.18);
-  color: #93c5fd;
-}
-
-/* Floating Controls Dock */
-body.theme-night .control-group {
-  background: rgba(16, 19, 26, 0.88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--g-border);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-  color: #e4e4e7;
-}
-
-body.theme-night .btn-ctrl {
-  color: #9499a8;
-}
-
-body.theme-night .btn-ctrl:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #f4f4f6;
-}
-
-body.theme-night .btn-ctrl.active {
-  background: rgba(59, 130, 246, 0.25);
-  border: 1px solid #3b82f6;
-  color: #93c5fd;
-  box-shadow: 0 0 14px rgba(59, 130, 246, 0.35);
-}
-
-/* Turn-by-Turn Navigation Header in Subtle Dark */
-body.theme-night .hud-nav-banner {
-  background: rgba(10, 28, 20, 0.92);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.65), 0 0 24px rgba(16, 185, 129, 0.2);
-}
-
-body.theme-night .hud-maneuver-box {
-  background: rgba(16, 185, 129, 0.25);
-  color: #34d399;
-}
-
-/* Bottom ETA Card in Subtle Dark */
-body.theme-night .hud-bottom-eta {
-  background: rgba(15, 23, 42, .92);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--g-border);
-  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.7);
-  color: #f4f4f6;
-}
-
-body.theme-night .eta-large {
-  color: #34d399;
-}
-
-body.theme-night .floating-recenter-btn {
-  background: rgba(15, 23, 42, .92);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--g-border);
-  color: #60a5fa;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-}
-
-body.theme-night .floating-recenter-btn:hover {
-  background: rgba(59, 130, 246, 0.2);
-  border-color: #3b82f6;
-  box-shadow: 0 0 16px rgba(59, 130, 246, 0.3);
-}
-
-/* Popups in Dark Mode */
-body.theme-night .maplibregl-popup-content {
-  background: #141720;
-  border: 1px solid var(--g-border);
-  color: #f4f4f6;
-  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.7);
-}
-
-body.theme-night .popup-btn {
-  background: rgba(255, 255, 255, 0.06);
-  color: #f4f4f6;
-  border: 1px solid var(--g-border);
-}
-
-body.theme-night .popup-btn.primary {
-  background: #3b82f6;
-  border-color: #3b82f6;
-}
-
-/* Atmospheric Horizon Gradient in Dark Mode */
-body.theme-night .map-viewport::before {
-  background: linear-gradient(to bottom, rgba(5, 7, 12, 0.92) 0%, rgba(9, 10, 15, 0.5) 45%, rgba(9, 10, 15, 0) 100%);
-}
-
-/* Destination Pin in Dark Mode */
-body.theme-night .dest-pin-badge {
-  background: linear-gradient(135deg, #FF6B4A 0%, #D83A1E 100%);
-  border-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 0 20px rgba(255, 107, 74, 0.6), 0 4px 12px rgba(0, 0, 0, 0.6);
-}
-
-/* Sidebar Components in Luxury Subtle Dark Mode */
-body.theme-night .search-box {
-  background: transparent;
-  border-bottom: 1px solid var(--g-divider);
-}
-
-body.theme-night .panel-footer {
-  background: transparent;
-  border-top: 1px solid var(--g-divider);
-}
-
-body.theme-night .corridor-picker select {
-  background: rgba(22, 27, 38, 0.85);
-  border: 1px solid var(--g-border);
-  color: #f4f4f6;
-}
-
-body.theme-night .btn-audit {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--g-border);
-  color: #f4f4f6;
-}
-
-body.theme-night .btn-audit:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-body.theme-night .audit-table-wrapper {
-  border-color: var(--g-divider);
-}
-
-body.theme-night table th {
-  background: rgba(22, 27, 38, 0.95);
-  color: #8e95a5;
-  border-bottom: 1px solid var(--g-divider);
-}
-
-body.theme-night table td {
-  border-bottom: 1px solid var(--g-divider);
-  color: #d1d5db;
-}
-
-body.theme-night .map-viewport {
-  background: #0b0f19;
-}
-
-body.theme-night .results-title {
-  color: #f4f4f6;
-}
-
-body.theme-night .results-meta,
-body.theme-night .results-status,
-body.theme-night .brand-status,
-body.theme-night .quick-title,
-body.theme-night .filter-group label,
-body.theme-night .corridor-audit-details summary,
-body.theme-night .audit-summary,
-body.theme-night .corridor-status {
-  color: #8e95a5;
-}
-
-body.theme-night .filter-group input[type="datetime-local"] {
-  background: rgba(22, 27, 38, 0.85);
-  border: 1px solid var(--g-border);
-  color: #f4f4f6;
-  color-scheme: dark;
-}
-
-body.theme-night .filter-group input[type="range"] {
-  accent-color: #3b82f6;
-}
-
-body.theme-night .route-badge.bus {
-  background: rgba(59, 130, 246, 0.2);
-  color: #93c5fd;
-  border: 1px solid rgba(59, 130, 246, 0.35);
-}
-
-body.theme-night .route-badge.metro {
-  background: rgba(245, 158, 11, 0.2);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.35);
-}
-
-body.theme-night .fare-pill {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-}
-
-body.theme-night .time-window,
-body.theme-night .transit-card-details {
-  color: #8e95a5;
-  border-top-color: var(--g-divider);
-}
-
 .map-source-status {
   position: absolute;
   z-index: 3;
@@ -1833,10 +1433,3 @@ body.theme-night .transit-card-details {
 }
 .chassis-side-left { left: -3px; transform: rotateY(62deg); }
 .chassis-side-right { right: -3px; transform: rotateY(-62deg); }
-
-body.theme-night .maplibregl-ctrl-attrib {
-  background: #0f172ae8;
-  color: #bdc9da;
-}
-body.theme-night .maplibregl-ctrl-attrib a { color: #bdc9da; }
-body.theme-night .maplibregl-ctrl-attrib-button { background-color: #b9c8da; }

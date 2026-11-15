@@ -456,17 +456,6 @@ if (btnLiveFleet) {
   });
 }
 
-const btnTheme = byId("btn-toggle-theme");
-if (btnTheme) {
-  btnTheme.addEventListener("click", () => {
-    const isNight = document.body.classList.toggle("theme-night");
-    btnTheme.classList.toggle("active", isNight);
-    if (transitMap) {
-      transitMap.setTheme(isNight ? "night" : "day");
-    }
-  });
-}
-
 const btnRecenter = byId("btn-recenter");
 if (btnRecenter) {
   btnRecenter.addEventListener("click", () => {
