@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bus time accuracy</title>
+  <meta name="description" content="How close the Delhi bus times are to real bus trips, the timetable and Google Maps.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@400;500;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/accuracy.css?v=2">
+</head>
+<body>
+  <header class="bar">
+    <a class="wordmark" href="/">Delhi bus times</a>
+    <nav class="bar-links"><a href="/">Planner</a> <a href="/accuracy" aria-current="page">Accuracy</a> <a href="/docs">API</a></nav>
+  </header>
+
+  <main class="page" id="page" aria-busy="true">
+    <section class="intro">
+      <h1>How close are our bus times?</h1>
+      <p class="lead" id="lead">Loading the latest check.</p>
+    </section>
+
+    <section aria-labelledby="h-error" class="block">
+      <h2 id="h-error">Average error on held-back bus trips</h2>
+      <div class="stats" id="stats">
+        <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-scatter" class="block">
+      <h2 id="h-scatter">Predicted against what the bus really took</h2>
+      <p class="note">Each dot is one real bus trip of 5 to 30 stops. On the diagonal, the prediction was exact. Above it, the prediction was too slow.</p>
+      <div class="legend" aria-hidden="true">
+        <span><i class="key key--model"></i>Our model</span>
+        <span><i class="key key--base"></i>Timetable</span>
+      </div>
+      <div class="multiples" id="scatter"></div>
+    </section>
+
+    <section aria-labelledby="h-hour" class="block">
+      <h2 id="h-hour">Error by hour of day</h2>
+      <p class="note" id="hour-note">Hours appear here once the logger has bus data for them.</p>
+      <div class="legend" aria-hidden="true">
+        <span><i class="key key--model"></i>Our model</span>
+        <span><i class="key key--base"></i>Timetable</span>
+      </div>
+      <div id="hours" class="chart"></div>
+      <details class="table-view">
+        <summary>Show as a table</summary>
+        <table id="hour-table"><thead><tr><th scope="col">Hour</th><th scope="col">Trips</th><th scope="col" class="num">Model, min</th><th scope="col" class="num">Timetable, min</th></tr></thead><tbody></tbody></table>
+      </details>
+    </section>
+
+    <section aria-labelledby="h-google" class="block">
+      <h2 id="h-google">Against Google Maps</h2>
+      <div id="google"></div>
+    </section>
+
+    <section aria-labelledby="h-data" class="block">
+      <h2 id="h-data">What this check rests on</h2>
+      <dl class="facts" id="facts"></dl>
+      <p class="note" id="split"></p>
+    </section>
+  </main>
+
+  <div class="tip" id="tip" role="status" hidden></div>
+  <noscript><p class="noscript">The charts need JavaScript. The raw report is at <a href="/validation">/validation</a>.</p></noscript>
+  <script src="/static/accuracy.js?v=3"></script>
+</body>
+</html>

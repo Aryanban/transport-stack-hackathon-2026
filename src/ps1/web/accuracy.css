@@ -1,0 +1,80 @@
+/* Hallmark · shape: app screen · genre: modern-minimal · theme: Wayfind (deal 1/3, seed delhi-bus-journey-planner-937e·b435fc9e·2026-11-16·r0)
+ * nav: top bar shared with the planner · signature: predicted-vs-observed pair of plots on one scale · states: loading, empty, error, full · wayfind: platform
+ * axes: light/mono/cool · posture: committed · contrast: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: P, one logged day gives one hour of bars; the page says so instead of padding it */
+/* Hallmark · waive 64 · theme Wayfind, --font-body is Chivo Mono · mono is the theme's material */
+@import url("./tokens.css");
+@import url("./base.css");
+
+:root { --chart-base: var(--color-muted); --chart-model: var(--color-accent); --chart-grid: var(--color-rule); --page: 72rem; }
+body { font-variant-numeric: tabular-nums; }
+
+.bar { display: flex; align-items: center; gap: var(--space-lg); height: 56px; padding-inline: var(--space-md); border-bottom: var(--rule-bar) solid var(--color-ink); background: var(--color-paper-3); }
+.wordmark { font-weight: 800; text-decoration: none; letter-spacing: var(--tracking-display); }
+.bar-links { margin-left: auto; display: flex; gap: var(--space-md); font-size: var(--text-sm); font-weight: 500; }
+.bar-links a:hover { color: var(--color-accent); }
+.bar-links a[aria-current="page"] { text-decoration-thickness: 2px; }
+
+.page { grid-template-columns: minmax(0, 1fr); max-width: var(--page); margin-inline: auto; padding: var(--space-xl) var(--space-md) var(--space-3xl); display: grid; gap: var(--space-2xl); }
+.intro { display: grid; gap: var(--space-sm); }
+.intro h1 { font-size: var(--text-3xl); }
+.block { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-sm); border-top: var(--rule-bar) solid var(--color-ink); padding-top: var(--space-md); }
+.note { font-size: var(--text-sm); color: var(--color-ink-2); max-width: 70ch; }
+
+/* figures */
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: var(--rule-bar) solid var(--color-ink); }
+.stat { display: grid; gap: var(--space-2xs); padding: var(--space-md); border-right: var(--rule-bar) solid var(--color-ink); background: var(--color-paper-3); }
+.stat:last-child { border-right: 0; }
+.stat--lead { background: var(--color-ink); color: var(--color-paper); }
+.stat .label { font-size: var(--text-sm); font-weight: 500; }
+.stat .figure { font-size: var(--text-3xl); font-weight: 800; line-height: 1; }
+.stat--lead .figure { color: var(--color-accent-2); }
+.stat .sub { font-size: var(--text-sm); color: var(--color-ink-2); }
+.stat--lead .sub { color: var(--color-paper-2); }
+.skel { height: 132px; background: var(--color-paper-2); border-right: var(--rule-bar) solid var(--color-ink); }
+
+/* charts */
+.legend { display: flex; gap: var(--space-md); font-size: var(--text-sm); font-weight: 500; color: var(--color-ink-2); }
+.key { display: inline-block; width: 12px; height: 12px; margin-right: var(--space-2xs); vertical-align: -1px; border-radius: 2px; }
+.key--model { background: var(--chart-model); } .key--base { background: var(--chart-base); }
+.multiples { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-lg); }
+.panel h3 { font-size: var(--text-md); margin-bottom: var(--space-xs); }
+.chart svg, .panel svg { width: 100%; height: auto; overflow: visible; }
+.axis text { fill: var(--color-muted); font: 500 11px var(--font-body); }
+.axis line, .grid line { stroke: var(--chart-grid); stroke-width: 1; }
+.diag { stroke: var(--color-ink); stroke-width: 1; stroke-dasharray: 3 3; }
+.dot { stroke: var(--color-paper-3); stroke-width: 1.5; fill-opacity: 0.75; }
+.dot--model { fill: var(--chart-model); } .dot--base { fill: var(--chart-base); }
+.barm--model { fill: var(--chart-model); } .barm--base { fill: var(--chart-base); }
+.hit { fill: transparent; cursor: crosshair; }
+.hit:focus-visible { outline: none; stroke: var(--color-focus); stroke-width: 2; }
+.hit:hover + .dot, .dot.on { stroke: var(--color-ink); stroke-width: 2; fill-opacity: 1; }
+
+.tip { position: fixed; z-index: 5; pointer-events: none; padding: var(--space-xs) var(--space-sm); border: var(--rule-bar) solid var(--color-ink); background: var(--color-paper-3); font-size: var(--text-sm); box-shadow: var(--shadow-card); }
+.tip b { font-weight: 800; }
+
+.table-view summary { cursor: pointer; font-size: var(--text-sm); font-weight: 500; }
+.table-view summary:hover { color: var(--color-accent); }
+table { border-collapse: collapse; margin-top: var(--space-xs); font-size: var(--text-sm); }
+th { text-align: left; font-weight: 500; color: var(--color-muted); border-bottom: var(--rule-bar) solid var(--color-ink); padding: var(--space-2xs) var(--space-md) var(--space-2xs) 0; }
+td { border-bottom: var(--rule-hair) solid var(--color-rule); padding: var(--space-2xs) var(--space-md) var(--space-2xs) 0; }
+.num { text-align: right; }
+
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); margin: 0; border-top: var(--rule-hair) solid var(--color-rule); }
+.facts div { padding: var(--space-sm) var(--space-sm) var(--space-sm) 0; border-bottom: var(--rule-hair) solid var(--color-rule); }
+.facts dt { font-size: var(--text-sm); font-weight: 500; color: var(--color-muted); }
+.facts dd { margin: 0; font-weight: 800; }
+
+.empty, .error { border: var(--rule-bar) solid var(--color-ink); padding: var(--space-md); display: grid; gap: var(--space-xs); background: var(--color-paper-3); }
+.empty p, .error p { font-size: var(--text-sm); max-width: 70ch; }
+code { overflow-wrap: anywhere; font: 500 var(--text-sm) var(--font-body); background: var(--color-paper-2); padding: 0 var(--space-2xs); }
+.noscript { padding: var(--space-md); }
+
+@media (max-width: 48rem) {
+  .stats { grid-template-columns: minmax(0, 1fr); }
+  .stat { border-right: 0; border-bottom: var(--rule-bar) solid var(--color-ink); }
+  .stat:last-child { border-bottom: 0; }
+  .multiples { grid-template-columns: minmax(0, 1fr); }
+  .bar-links a[href="/docs"] { display: none; }
+}
+.bar-links a:active, .table-view summary:active { color: var(--color-ink); background: var(--color-paper-2); }
