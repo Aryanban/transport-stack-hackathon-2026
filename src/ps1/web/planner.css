@@ -7,6 +7,8 @@
   --font-ui: "Manrope", -apple-system, "Segoe UI", sans-serif;
   --live: #0b8043;
   --live-bg: #e6f4ea;
+  --fleet: #0f8a3c;      /* live buses on the map: eco green, as on the 3D models */
+  --fleet-roof: #1fb35a;
   --g-blue: #1a73e8;
   --g-blue-hover: #1557b0;
   --g-blue-surface: #e8f0fe;
@@ -1019,11 +1021,11 @@ th {
 .legend-dot.metro-blue { background: var(--metro-blue); }
 .legend-dot.bus-route { background: var(--g-blue); }
 .legend-dot.bus-icon-dot {
-  background: #00A389;
+  background: linear-gradient(90deg, var(--fleet) 0 18%, var(--fleet-roof) 18% 82%, var(--fleet) 82%);
   border-radius: 2px;
-  width: 12px;
-  height: 8px;
-  box-shadow: 0 0 6px rgba(0, 163, 137, 0.4);
+  width: 14px;
+  height: 7px;
+  box-shadow: 0 0 0 1px #fff, 0 0 6px rgba(15, 138, 60, 0.45);
 }
 
 /* Moving 3D Animated Motion Graphics Vehicle Marker */
@@ -1408,7 +1410,7 @@ th {
 .hud-crowd-chip.crowd-unknown { background: var(--g-card-bg); color: var(--g-subtext); }
 .vehicle-3d-wrapper { transition: none; }
 @media (min-width: 1051px) {
-  .hud-bottom-eta { bottom: 70px; }
+  .hud-bottom-eta { bottom: 128px; /* clears the controls and legend stacked at bottom right */ }
 }
 @media (max-width: 1050px) {
   .map-floating-controls { bottom: 12px; right: 10px; }
@@ -1502,7 +1504,7 @@ th {
 .panel-footer p { padding: 10px 16px; font-size: 0.72rem; color: var(--g-subtext); }
 .speed-legend { gap: 6px; }
 .sw { display: inline-block; width: 14px; height: 4px; border-radius: 2px; }
-.sw.slow { background: #d93025; } .sw.mid { background: #f9ab00; } .sw.fast { background: #1e8e3e; }
+.sw.slow { background: #d93025; } .sw.mid { background: #f9ab00; } .sw.fast { background: #7d8fa3; } /* slate, not green: green is the live bus colour */
 .noscript { position: fixed; inset: auto 16px 16px; padding: 12px; background: #fff; border-radius: 8px; }
 .btn-search[aria-busy="true"] { cursor: progress; opacity: 0.8; }
 @media (max-width: 480px) { .compare { grid-template-columns: minmax(0, 1fr); } .compare div { border-right: 0; border-bottom: 1px solid var(--g-divider); } .hours { grid-template-columns: repeat(10, minmax(0, 1fr)); } }
@@ -1517,3 +1519,8 @@ th {
 .transit-card:active { transform: scale(0.99); }
 .btn-ctrl:active, .time-chip:active, .btn-search:active { transform: scale(0.97); }
 @media (prefers-reduced-motion: reduce) { .journey-cards-list .transit-card { animation: none; } }
+
+/* Toggle swatches: the control itself says what its map colour means (the legend is hidden on phones). */
+.btn-ctrl .btn-swatch { display: inline-block; vertical-align: middle; margin-right: 6px; border-radius: 2px; }
+.btn-swatch.bus-icon-dot { width: 14px; height: 7px; background: linear-gradient(90deg, var(--fleet) 0 18%, var(--fleet-roof) 18% 82%, var(--fleet) 82%); box-shadow: 0 0 0 1px #fff; }
+.btn-swatch.speed-swatch { width: 16px; height: 5px; background: linear-gradient(90deg, #d93025 0 33%, #f9ab00 33% 66%, #7d8fa3 66%); box-shadow: 0 0 0 1px #fff; }

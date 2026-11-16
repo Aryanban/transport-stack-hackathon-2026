@@ -14,6 +14,10 @@ const mercY = (lat) => (1 - Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 36
 const easeOut = (t) => 1 - Math.pow(1 - t, 3);
 const turn = (a, b, t) => a + ((((b - a) % 360) + 540) % 360 - 180) * t;
 
+// Liveries: sides, roof and roof pod. The roof carries the colour because the map is seen from above.
+const HERO = { body: "#1a73e8", roof: "#4f8ff0", pod: "#d2e3fc" };    // your trip
+const FLEET = { body: "#0f8a3c", roof: "#1fb35a", pod: "#9ee6b8" };   // live buses, eco green
+
 function busGeometry(THREE, livery) {
   // Local frame in metres: x right, y forward, z up. A 12 m low-floor city bus.
   const parts = [];
@@ -28,10 +32,11 @@ function busGeometry(THREE, livery) {
     g.translate(x, y, 0.5);
     parts.push([g, new THREE.Color("#1f2328")]);
   };
-  box(2.55, 12.0, 1.15, 0, 0, 0.95, livery);           // lower body
+  box(2.55, 12.0, 1.15, 0, 0, 0.95, livery.body);      // lower body
   box(2.56, 11.1, 0.95, 0, -0.2, 2.05, "#20303f");      // window band, dark glass
-  box(2.55, 12.0, 0.35, 0, 0, 2.7, "#f4f6f8");          // roof line
-  box(1.9, 3.6, 0.38, 0, -1.2, 3.06, "#d9dee4");        // roof AC pod
+  box(2.55, 12.0, 0.35, 0, 0, 2.7, livery.roof);        // roof
+  box(1.9, 3.6, 0.38, 0, -1.2, 3.06, livery.pod);       // roof AC / battery pod
+  box(2.2, 0.5, 0.39, 0, 4.6, 3.07, "#ffffff");         // white roof band at the front, shows heading
   box(2.3, 0.08, 1.5, 0, 6.01, 1.95, "#14212d");        // windscreen
   box(0.42, 0.06, 0.2, -0.85, 6.03, 0.75, "#fff6d6");   // headlights
   box(0.42, 0.06, 0.2, 0.85, 6.03, 0.75, "#fff6d6");
@@ -126,7 +131,7 @@ function makeLayer(THREE, engine) {
       scene.add(sun);
 
       const heroMat = new THREE.MeshLambertMaterial({ vertexColors: true });
-      hero = new THREE.Mesh(busGeometry(THREE, "#1a73e8"), heroMat);
+      hero = new THREE.Mesh(busGeometry(THREE, HERO), heroMat);
       hero.matrixAutoUpdate = false;
       hero.matrixWorldAutoUpdate = false;
       heroShadow = new THREE.Mesh(new THREE.PlaneGeometry(4.6, 15), new THREE.MeshBasicMaterial({ map: shadowTexture(THREE), transparent: true, depthWrite: false }));
@@ -136,7 +141,7 @@ function makeLayer(THREE, engine) {
       scene.add(heroShadow, ring, hero);
 
       const fleetMat = new THREE.MeshLambertMaterial({ vertexColors: true });
-      fleetMesh = new THREE.InstancedMesh(busGeometry(THREE, "#14b8a6"), fleetMat, MAX_FLEET);
+      fleetMesh = new THREE.InstancedMesh(busGeometry(THREE, FLEET), fleetMat, MAX_FLEET);
       fleetMesh.frustumCulled = false;
       fleetMesh.count = 0;
       fleetMesh.matrixAutoUpdate = false;

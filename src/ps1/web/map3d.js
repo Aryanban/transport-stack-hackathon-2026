@@ -91,27 +91,27 @@ function create3DBusImage(color = "#00A389") {
   // 5. Glossy Porcelain White Roof with Dual HVAC & Battery Pods
   const rx = bx + 5, ry = by + 18, rw = bw - 10, rh = 48;
   const roofGrad = ctx.createLinearGradient(rx, 0, rx + rw, 0);
-  roofGrad.addColorStop(0, "#E2E8F0");
-  roofGrad.addColorStop(0.5, "#FFFFFF");
-  roofGrad.addColorStop(1, "#CBD5E1");
+  roofGrad.addColorStop(0, "#15994a");
+  roofGrad.addColorStop(0.5, "#22b85f");
+  roofGrad.addColorStop(1, "#128a42");
   ctx.fillStyle = roofGrad;
   drawRoundRect(ctx, rx, ry, rw, rh, 4);
   ctx.fill();
   ctx.lineWidth = 1;
-  ctx.strokeStyle = "#94A3B8";
+  ctx.strokeStyle = "#0b6b31";
   ctx.stroke();
 
   // Dual AC Unit on Roof with ventilation grilles
-  ctx.fillStyle = "#64748B";
+  ctx.fillStyle = "#0b6b31";
   drawRoundRect(ctx, rx + 2, ry + 6, rw - 4, 13, 2);
   ctx.fill();
-  ctx.fillStyle = "#475569";
+  ctx.fillStyle = "#095a29";
   for (let gy = ry + 8; gy <= ry + 16; gy += 3) {
     ctx.fillRect(rx + 4, gy, rw - 8, 1);
   }
 
   // Rear Battery Pod
-  ctx.fillStyle = "#64748B";
+  ctx.fillStyle = "#0b6b31";
   drawRoundRect(ctx, rx + 2, ry + 28, rw - 4, 14, 2);
   ctx.fill();
 
@@ -336,7 +336,7 @@ class TransitMapEngine {
   _registerSprites() {
     if (!this.map) return;
     if (!this.map.hasImage("bus-3d-model")) {
-      this.map.addImage("bus-3d-model", create3DBusImage("#00A389"), { pixelRatio: 2 });
+      this.map.addImage("bus-3d-model", create3DBusImage("#0f8a3c"), { pixelRatio: 2 });
     }
     if (!this.map.hasImage("metro-3d-model")) {
       this.map.addImage("metro-3d-model", create3DMetroImage("#F59E0B"), { pixelRatio: 2 });
@@ -1105,7 +1105,7 @@ class TransitMapEngine {
         layout: { "line-cap": "round", "line-join": "round" },
         paint: {
           "line-width": ["interpolate", ["linear"], ["zoom"], 10, 2, 14, 5],
-          "line-color": ["step", ["get", "kmh"], "#d93025", 12, "#f9ab00", 20, "#1e8e3e"],
+          "line-color": ["step", ["get", "kmh"], "#d93025", 12, "#f9ab00", 20, "#7d8fa3"],
           "line-opacity": 0.9
         }
       }, map.getLayer("route-glow") ? "route-glow" : undefined);

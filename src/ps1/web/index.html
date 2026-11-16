@@ -9,11 +9,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/vendor/maplibre-gl.css">
-  <link rel="stylesheet" href="/static/planner.css?v=4">
+  <link rel="stylesheet" href="/static/planner.css?v=8">
   <script src="/static/vendor/maplibre-gl.js"></script>
-  <script src="/static/map3d.js?v=9" defer></script>
+  <script src="/static/map3d.js?v=11" defer></script>
   <script src="/static/planner.js?v=6" defer></script>
-  <script type="module" src="/static/buses3d.js?v=3"></script>
+  <script type="module" src="/static/buses3d.js?v=4"></script>
 </head>
 <body>
   <div class="app-layout">
@@ -140,8 +140,8 @@
         <div class="control-group">
           <button type="button" id="btn-toggle-3d" class="btn-ctrl active" aria-pressed="true">3D</button>
           <button type="button" id="btn-follow-vehicle" class="btn-ctrl" aria-pressed="false">Follow</button>
-          <button type="button" id="btn-toggle-live-fleet" class="btn-ctrl" aria-pressed="false">Live buses</button>
-          <button type="button" id="btn-toggle-speeds" class="btn-ctrl" aria-pressed="false">Speeds</button>
+          <button type="button" id="btn-toggle-live-fleet" class="btn-ctrl" aria-pressed="false"><i class="btn-swatch bus-icon-dot" aria-hidden="true"></i>Live buses</button>
+          <button type="button" id="btn-toggle-speeds" class="btn-ctrl" aria-pressed="false"><i class="btn-swatch speed-swatch" aria-hidden="true"></i>Speeds</button>
         </div>
         <div class="control-group legend-group">
           <span class="legend-chip"><i class="legend-dot bus-route"></i> Your bus</span>
