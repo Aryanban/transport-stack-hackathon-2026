@@ -226,3 +226,30 @@ def test_bus_legs_say_which_way_the_bus_goes(net):
     r = p.plan("Kashmere Gate", "Nehru Place", datetime(2026, 11, 17, 8, 30, tzinfo=IST))
     leg = next(l for o in r["options"] for l in o["legs"] if l["mode"] == "bus")
     assert leg["towards"] and " to " not in leg["towards"]
+
+
+def test_fares_follow_dtc_distance_slabs():
+    from src.ps1.planner import fare_inr
+    assert fare_inr(3) == {"non_ac": 5, "ac": 10}
+    assert fare_inr(9) == {"non_ac": 10, "ac": 20}
+    assert fare_inr(25) == {"non_ac": 15, "ac": 25}
+
+
+def test_stop_departures_and_route_lookup(net):
+    p = Planner(net, TravelModel.load())
+    when = datetime(2026, 11, 17, 8, 30, tzinfo=IST)
+    stop = p.search_stops("nehru place", 1)[0]["id"]
+    deps = p.departures(stop, when)
+    assert deps and all(d["times"][0] >= when.isoformat() for d in deps)
+    assert [d["times"][0] for d in deps] == sorted(d["times"][0] for d in deps)
+    hit = p.find_routes("534")[0]
+    assert hit["route"].startswith("534")
+    detail = p.route_detail(hit["route_id"])
+    assert detail["stops"] and detail["first"] < detail["last"] and len(detail["path"]) > 2
+
+
+def test_live_client_never_invents_buses(monkeypatch):
+    from src.gtfs_rt_client import DelhiGTFSRealtimeClient
+    monkeypatch.delenv("DTS_API_KEY", raising=False)
+    monkeypatch.delenv("DELHI_GTFS_RT_API_KEY", raising=False)
+    assert DelhiGTFSRealtimeClient().fetch_vehicle_positions() == []  # no key: nothing, not a simulation

@@ -31,7 +31,7 @@ python -m pytest tests/test_ps1.py
 - **Bus GPS:** the GTFS-RT VehiclePositions feed from DTS, polled every 20 s by `scripts/log_gtfs_rt.py`.
 - **GPS log format:** one gzip CSV per IST hour in `data/gps_log/` (columns `ts, vehicle_id, route_id, trip_id, lat, lon, speed_ms`). Each poll is written as its own gzip member and flushed to disk, so a crash loses at most that poll. When an hour ends, its file is sorted by bus and time, deduplicated and recompressed after a row-count check: about 13 bytes per position, about 115 MB per day. Read any file with `src.ps1.gpslog.read_file`.
 - **Metro stations:** from DMRC's gate locations file, for map context only. Stations that the file stacks on one placeholder point are left out.
-- **Crowding:** not shown. The ticket files in `data/etm_ticketing_data/` are simulated, so the planner shows no crowd levels until real ETM data is loaded.
+- **Crowding:** not shown. No real ETM ticket data is available yet, so the planner shows no crowd levels.
 
 ## API
 

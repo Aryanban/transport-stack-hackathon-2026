@@ -53,6 +53,18 @@ def match_rank(q: str, name: str):
     return None
 
 
+def _towards(desc: str) -> str:
+    return desc.rsplit(" to ", 1)[-1].strip() if " to " in desc else desc
+
+
+def fare_inr(km: float) -> dict:
+    """DTC adult fare by distance. Non-AC slabs are DTC's published table; AC slabs are the
+    commonly quoted ones and may differ by a stage. Women ride free with the Pink Saheli card."""
+    non_ac = 5 if km <= 4 else 10 if km <= 10 else 15
+    ac = 10 if km <= 4 else 15 if km <= 8 else 20 if km <= 12 else 25
+    return {"non_ac": non_ac, "ac": ac}
+
+
 @dataclass
 class Place:
     label: str
@@ -256,12 +268,14 @@ class Planner:
             aname, alat, alon = self.net.stops[r.stops[j]]
             legs.append({
                 "mode": "bus", "route": r.name, "route_id": rid, "headsign": r.desc,
-                "towards": r.desc.rsplit(" to ", 1)[-1].strip() if " to " in r.desc else r.desc,
+                "towards": _towards(r.desc),
                 "from": {"id": stop, "name": sname, "lat": slat, "lon": slon},
                 "to": {"id": r.stops[j], "name": aname, "lat": alat, "lon": alon},
                 "wait_min": round((board - t).total_seconds() / 60, 1),
                 "board": board.isoformat(), "alight": alight.isoformat(),
                 "stops": j - i, "ride_min": round(ride_s / 60, 1),
+                "km": round(float(r.stop_dist[j] - r.stop_dist[i]) / 1000, 1),
+                "fare": fare_inr(float(r.stop_dist[j] - r.stop_dist[i]) / 1000),
                 "typical_min": round(hist_s / 60, 1), "quiet_min": round(quiet_s / 60, 1),
                 "timetable_min": round(sched_s / 60, 1), "observed_share": round(share, 2),
                 "bus_source": source, "hour_basis": self.hour_basis(board), "path": self._path(r, i, j),
@@ -278,11 +292,13 @@ class Planner:
                 legs.append(self._walk(prev_place, d, t, walk_after))
                 t += timedelta(seconds=walk_after)
         total = (t - depart).total_seconds()
+        bus_legs = [l for l in legs if l["mode"] == "bus"]
+        fare = {k: sum(l["fare"][k] for l in bus_legs) for k in ("non_ac", "ac")}
         walk = sum(leg.get("minutes", 0) for leg in legs if leg["mode"] == "walk")
         fixed = total - ride_total  # walking and waiting do not change with traffic
         return {
             "depart": depart.isoformat(), "arrive": t.isoformat(), "total_min": round(total / 60, 1),
-            "walk_min": round(walk, 1), "transfers": len(cand) - 1,
+            "walk_min": round(walk, 1), "transfers": len(cand) - 1, "fare": fare,
             "ride_min": round(ride_total / 60, 1),
             "quiet_total_min": round((fixed + quiet_total) / 60, 1), "quiet_hour": self.quiet_hour(),
             "timetable_ride_min": round(sched_total / 60, 1),
@@ -290,6 +306,52 @@ class Planner:
             "hour_basis": next((l["hour_basis"] for l in legs if l["mode"] == "bus"), ""),
             "legs": legs,
         }
+
+    # ---------- stops and routes ----------
+    def departures(self, stop_id: str, when: datetime, per_route=2):
+        """Next buses at a stop, soonest first: route, direction and up to per_route arrivals."""
+        out = []
+        for rid, i in self.net.stop_routes.get(stop_id, ()):
+            r = self.net.routes[rid]
+            if i == len(r.stops) - 1:
+                continue  # the route ends here, nobody boards
+            times, ready, source = [], when, None
+            for _ in range(per_route):
+                t, src = self.next_bus(r, i, ready)
+                if t is None:
+                    break
+                times.append(t.isoformat())
+                source = source or src
+                ready = t + timedelta(minutes=1)
+            if times:
+                out.append({"route": r.name, "route_id": rid, "towards": _towards(r.desc),
+                            "times": times, "source": source})
+        out.sort(key=lambda d: d["times"][0])
+        return out
+
+    def find_routes(self, text: str, limit=8):
+        q = re.sub(r"\s+", "", text.upper())
+        if not q:
+            return []
+        hits = sorted(((r.name.upper() != q, not r.name.upper().startswith(q), len(r.name), r.name, rid)
+                       for rid, r in self.net.routes.items() if q in r.name.upper().replace(" ", "")))
+        return [{"route_id": rid, "route": name, "desc": self.net.routes[rid].desc,
+                 "towards": _towards(self.net.routes[rid].desc)} for *_, name, rid in hits[:limit]]
+
+    def route_detail(self, rid: str):
+        r = self.net.routes[rid]
+        deps = sorted(int(d) % 86400 for d in r.departures)
+        gaps = np.diff(deps) if len(deps) > 1 else np.array([])
+        peak = [g for d, g in zip(deps[1:], gaps) if 8 * 3600 <= d <= 11 * 3600]
+        return {"route_id": rid, "route": r.name, "desc": r.desc, "towards": _towards(r.desc),
+                "km": round(float(r.stop_dist[-1]) / 1000, 1),
+                "first": f"{deps[0] // 3600:02d}:{deps[0] % 3600 // 60:02d}" if deps else None,
+                "last": f"{deps[-1] // 3600:02d}:{deps[-1] % 3600 // 60:02d}" if deps else None,
+                "trips_per_day": len(deps),
+                "peak_every_min": round(float(np.median(peak)) / 60) if peak else None,
+                "path": self._path(r, 0, len(r.stops) - 1),
+                "stops": [{"id": s, "name": self.net.stops[s][0], "lat": self.net.stops[s][1],
+                           "lon": self.net.stops[s][2]} for s in r.stops if s in self.net.stops]}
 
     def _walk_only(self, o: Place, d: Place, depart):
         sec = float(haversine_m(o.lat, o.lon, d.lat, d.lon)) * WALK_DETOUR / WALK_MS
@@ -300,6 +362,7 @@ class Planner:
                 "walk_min": round(sec / 60, 1), "transfers": 0, "ride_min": 0.0,
                 "quiet_total_min": round(sec / 60, 1), "quiet_hour": self.quiet_hour(),
                 "timetable_ride_min": 0.0, "observed_share": 0.0, "hour_basis": "walking only",
+                "fare": {"non_ac": 0, "ac": 0},
                 "legs": [self._walk(o, d, depart, sec)]}
 
     def _walk(self, a: Place, b: Place, t, sec):

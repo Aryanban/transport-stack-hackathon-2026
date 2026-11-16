@@ -6,63 +6,34 @@
 
 ## ⚡ 1. Repository Essence & Architecture
 
-**Transport Stack Hackathon 2026 — Delhi Transit Engine** is an open-source, high-performance transit routing, congestion estimation, and crowdedness prediction platform for the National Capital Territory (NCT) of Delhi.
+**Delhi bus times** is our submission for **Problem 1 (real-time bus traffic model and journey planner)**:
+a journey planner whose travel times come from a model learned from Delhi bus GPS, adjusted live from
+the GTFS-RT feed. Crowding (Problem 2) is not built: no real ETM ticket data is available yet.
 
-It tackles:
-- **Problem 1 (Traffic Model & Dynamic Journey Planning):** Fuses Delhi bus fleet GPS telemetry with static GTFS to estimate real-time corridor velocities and predict dynamic travel times that outperform static timetables.
-- **Problem 2 (Crowdedness-Aware Journey Planning):** Ingests ticketing logs and pass-holder multipliers (accounting for Delhi's ~35% non-ticketed pink passes) to classify route segments into comfort tiers: *Seats Available*, *Standing Room*, and *Heavily Crowded*, utilizing Hensher-Wardman Value-of-Time (VOT) multipliers.
-- **Phase 2 Extensibility:** First/last-mile DMRC feeder bus optimization (Problem 4) and 258×258 AFC Origin-Destination station matrix extrapolation (Problem 3).
+**Real data only.** Never add generated, simulated or hand-invented data, and never present a
+fallback as live. With no data, show nothing and say so.
 
-### Directory Layout & Key Modules
+### Directory Layout
 ```
-transport-stack-hackathon-2026/
-├── .agents/skills/                # Canonical Agent & Design-Engineering Skills (Open Standard)
-│   ├── frontend-design/           # Macro aesthetic, typography pairings, atmospheric textures
-│   ├── emil-design-eng/           # Micro-interactions, tactile feedback, toast/modal craft
-│   ├── apple-design/              # 1:1 direct manipulation, pointer-down responsiveness, spring physics
-│   ├── web-design-guidelines/     # Ergonomics, accessibility (WCAG), touch targets, contrast
-│   └── review-animations/         # Strict <300ms motion budget, GPU transforms, touch origins
-├── .claude/skills/                # Symlinks for Claude Code CLI discovery
-├── src/                           # Core Transit Engine & API
-│   ├── api.py                     # FastAPI REST application & OpenAPI documentation
-│   ├── engine.py                  # Core transit engine orchestrating GTFS, routing, and live telemetry
-│   ├── gtfs_loader.py             # GTFS parser (stops, routes, trips, stop_times, calendar)
-│   ├── gtfs_rt_client.py          # Real-time GTFS-RT Protobuf client (VehiclePositions.pb)
-│   ├── traffic_model.py           # Delhi-specific 24-hr diurnal speed profiles & corridor multipliers
-│   ├── crowdedness_model.py       # Passenger occupancy estimator with 1.35x pink-pass multiplier
-│   ├── feeder_optimizer.py        # DMRC first/last-mile feeder bus route optimizer
-│   └── od_extrapolator.py         # 258x258 DMRC station AFC flow matrix extrapolation
-├── data/                          # GTFS static datasets and transit data layers
-│   ├── delhi_buses_gtfs/          # Static GTFS for DTC and DIMTS buses
-│   └── dmrc_metro_gtfs/           # Static GTFS and station coordinates for Delhi Metro
-├── docs/
-│   └── RESOURCES.md               # Curated open-source intelligence, API schemas, and mathematical papers
-├── tests/                         # Pytest test suite (15 passing integration & unit tests)
-│   └── test_engine.py             # Full coverage of routing, traffic, crowdedness, and live APIs
-├── pyproject.toml                 # Package definition & dependencies
-├── requirements.txt               # Direct pip dependency manifest
-├── README.md                      # Human developer documentation & system architecture
-└── AGENTS.md                      # This file (AI agent operational instructions)
+src/ps1/               network.py (GTFS to routes), matcher.py (GPS to stretch timings), model.py
+                       (travel-time model), validation.py, live.py (GTFS-RT layer), planner.py,
+                       metro.py (metro stations for map context), api.py (FastAPI), web/ (planner UI)
+src/gtfs_rt_client.py  live GTFS-RT client, live data only
+scripts/log_gtfs_rt.py logs the live feed to data/gps_log/
+data/delhi_buses_gtfs/ official static GTFS (stop_times.txt.gz)
+data/ps1/              model.json, validation.json, google_benchmark_template.csv
+tests/test_ps1.py      test suite
 ```
 
 ---
 
 ## 🛠️ 2. Environment Setup & Execution
 
-All autonomous agents must run within the local Python virtual environment:
-
 ```bash
-# Activate virtual environment
 source .venv/bin/activate
-
-# Install dependencies (if needed)
 pip install -r requirements.txt
-
-# Run complete test suite (Always run before completing tasks)
-PYTHONPATH=. .venv/bin/pytest tests/test_engine.py -v
-
-# Launch the FastAPI REST server on port 8000
-PYTHONPATH=. .venv/bin/uvicorn src.api:app --host 127.0.0.1 --port 8000 --reload
+PYTHONPATH=. .venv/bin/pytest tests/ -q                         # run before completing any task
+PYTHONPATH=. .venv/bin/uvicorn src.ps1.api:app --port 8020       # planner at http://127.0.0.1:8020/
 ```
 
 ---
@@ -83,44 +54,24 @@ Whenever generating, styling, or reviewing frontend interfaces (Leaflet maps, jo
 
 ---
 
-## 🤖 4. Programmatic REST API & Tool Manifest
+## 🤖 4. REST API
 
-Agents interacting with the running server can query or verify endpoints:
-
-| Endpoint | Method | Parameters | Description |
-| :--- | :--- | :--- | :--- |
-| `/api/v1/health` | `GET` | None | System status, GTFS static counts, and live feed health. |
-| `/api/v1/journey` | `GET` | `origin_lat`, `origin_lon`, `dest_lat`, `dest_lon`, `departure_time` | Calculates Pareto-optimal multi-modal journey with real-time traffic adjustments. |
-| `/api/v1/crowdedness` | `GET` | `route_id`, `hour_of_day` | Returns segment crowdedness estimates and comfort tiers. |
-| `/api/v1/live/vehicles` | `GET` | `limit`, `route_id` | Fetches live Delhi bus GPS telemetry from Transport Stack GTFS-RT feed. |
-| `/api/v1/live/speeds` | `GET` | None | Returns real-time aggregate fleet speed (km/h) across operational corridors. |
-| `/api/v1/od-matrix` | `GET` | `top_n` | Returns top DMRC station origin-destination commuter flows. |
-| `/api/v1/feeder-routes` | `GET` | `metro_station_id`, `radius_km` | Generates optimized first/last-mile feeder bus loop suggestions. |
+See `/docs` on the running server and the API table in `README.md`. Main endpoints: `/journeys`,
+`/journeys/day`, `/stops`, `/stops/{id}/departures`, `/routes`, `/routes/{id}`, `/traffic/stretches`,
+`/live/vehicles`, `/validation`.
 
 ---
 
-## 🔒 5. Security & Sensitive Credentials Protocol
+## 🔒 5. Security & Sensitive Credentials
 
-1. **NEVER leak or commit `.env` or raw API keys:**
-   - The Transport Stack GTFS-RT API key is managed via `.env` (`DELHI_GTFS_RT_API_KEY`).
-   - `.env` is strictly gitignored. Never stage `.env` or print secret values into commit messages or logs.
-   - The application securely loads credentials via `os.getenv("DELHI_GTFS_RT_API_KEY")` inside `src/gtfs_rt_client.py`.
-2. **Deterministic Fallbacks:**
-   - If live API credentials are unset or network is unavailable, `gtfs_rt_client.py` gracefully degrades to simulated historical telemetry so tests and local evaluation never break.
+1. The GTFS-RT key lives in the gitignored `.env` as `DTS_API_KEY`. Never print, log or commit it.
+2. Without a key or network, the live layer returns nothing and the planner falls back to the learned
+   model. It never invents positions.
 
 ---
 
-## 📐 6. Developer Guidelines for Modifying This Codebase
+## 📐 6. Developer Guidelines
 
-When writing code or refactoring within this repository:
-
-1. **Surgical, Minimal Changes:**
-   - Solve tasks with the smallest complete diff. Do not rewrite functioning modules or add unnecessary bloated dependencies.
-2. **Preserve Mathematical Rigor:**
-   - Any transit modeling logic must account for Delhi-specific conditions (e.g. peak hour congestion factors, 1.35× pink pass multipliers, and Hensher-Wardman VOT crowding penalties).
-3. **Evidence Before Assertions:**
-   - Always run the test suite:
-     ```bash
-     PYTHONPATH=. .venv/bin/pytest tests/test_engine.py -v
-     ```
-   - Confirm **15/15 tests passing** before marking any work complete.
+1. Make the smallest complete change. Do not add dependencies without need.
+2. Every number shown to users must come from real data or say where it comes from.
+3. Run the tests before marking work complete.

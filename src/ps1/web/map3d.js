@@ -705,9 +705,8 @@ class TransitMapEngine {
       if (!features || !features.length) return;
       const p = features[0].properties;
       showPopup(features[0].geometry.coordinates.slice(), p.name, [
-        p.interchange === "true" || p.interchange === true ? "Interchange Station" : "Station",
-        p.line || p.lines_str || "Metro",
-        p.gate_count ? `${p.gate_count} Gates` : "Metro Gate Access",
+        p.interchange === "true" || p.interchange === true ? "Metro interchange" : "Metro station",
+        (() => { try { const l = JSON.parse(p.lines || "[]"); return l.length ? l.join(", ") : "Delhi Metro"; } catch { return "Delhi Metro"; } })(),
       ], p.name);
     });
 

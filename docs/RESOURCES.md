@@ -236,12 +236,7 @@ def evaluate_pareto_journey_options(options: list) -> list:
 
 ---
 
-## 🗄️ 4. Data Assets Created & Integrated into Repository
+## 4. Data in this repository
 
-All concrete data files created from these open-source standards are saved locally in the repository:
-
-1. **`data/etm_ticketing_data/passenger_alighting_decay_matrix.csv`**: Gravity decay model mapping fare stage limits to stop alighting probabilities.
-2. **`data/etm_ticketing_data/pass_holder_expansion_factors.json`**: DTC depot-calibrated Pink Pass & concession multipliers.
-3. **`data/etm_ticketing_data/dwell_time_crowding_calibration.csv`**: Dwell time delays and bus bunching coefficients.
-4. **`data/etm_ticketing_data/trip_fleet_assignment_roster.csv`**: GTFS `trip_id` capacity assignments (12m AC, 12m Non-AC, 9m Feeder).
-5. **`data/etm_ticketing_data/corridor_hourly_crowding_ground_truth.csv`**: Hourly ground-truth reference loads for validation.
+Only official data is kept: Delhi bus GTFS (`data/delhi_buses_gtfs/`), the live GTFS-RT feed logged to
+`data/gps_log/`, and the DTS portal samples. No ETM data is included; the earlier generated files were removed.

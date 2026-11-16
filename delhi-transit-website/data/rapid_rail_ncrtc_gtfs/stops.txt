@@ -1,6 +1,0 @@
-stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,zone_id,stop_url,location_type,parent_station,stop_timezone,wheelchair_boarding,platform_code,level_id
-DF2B7C96,DF2B7C96,Murad Nagar,,28.770382,77.510704,,,0,,,0,,
-60E166B8,60E166B8,Duhai,,28.727022,77.471466,,,0,,,0,,
-2C59B7CD,2C59B7CD,Begumpul,,29.003515,77.704582,,,0,,,0,,
-86486622,86486622,Modipuram,,29.099451,77.711273,,,0,,,0,,
-ACE21CD7,ACE21CD7,Duhai Depot,,28.742188,77.467773,,,0,,,0,,

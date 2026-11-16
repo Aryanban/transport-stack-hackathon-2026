@@ -33,7 +33,7 @@ def state():
     live = None
     if os.getenv("PS1_LIVE", "1") == "1":
         from src.gtfs_rt_client import DelhiGTFSRealtimeClient
-        client = DelhiGTFSRealtimeClient(live_only=True)
+        client = DelhiGTFSRealtimeClient()
         if client.api_key:
             live = LiveTracker(net, model, client)
             live.start()
@@ -90,6 +90,41 @@ def journeys_day(from_: str = Query(..., alias="from"), to: str = Query(...),
 def stops(q: str = Query(..., min_length=2)):
     *_, planner = state()
     return planner.search_stops(q)
+
+
+@app.get("/stops/all", summary="Every served bus stop as GeoJSON points, for the map")
+@lru_cache(maxsize=1)
+def stops_all():
+    net, *_ , planner = state()
+    feats = [{"type": "Feature", "properties": {"id": s, "name": net.stops[s][0], "routes": len(net.stop_routes[s])},
+              "geometry": {"type": "Point", "coordinates": [round(net.stops[s][2], 6), round(net.stops[s][1], 6)]}}
+             for s in planner.stop_ids]
+    return {"type": "FeatureCollection", "features": feats}
+
+
+@app.get("/stops/{stop_id}/departures", summary="Next buses at a stop")
+def stop_departures(stop_id: str, depart: str | None = Query(None, description="YYYY-MM-DDTHH:MM in IST; default now")):
+    net, *_, planner = state()
+    if stop_id not in net.stops:
+        raise HTTPException(404, "No such stop.")
+    name, lat, lon = net.stops[stop_id]
+    when = parse_depart(depart)
+    return {"id": stop_id, "name": name, "lat": lat, "lon": lon, "at": when.isoformat(),
+            "departures": planner.departures(stop_id, when)}
+
+
+@app.get("/routes", summary="Find bus routes by number")
+def routes(q: str = Query(..., min_length=1)):
+    *_, planner = state()
+    return planner.find_routes(q)
+
+
+@app.get("/routes/{route_id}", summary="A bus route: its path, stops, first and last bus, and how often it runs")
+def route(route_id: str):
+    net, *_, planner = state()
+    if route_id not in net.routes:
+        raise HTTPException(404, "No such route.")
+    return planner.route_detail(route_id)
 
 
 @app.get("/traffic/hours", summary="City-wide congestion factor by hour")
@@ -149,16 +184,8 @@ def live_vehicles(route: str | None = None):
 @app.get("/metro/network", summary="Delhi Metro stations, for map context only")
 @lru_cache(maxsize=1)
 def metro_network():
-    from src.ps2.metro_loader import get_metro_network_geojson
-    # Stations only: their positions come from DMRC's gate file. The repo has no real metro track
-    # shapes, and the loader's station-to-station "schematic" lines cut straight across the city.
-    # Some rows in the gate file share one placeholder point; those stations are left out
-    # rather than drawn in the wrong place.
-    from collections import Counter
-    stations = [f for f in get_metro_network_geojson()["features"] if f["properties"].get("type") == "station"]
-    spot = lambda f: tuple(round(v, 3) for v in f["geometry"]["coordinates"])  # ~100 m
-    stacked = Counter(spot(f) for f in stations)
-    return {"type": "FeatureCollection", "features": [f for f in stations if stacked[spot(f)] < 3]}
+    from .metro import stations
+    return stations()
 
 
 @app.get("/validation", summary="Held-out accuracy report")

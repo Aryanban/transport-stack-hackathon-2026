@@ -1,7 +1,0 @@
-trip_id,arrival_time,departure_time,stop_id,stop_sequence,stop_headsign,pickup_type,drop_off_type,shape_dist_traveled,timepoint,continuous_pickup,continuous_drop_off
-CA61E4,06:00:00,06:00:00,C2F18E17,0,,0,0,0.0,1,,
-CA61E4,06:03:50,06:03:50,B8F44562,1,,0,0,3859.481,1,,
-861E55,22:12:45,22:12:45,60E166B8,3,,0,0,14860.256,1,,
-861E55,22:18:53,22:18:53,DF2B7C96,4,,0,0,21052.475,1,,
-861E55,22:25:47,22:25:47,B8F44562,5,,0,0,27993.656,1,,
-861E55,22:29:37,22:29:37,C2F18E17,6,,0,0,31849.771,1,,
