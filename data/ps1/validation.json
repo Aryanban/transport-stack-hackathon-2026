@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-16T17:44:15+05:30",
+  "generated": "2026-11-17T01:34:08+05:30",
   "split": "last 30% of a single logged day (more days needed)",
   "train_observations": 37040,
   "test_subtrips": 1735,
@@ -3676,6 +3676,242 @@
     "last": "2026-11-16T17:43+05:30"
   },
   "google": {
-    "status": "no benchmark file at data/ps1/google_benchmark.csv"
+    "pairs": [
+      {
+        "origin": "Kashmere Gate",
+        "destination": "Nehru Place",
+        "depart": "2026-11-24T08:30",
+        "google_min": 61.0,
+        "ours_min": 61.2
+      },
+      {
+        "origin": "Kashmere Gate",
+        "destination": "Nehru Place",
+        "depart": "2026-11-24T14:00",
+        "google_min": 61.0,
+        "ours_min": 53.2
+      },
+      {
+        "origin": "Kashmere Gate",
+        "destination": "Nehru Place",
+        "depart": "2026-11-24T21:30",
+        "google_min": 66.0,
+        "ours_min": 68.2
+      },
+      {
+        "origin": "Anand Vihar",
+        "destination": "Connaught Place",
+        "depart": "2026-11-24T08:30",
+        "google_min": 40.0,
+        "ours_min": 46.6
+      },
+      {
+        "origin": "Anand Vihar",
+        "destination": "Connaught Place",
+        "depart": "2026-11-24T14:00",
+        "google_min": 50.0,
+        "ours_min": 47.5
+      },
+      {
+        "origin": "Anand Vihar",
+        "destination": "Connaught Place",
+        "depart": "2026-11-24T21:30",
+        "google_min": 44.0,
+        "ours_min": 41.6
+      },
+      {
+        "origin": "Rohini Sec 22",
+        "destination": "Azadpur",
+        "depart": "2026-11-24T08:30",
+        "google_min": 66.0,
+        "ours_min": 52.6
+      },
+      {
+        "origin": "Rohini Sec 22",
+        "destination": "Azadpur",
+        "depart": "2026-11-24T14:00",
+        "google_min": 59.0,
+        "ours_min": 48.2
+      },
+      {
+        "origin": "Rohini Sec 22",
+        "destination": "Azadpur",
+        "depart": "2026-11-24T21:30",
+        "google_min": 62.0,
+        "ours_min": 60.4
+      },
+      {
+        "origin": "Mehrauli",
+        "destination": "Kashmere Gate",
+        "depart": "2026-11-24T08:30",
+        "google_min": 71.0,
+        "ours_min": 65.8
+      },
+      {
+        "origin": "Mehrauli",
+        "destination": "Kashmere Gate",
+        "depart": "2026-11-24T14:00",
+        "google_min": 71.0,
+        "ours_min": 90.8
+      },
+      {
+        "origin": "Mehrauli",
+        "destination": "Kashmere Gate",
+        "depart": "2026-11-24T21:30",
+        "google_min": 71.0,
+        "ours_min": 65.8
+      },
+      {
+        "origin": "Dhaula Kuan",
+        "destination": "ITO",
+        "depart": "2026-11-24T08:30",
+        "google_min": 92.0,
+        "ours_min": 47.1
+      },
+      {
+        "origin": "Dhaula Kuan",
+        "destination": "ITO",
+        "depart": "2026-11-24T14:00",
+        "google_min": 94.0,
+        "ours_min": 52.2
+      },
+      {
+        "origin": "Dhaula Kuan",
+        "destination": "ITO",
+        "depart": "2026-11-24T21:30",
+        "google_min": 121.0,
+        "ours_min": 41.2
+      },
+      {
+        "origin": "Uttam Nagar",
+        "destination": "Rajiv Chowk",
+        "depart": "2026-11-24T08:30",
+        "google_min": 90.0,
+        "ours_min": 84.8
+      },
+      {
+        "origin": "Uttam Nagar",
+        "destination": "Rajiv Chowk",
+        "depart": "2026-11-24T14:00",
+        "google_min": 93.0,
+        "ours_min": 75.8
+      },
+      {
+        "origin": "Uttam Nagar",
+        "destination": "Rajiv Chowk",
+        "depart": "2026-11-24T21:30",
+        "google_min": 88.0,
+        "ours_min": 83.8
+      },
+      {
+        "origin": "Badarpur",
+        "destination": "Ashram",
+        "depart": "2026-11-24T08:30",
+        "google_min": 35.0,
+        "ours_min": 35.9
+      },
+      {
+        "origin": "Badarpur",
+        "destination": "Ashram",
+        "depart": "2026-11-24T14:00",
+        "google_min": 35.0,
+        "ours_min": 30.8
+      },
+      {
+        "origin": "Badarpur",
+        "destination": "Ashram",
+        "depart": "2026-11-24T21:30",
+        "google_min": 35.0,
+        "ours_min": 30.8
+      },
+      {
+        "origin": "Mayur Vihar",
+        "destination": "Lajpat Nagar",
+        "depart": "2026-11-24T08:30",
+        "google_min": 48.0,
+        "ours_min": 50.5
+      },
+      {
+        "origin": "Mayur Vihar",
+        "destination": "Lajpat Nagar",
+        "depart": "2026-11-24T14:00",
+        "google_min": 48.0,
+        "ours_min": 65.4
+      },
+      {
+        "origin": "Mayur Vihar",
+        "destination": "Lajpat Nagar",
+        "depart": "2026-11-24T21:30",
+        "google_min": 55.0,
+        "ours_min": 70.4
+      },
+      {
+        "origin": "Punjabi Bagh",
+        "destination": "Karol Bagh",
+        "depart": "2026-11-24T08:30",
+        "google_min": 35.0,
+        "ours_min": 32.9
+      },
+      {
+        "origin": "Punjabi Bagh",
+        "destination": "Karol Bagh",
+        "depart": "2026-11-24T14:00",
+        "google_min": 64.0,
+        "ours_min": 34.8
+      },
+      {
+        "origin": "Punjabi Bagh",
+        "destination": "Karol Bagh",
+        "depart": "2026-11-24T21:30",
+        "google_min": 37.0,
+        "ours_min": 37.5
+      },
+      {
+        "origin": "Seelampur",
+        "destination": "Old Delhi Railway Station",
+        "depart": "2026-11-24T08:30",
+        "google_min": 43.0,
+        "ours_min": 32.6
+      },
+      {
+        "origin": "Seelampur",
+        "destination": "Old Delhi Railway Station",
+        "depart": "2026-11-24T14:00",
+        "google_min": 43.0,
+        "ours_min": 27.6
+      },
+      {
+        "origin": "Seelampur",
+        "destination": "Old Delhi Railway Station",
+        "depart": "2026-11-24T21:30",
+        "google_min": 43.0,
+        "ours_min": 34.8
+      },
+      {
+        "origin": "Saket",
+        "destination": "AIIMS",
+        "depart": "2026-11-24T08:30",
+        "google_min": 36.0,
+        "ours_min": 29.5
+      },
+      {
+        "origin": "Saket",
+        "destination": "AIIMS",
+        "depart": "2026-11-24T14:00",
+        "google_min": 35.0,
+        "ours_min": 43.7
+      },
+      {
+        "origin": "Saket",
+        "destination": "AIIMS",
+        "depart": "2026-11-24T21:30",
+        "google_min": 33.0,
+        "ours_min": 31.7
+      }
+    ],
+    "n": 33,
+    "mae_min": 12.1,
+    "mape_pct": 17.9,
+    "within_20pct": 66.7
   }
 }

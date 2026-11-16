@@ -39,6 +39,9 @@ python -m pytest tests/test_ps1.py
 | --- | --- |
 | `GET /journeys?from=&to=&depart=` | Up to 3 options. Each option lists every walk, the boarding stop, the route, the stop to get off, the change, total time, ride time now, ride time at the quiet hour and the timetable's ride time. `from` and `to` take a stop name, a stop_id or `lat,lon`. `depart` takes `YYYY-MM-DDTHH:MM` or `HH:MM` in IST. |
 | `GET /journeys/day?from=&to=&date=` | The fastest door-to-door time for the same trip at each hour from 05:00 to 23:00 |
+| `GET /stops?q=`, `GET /stops/all` | Stops matching a name; every served stop as GeoJSON |
+| `GET /stops/{id}/departures?depart=` | The next buses at a stop: route, direction and arrival times |
+| `GET /routes?q=`, `GET /routes/{id}` | Routes by bus number; a route's path, stops, first and last bus, and how often it runs |
 | `GET /traffic/hours` | City-wide congestion factor by hour and day type, with observation counts |
 | `GET /traffic/stretches?hour=&daytype=` | GeoJSON of observed stretches with predicted km/h |
 | `GET /live/status`, `GET /live/vehicles?route=` | Live feed health, and current bus positions with a heading taken from each bus's own GPS movement |
@@ -83,7 +86,16 @@ With no key or no fresh data, both switch off and the historical model stands.
 
 These numbers cover one hour of one day. Rerun after 3 to 5 days of logging and replace this table.
 
-**Google Maps.** Copy `data/ps1/google_benchmark_template.csv` to `data/ps1/google_benchmark.csv`. For each row, fill `google_min` with the transit time Google Maps shows for that origin, destination and departure, bus only. The validation report then adds our door-to-door estimate against Google for the same pairs.
+**Google Maps.** `data/ps1/google_benchmark.csv` holds 11 origin–destination pairs at 08:30, 14:00 and 21:30 on Tuesday 24 November. That makes 33 trips. For each one, we read the duration of Google Maps' best transit option with only *Bus* selected, on 17 November 2026. We compare it with our fastest door-to-door option for the same place names and time.
+
+| 33 trips against Google Maps | Value |
+| --- | --- |
+| Mean absolute difference | 12.1 min |
+| Mean percentage difference | 17.9% |
+| Within ±20% of Google | 66.7% |
+| Mean signed difference (ours minus Google) | −7.6 min |
+
+Google's bus times are themselves timetable-based estimates, not observed trips, so this is a comparison, not ground truth. Most of the gap comes from Dhaula Kuan to ITO, where Google's best bus option takes 92 to 121 min and ours 41 to 52 min. Google also places "ITO" and "Ashram" at its own points, which can differ from the stops we match. On many pairs Google gives the same time at 08:30 and at 21:30.
 
 ## Where it is least reliable
 
