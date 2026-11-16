@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/vendor/maplibre-gl.css">
-  <link rel="stylesheet" href="/static/planner.css?v=13">
+  <link rel="stylesheet" href="/static/planner.css?v=14">
   <script src="/static/vendor/maplibre-gl.js"></script>
   <script src="/static/map3d.js?v=14" defer></script>
-  <script src="/static/planner.js?v=10" defer></script>
+  <script src="/static/planner.js?v=15" defer></script>
   <script type="module" src="/static/buses3d.js?v=4"></script>
 </head>
 <body>
@@ -76,14 +76,6 @@
           <button class="btn-search" type="submit"><span>Find buses</span></button>
         </form>
 
-        <div class="route-lookup">
-          <label for="route-q">Or look up a bus by number</label>
-          <div class="route-lookup-row">
-            <input id="route-q" type="search" placeholder="e.g. 534 or 990" autocomplete="off" inputmode="search">
-          </div>
-          <div id="route-results" class="route-results" hidden></div>
-          <div id="route-info" class="route-info" hidden></div>
-        </div>
       </section>
 
       <a class="proof" href="/accuracy">
@@ -106,6 +98,15 @@
           <ol class="hours" id="hours"></ol>
         </section>
       </section>
+
+      <div class="route-lookup">
+        <label for="route-q">Or look up a bus by number</label>
+        <div class="route-lookup-row">
+          <input id="route-q" type="search" placeholder="e.g. 534 or 990" autocomplete="off" inputmode="search">
+        </div>
+        <div id="route-results" class="route-results" hidden></div>
+        <div id="route-info" class="route-info" hidden></div>
+      </div>
 
       <footer class="panel-footer">
         <p>Crowding levels appear here once real ETM ticket data is loaded.</p>

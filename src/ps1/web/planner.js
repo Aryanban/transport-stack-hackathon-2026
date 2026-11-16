@@ -157,9 +157,26 @@ async function plan(event, { withDay = true } = {}) {
     statusEl.textContent = err.message;
     optionsEl.replaceChildren();
     transitMap?.clearJourney();
-  } finally { submit.disabled = false; submit.removeAttribute("aria-busy"); }
+  } finally {
+    submit.disabled = false; submit.removeAttribute("aria-busy");
+    if (ticket === plan.ticket) showResults(); // options, or why there are none
+  }
 }
 form.addEventListener("submit", plan);
+
+// Bring the bus options into view inside the scrolling panel (never the page).
+function showResults() {
+  const panel = document.querySelector(".directions-panel");
+  const head = document.querySelector(".results-container");
+  const top = head.getBoundingClientRect().top - panel.getBoundingClientRect().top + panel.scrollTop - 8;
+  panel.scrollTo({ top }); // instant: planning is a frequent action, not a moment to animate
+}
+
+// A point picked by location or on the map comes back as raw coordinates; show what the user sees instead.
+function placeName(data, side) {
+  const label = data[side].label;
+  return /^-?\d+(\.\d+)?, ?-?\d+(\.\d+)?$/.test(label) ? (byId(side).value.trim() || label) : label;
+}
 
 function render(data) {
   if (!data.options.length) {
@@ -169,7 +186,7 @@ function render(data) {
     transitMap?.clearJourney();
     return;
   }
-  statusEl.textContent = `${data.origin.label} to ${data.destination.label}, leaving ${clock(data.depart)}`;
+  statusEl.textContent = `${placeName(data, "origin")} to ${placeName(data, "destination")}, leaving ${clock(data.depart)}`;
   byId("btn-share").hidden = false;
   byId("source").textContent = data.options.some((o) => o.legs.some((l) => l.bus_source === "live"))
     ? "Times from bus GPS, with live buses" : "Times from bus GPS";
@@ -286,7 +303,7 @@ function card(o, i, data) {
   article.append(top, main, el("p", summaryLine(o), "card-summary"));
 
   const open = el("div", null, "card-open");
-  open.append(itinerary(o, data.origin.label, data.destination.label));
+  open.append(itinerary(o, placeName(data, "origin"), placeName(data, "destination")));
   if (buses.length) {
     const dl = el("dl", null, "compare");
     for (const [dt, dd] of [["On the bus, our estimate", `${Math.round(o.ride_min)} min`], ["Timetable says", `${Math.round(o.timetable_ride_min)} min`], ["Fare", fareText(o.fare)]]) {
@@ -508,6 +525,7 @@ byId("btn-share").addEventListener("click", async () => {
         r.peak_every_min ? `About every ${r.peak_every_min} min in the morning peak.` : null,
       ].filter(Boolean);
       info.replaceChildren(head, ...facts.map((f) => el("p", f, "route-info-meta")));
+      info.scrollIntoView({ block: "nearest" }); // the panel scrolls; the page does not
       const pts = r.path.map(([lat, lon]) => ({ lat, lon }));
       transitMap?.setJourney({
         routeView: true, legs: [{ mode: "bus", points: pts, stops: r.stops }], minutes: null, arrival: null,
