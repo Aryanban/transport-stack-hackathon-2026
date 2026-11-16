@@ -539,6 +539,27 @@ class TransitMapEngine {
       });
     }
 
+    // Every served bus stop, from street zoom: tap one for its next buses.
+    if (!map.getSource("all-stops")) {
+      map.addSource("all-stops", { type: "geojson", data: "/stops/all" });
+    }
+    if (!map.getLayer("all-stops-circles")) {
+      map.addLayer({
+        id: "all-stops-circles",
+        type: "circle",
+        source: "all-stops",
+        minzoom: 14,
+        paint: {
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 14, 3, 17, 6],
+          "circle-color": "#5f6368",
+          "circle-stroke-width": 1.5,
+          "circle-stroke-color": "#ffffff",
+          "circle-opacity": ["interpolate", ["linear"], ["zoom"], 14, 0, 14.5, 0.9],
+          "circle-stroke-opacity": ["interpolate", ["linear"], ["zoom"], 14, 0, 14.5, 1],
+        },
+      });
+    }
+
     // Intermediate Waypoint Stop Dots
     if (!map.getSource("route-stops-source")) {
       map.addSource("route-stops-source", {
@@ -718,14 +739,32 @@ class TransitMapEngine {
         `GPS reported ${p.age} s ago`,
       ]);
     };
-    map.on("click", "route-stops-circles", ({ features }) => {
+    // Next buses at a stop, for the time the planner is set to.
+    const hhmm = (iso) => new Date(iso).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Kolkata" });
+    const stopBoard = async ({ features }) => {
       if (!features || !features.length) return;
-      showPopup(features[0].geometry.coordinates.slice(), features[0].properties.name || "Stop", ["A stop on your bus"]);
-    });
+      const f = features[0], coords = f.geometry.coordinates.slice(), name = f.properties.name || "Stop";
+      if (!f.properties.id) return showPopup(coords, name, [], name);
+      let lines;
+      try {
+        const depart = window.plannerDepart?.();
+        const res = await fetch(`/stops/${encodeURIComponent(f.properties.id)}/departures` + (depart ? `?depart=${encodeURIComponent(depart)}` : ""));
+        if (!res.ok) throw new Error();
+        const deps = (await res.json()).departures;
+        lines = deps.length
+          ? [depart ? `Next buses from ${depart.slice(11, 16)}` : "Next buses",
+             ...deps.slice(0, 6).map((d) => `${d.route} to ${d.towards}: ${d.times.map(hhmm).join(", ")}${d.source === "live" ? " (tracked)" : ""}`),
+             ...(deps.length > 6 ? [`and ${deps.length - 6} more routes`] : [])]
+          : ["No bus in the next 3 hours"];
+      } catch { lines = ["Could not load next buses"]; }
+      showPopup(coords, name, lines, name);
+    };
+    map.on("click", "route-stops-circles", stopBoard);
+    map.on("click", "all-stops-circles", stopBoard);
     map.on("click", "live-fleet-layer", fleetPopup);
     map.on("click", "live-fleet-hit", fleetPopup);
 
-    ["metro-stations-halo", "live-fleet-layer", "live-fleet-hit", "route-stops-circles"].forEach((layerId) => {
+    ["metro-stations-halo", "live-fleet-layer", "live-fleet-hit", "route-stops-circles", "all-stops-circles"].forEach((layerId) => {
       map.on("mouseenter", layerId, () => { map.getCanvas().style.cursor = "pointer"; });
       map.on("mouseleave", layerId, () => { map.getCanvas().style.cursor = ""; });
     });
@@ -799,7 +838,8 @@ class TransitMapEngine {
     });
 
     const pinTime = document.getElementById("dest-pin-time");
-    if (pinTime) pinTime.textContent = Math.round(journey.minutes || 10);
+    if (pinTime) pinTime.textContent = journey.routeView ? "" : Math.round(journey.minutes || 0);
+    this.endMarker.getElement().classList.toggle("no-eta", !!journey.routeView);
 
     const navBanner = document.getElementById("hud-nav-banner");
     if (navBanner) navBanner.hidden = false;
@@ -809,7 +849,9 @@ class TransitMapEngine {
     }
 
     const bottomEta = document.getElementById("hud-bottom-eta");
-    if (bottomEta) {
+    if (bottomEta && journey.routeView) {
+      bottomEta.hidden = true; // a route on its own has no trip time to show
+    } else if (bottomEta) {
       bottomEta.hidden = false;
       const etaMin = document.getElementById("hud-eta-min");
       const etaDist = document.getElementById("hud-eta-dist");

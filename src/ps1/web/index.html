@@ -9,10 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/vendor/maplibre-gl.css">
-  <link rel="stylesheet" href="/static/planner.css?v=10">
+  <link rel="stylesheet" href="/static/planner.css?v=13">
   <script src="/static/vendor/maplibre-gl.js"></script>
-  <script src="/static/map3d.js?v=13" defer></script>
-  <script src="/static/planner.js?v=9" defer></script>
+  <script src="/static/map3d.js?v=14" defer></script>
+  <script src="/static/planner.js?v=10" defer></script>
   <script type="module" src="/static/buses3d.js?v=4"></script>
 </head>
 <body>
@@ -43,6 +43,9 @@
             <div class="input-fields">
               <div class="stop-field origin-field">
                 <input id="origin" role="combobox" aria-label="From" aria-autocomplete="list" aria-expanded="false" aria-controls="origin-results" placeholder="From: stop name or lat,lon" autocomplete="off" required>
+                <button type="button" id="btn-locate" class="btn-locate" aria-label="Start from my location" title="Start from my location">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 8a4 4 0 100 8 4 4 0 000-8zm8.94 3A8.99 8.99 0 0013 3.06V1h-2v2.06A8.99 8.99 0 003.06 11H1v2h2.06A8.99 8.99 0 0011 20.94V23h2v-2.06A8.99 8.99 0 0020.94 13H23v-2h-2.06zM12 19a7 7 0 110-14 7 7 0 010 14z"/></svg>
+                </button>
                 <div id="origin-results" class="suggestions" role="listbox" hidden></div>
               </div>
               <div class="field-divider">
@@ -72,6 +75,15 @@
 
           <button class="btn-search" type="submit"><span>Find buses</span></button>
         </form>
+
+        <div class="route-lookup">
+          <label for="route-q">Or look up a bus by number</label>
+          <div class="route-lookup-row">
+            <input id="route-q" type="search" placeholder="e.g. 534 or 990" autocomplete="off" inputmode="search">
+          </div>
+          <div id="route-results" class="route-results" hidden></div>
+          <div id="route-info" class="route-info" hidden></div>
+        </div>
       </section>
 
       <a class="proof" href="/accuracy">
@@ -83,6 +95,7 @@
         <div class="results-header">
           <span class="results-title">Bus options</span>
           <span id="source" class="results-meta"></span>
+          <button type="button" id="btn-share" class="btn-share" hidden>Share</button>
         </div>
         <div id="status" class="results-status" role="status"></div>
         <div id="options" class="journey-cards-list"></div>

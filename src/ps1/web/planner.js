@@ -164,11 +164,13 @@ form.addEventListener("submit", plan);
 function render(data) {
   if (!data.options.length) {
     statusEl.textContent = `${data.message || "No bus fits."} Try a later time, or a bigger stop nearby.`;
+    byId("btn-share").hidden = true;
     optionsEl.replaceChildren();
     transitMap?.clearJourney();
     return;
   }
   statusEl.textContent = `${data.origin.label} to ${data.destination.label}, leaving ${clock(data.depart)}`;
+  byId("btn-share").hidden = false;
   byId("source").textContent = data.options.some((o) => o.legs.some((l) => l.bus_source === "live"))
     ? "Times from bus GPS, with live buses" : "Times from bus GPS";
   optionsEl.replaceChildren(...data.options.map((o, i) => {
@@ -189,6 +191,8 @@ function badge(leg) {
   return b;
 }
 
+const fareText = (f) => (f && f.non_ac ? `₹${f.non_ac} (AC ₹${f.ac})` : "Free");
+
 // One line for a collapsed card: which bus, where, and where to change.
 function summaryLine(o) {
   const buses = o.legs.filter((l) => l.mode === "bus");
@@ -196,7 +200,7 @@ function summaryLine(o) {
   const [a, b] = buses;
   let text = `Board ${a.route} at ${a.from.name}, ${clock(a.board)}.`;
   if (b) text += ` Change at ${a.to.name} to ${b.route}.`;
-  return text;
+  return `${text} Fare ${fareText(o.fare)}.`;
 }
 
 function step(kind, time, title, lines = []) {
@@ -285,10 +289,11 @@ function card(o, i, data) {
   open.append(itinerary(o, data.origin.label, data.destination.label));
   if (buses.length) {
     const dl = el("dl", null, "compare");
-    for (const [dt, dd] of [["On the bus, our estimate", `${Math.round(o.ride_min)} min`], ["Timetable says", `${Math.round(o.timetable_ride_min)} min`]]) {
+    for (const [dt, dd] of [["On the bus, our estimate", `${Math.round(o.ride_min)} min`], ["Timetable says", `${Math.round(o.timetable_ride_min)} min`], ["Fare", fareText(o.fare)]]) {
       const d = el("div"); d.append(el("dt", dt), el("dd", dd)); dl.append(d);
     }
-    open.append(dl, el("p", `${Math.round(o.observed_share * 100)}% of this ride is on stretches where we have logged real buses. `
+    open.append(dl, el("p", "Fares are DTC's distance slabs for a non-AC bus, with the AC fare in brackets. "
+      + "Women ride free with the Pink Saheli card.", "fare-note"), el("p", `${Math.round(o.observed_share * 100)}% of this ride is on stretches where we have logged real buses. `
       + "The rest follows the city-wide pattern." + (o.hour_basis ? ` ${o.hour_basis[0].toUpperCase()}${o.hour_basis.slice(1)}.` : ""), "trust"));
   }
   article.append(open);
@@ -449,3 +454,89 @@ if (q.get("from") && q.get("to")) {
   byId("destination").value = "Nehru Place";
 }
 plan();
+
+
+// ---------- departure time for the map's stop popups ----------
+window.plannerDepart = () => byId("departure").value || null;
+
+// ---------- start from my location ----------
+byId("btn-locate").addEventListener("click", () => {
+  const btn = byId("btn-locate");
+  if (!navigator.geolocation) { statusEl.textContent = "This browser cannot share your location."; return; }
+  btn.setAttribute("aria-busy", "true");
+  statusEl.textContent = "Finding your location";
+  navigator.geolocation.getCurrentPosition(({ coords }) => {
+    btn.removeAttribute("aria-busy");
+    chosen.origin = `${coords.latitude.toFixed(6)},${coords.longitude.toFixed(6)}`;
+    byId("origin").value = "My location";
+    statusEl.textContent = "";
+    if (byId("destination").value) plan(); else byId("destination").focus();
+  }, (err) => {
+    btn.removeAttribute("aria-busy");
+    statusEl.textContent = err.code === 1 ? "Location is blocked. Allow it in the browser, or type a stop name."
+      : "Could not find your location. Type a stop name instead.";
+  }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
+});
+
+// ---------- share this trip ----------
+byId("btn-share").addEventListener("click", async () => {
+  const url = location.href;
+  try {
+    if (navigator.share) await navigator.share({ title: "Delhi bus times", url });
+    else { await navigator.clipboard.writeText(url); statusEl.textContent = "Link copied. Anyone with it sees this trip."; }
+  } catch (err) { if (err.name !== "AbortError") statusEl.textContent = url; }
+});
+
+// ---------- look up a bus by number ----------
+(() => {
+  const input = byId("route-q"), list = byId("route-results"), info = byId("route-info");
+  let timer, controller;
+  const showRoute = async (hit) => {
+    list.hidden = true;
+    input.value = hit.route;
+    info.hidden = false;
+    info.replaceChildren(el("p", "Loading the route", "route-info-meta"));
+    try {
+      const r = await getJSON(`/routes/${encodeURIComponent(hit.route_id)}`, {});
+      const head = el("div", null, "it-bus-head");
+      const b = badge({ mode: "bus", route: r.route });
+      b.classList.add("big");
+      head.append(b, el("span", `to ${r.towards}`, "it-towards"));
+      const facts = [
+        `${r.stops.length} stops, ${r.km} km, from ${r.stops[0].name}.`,
+        r.first ? `First bus ${r.first}, last ${r.last}, ${r.trips_per_day} trips a day by the timetable.` : null,
+        r.peak_every_min ? `About every ${r.peak_every_min} min in the morning peak.` : null,
+      ].filter(Boolean);
+      info.replaceChildren(head, ...facts.map((f) => el("p", f, "route-info-meta")));
+      const pts = r.path.map(([lat, lon]) => ({ lat, lon }));
+      transitMap?.setJourney({
+        routeView: true, legs: [{ mode: "bus", points: pts, stops: r.stops }], minutes: null, arrival: null,
+        km: r.km, keyStops: [{ ...r.stops[0], kind: "board", label: r.route }],
+        banner: { title: `${r.route} to ${r.towards}`, sub: "Tap a stop on the line for its next buses" },
+      });
+    } catch (err) { info.replaceChildren(el("p", err.message, "route-info-meta")); }
+  };
+  input.addEventListener("input", () => {
+    clearTimeout(timer); controller?.abort();
+    const q = input.value.trim();
+    if (!q) { list.hidden = true; return; }
+    timer = setTimeout(async () => {
+      controller = new AbortController();
+      try {
+        const hits = await getJSON("/routes", { q }, controller.signal);
+        list.replaceChildren(...(hits.length ? hits.map((h) => {
+          const btn = el("button", null, "route-hit");
+          btn.type = "button";
+          btn.append(el("strong", h.route), el("span", h.desc));
+          btn.addEventListener("click", () => showRoute(h));
+          return btn;
+        }) : [el("p", "No bus route by that number.", "route-info-meta")]));
+        list.hidden = false;
+      } catch (err) { if (err.name !== "AbortError") list.hidden = true; }
+    }, 160);
+  });
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); list.querySelector("button")?.click(); }
+    if (e.key === "Escape") list.hidden = true;
+  });
+})();
