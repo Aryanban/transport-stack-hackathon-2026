@@ -210,3 +210,19 @@ def test_live_snapshot_is_safe_while_polling():
     finally:
         stop.set()
         th.join()
+
+
+def test_stop_names_match_however_sector_is_written(net):
+    from src.ps1.planner import norm
+    assert norm("Dwarka Sector-21") == norm("Dwarka Sec21") == "dwarka sec 21"
+    p = Planner(net, TravelModel.load())
+    assert "21" in p.resolve("Dwarka Sector 21").label
+    names = [s["name"] for s in p.search_stops("nehru place", 8)]
+    assert len(names) == len({n.lower() for n in names})  # each name once
+
+
+def test_bus_legs_say_which_way_the_bus_goes(net):
+    p = Planner(net, TravelModel.load())
+    r = p.plan("Kashmere Gate", "Nehru Place", datetime(2026, 11, 17, 8, 30, tzinfo=IST))
+    leg = next(l for o in r["options"] for l in o["legs"] if l["mode"] == "bus")
+    assert leg["towards"] and " to " not in leg["towards"]

@@ -88,6 +88,7 @@ function bindStop(id) {
         found.forEach(({ name }) => seen.set(name, (seen.get(name) || 0) + 1));
         found.forEach((stop, i) => {
           const b = el("button", seen.get(stop.name) > 1 ? `${stop.name} (stop ${stop.id})` : stop.name);
+          if (stop.routes) b.append(el("small", `${stop.routes} route${stop.routes === 1 ? "" : "s"}`, "sugg-meta"));
           b.type = "button"; b.tabIndex = -1; b.id = `${id}-opt-${i}`;
           b.setAttribute("role", "option"); b.setAttribute("aria-selected", "false");
           b.addEventListener("pointerdown", (e) => e.preventDefault());
@@ -171,7 +172,7 @@ function render(data) {
   byId("source").textContent = data.options.some((o) => o.legs.some((l) => l.bus_source === "live"))
     ? "Times from bus GPS, with live buses" : "Times from bus GPS";
   optionsEl.replaceChildren(...data.options.map((o, i) => {
-    const c = card(o, i);
+    const c = card(o, i, data);
     c.style.setProperty("--i", i); // stagger the entrance
     return c;
   }));
@@ -188,13 +189,80 @@ function badge(leg) {
   return b;
 }
 
-function card(o, i) {
+// One line for a collapsed card: which bus, where, and where to change.
+function summaryLine(o) {
+  const buses = o.legs.filter((l) => l.mode === "bus");
+  if (!buses.length) return `Walk the whole way, ${Math.round(o.total_min)} min.`;
+  const [a, b] = buses;
+  let text = `Board ${a.route} at ${a.from.name}, ${clock(a.board)}.`;
+  if (b) text += ` Change at ${a.to.name} to ${b.route}.`;
+  return text;
+}
+
+function step(kind, time, title, lines = []) {
+  const li = el("li", null, "it-step " + kind);
+  li.append(el("span", time || "", "it-time"), el("span", null, "it-node"));
+  const body = el("div", null, "it-body");
+  if (title instanceof Node) body.append(title); else body.append(el("p", title, "it-title"));
+  for (const line of lines) if (line) body.append(line instanceof Node ? line : el("p", line, "it-line"));
+  li.append(body);
+  return li;
+}
+
+// Step-by-step directions: where to walk, which bus and which way, when it comes, where to get off.
+function itinerary(o, origin, destination) {
+  const ol = el("ol", null, "itinerary");
+  ol.setAttribute("aria-label", "Directions");
+  const legs = o.legs;
+  ol.append(step("start", clock(o.depart), `Leave ${origin}`));
+  legs.forEach((l, k) => {
+    const prevBus = legs.slice(0, k).some((x) => x.mode === "bus");
+    if (l.mode === "walk") {
+      const mins = Math.max(1, Math.round(l.minutes));
+      const nextBus = legs.slice(k + 1).find((x) => x.mode === "bus");
+      const title = k === legs.length - 1 ? `Walk ${mins} min to ${destination}`
+        : prevBus && nextBus ? `Change buses: walk ${mins} min to ${l.to.name}`
+        : `Walk ${mins} min to ${l.to.name}`;
+      ol.append(step("walk", l.start ? clock(l.start) : "", title));
+      return;
+    }
+    if (prevBus && legs[k - 1].mode === "bus") ol.append(step("walk", "", `Change buses at ${l.from.name}`));
+    const head = el("div", null, "it-bus-head");
+    const badgeEl = badge(l);
+    badgeEl.classList.add("big");
+    head.append(badgeEl, el("span", `towards ${l.towards || l.headsign}`, "it-towards"));
+    const wait = Math.round(l.wait_min);
+    const due = l.bus_source === "live"
+      ? `A tracked bus reaches the stop at ${clock(l.board)}${wait ? `, ${wait} min wait` : ""}.`
+      : `Next bus due ${clock(l.board)} by the timetable${wait ? `, ${wait} min wait` : ""}.`;
+    const between = (l.stop_points || []).slice(1, -1);
+    let list = null;
+    if (between.length) {
+      list = el("details", null, "it-stops");
+      list.append(el("summary", `${between.length} stop${between.length === 1 ? "" : "s"} in between`));
+      const names = el("ol", null, "it-stop-list");
+      between.forEach((sp) => names.append(el("li", sp.name)));
+      list.append(names);
+    }
+    ol.append(step("bus", clock(l.board), head, [
+      `Board at ${l.from.name}. ${due}`,
+      `Ride ${l.stops} stop${l.stops === 1 ? "" : "s"}, about ${Math.round(l.ride_min)} min.`,
+      list,
+    ]));
+    const last = k === legs.length - 1;
+    ol.append(step(last ? "end" : "alight", clock(l.alight), last ? `Get off at ${l.to.name}. You have arrived.` : `Get off at ${l.to.name}`));
+  });
+  if (legs[legs.length - 1].mode === "walk") ol.append(step("end", clock(o.arrive), `Arrive at ${destination}`));
+  return ol;
+}
+
+function card(o, i, data) {
   const buses = o.legs.filter((l) => l.mode === "bus");
   const article = el("article", null, "transit-card");
   article.tabIndex = 0;
   article.setAttribute("role", "button");
   article.setAttribute("aria-pressed", "false");
-  article.setAttribute("aria-label", `Option ${i + 1}: ${Math.round(o.total_min)} minutes, arrive ${clock(o.arrive)}`);
+  article.setAttribute("aria-label", `Option ${i + 1}: ${Math.round(o.total_min)} minutes, arrive ${clock(o.arrive)}. ${summaryLine(o)}`);
 
   const top = el("div", null, "transit-card-top");
   const row = el("div", null, "badge-row");
@@ -209,42 +277,28 @@ function card(o, i) {
   const main = el("div", null, "transit-card-main");
   const dur = el("div", null, "duration-box");
   dur.append(el("span", `${Math.round(o.total_min)} min`, "duration-text"));
-  main.append(dur, el("span", `${clock(o.depart)} to ${clock(o.arrive)}, `
-    + (buses.length ? (o.transfers ? "1 change" : "direct") : "no bus needed"), "time-window"));
-  article.append(top, main);
+  const changes = !buses.length ? "no bus needed" : o.transfers ? `${o.transfers} change${o.transfers > 1 ? "s" : ""}` : "direct";
+  main.append(dur, el("span", `${clock(o.depart)} to ${clock(o.arrive)}, ${changes}`, "time-window"));
+  article.append(top, main, el("p", summaryLine(o), "card-summary"));
 
+  const open = el("div", null, "card-open");
+  open.append(itinerary(o, data.origin.label, data.destination.label));
   if (buses.length) {
-    const quiet = buses.reduce((s, l) => s + l.quiet_min, 0);
     const dl = el("dl", null, "compare");
-    for (const [dt, dd] of [["Ride now", `${o.ride_min} min`], [`At ${o.quiet_hour}:00`, `${quiet.toFixed(1)} min`], ["Timetable says", `${o.timetable_ride_min} min`]]) {
+    for (const [dt, dd] of [["On the bus, our estimate", `${Math.round(o.ride_min)} min`], ["Timetable says", `${Math.round(o.timetable_ride_min)} min`]]) {
       const d = el("div"); d.append(el("dt", dt), el("dd", dd)); dl.append(d);
     }
-    article.append(dl);
-
-    const details = el("details", null, "transit-card-details");
-    details.append(el("summary", "Stops, waits and walking"));
-    const steps = el("ol", null, "timeline");
-    for (const l of o.legs) {
-      const li = el("li", null, "step " + l.mode);
-      li.append(el("span", l.mode === "walk" ? (l.start ? clock(l.start) : "") : clock(l.board), "t"));
-      const body = el("span", null, "b");
-      if (l.mode === "walk") body.append(`Walk ${Math.round(l.minutes)} min to ${l.to.name}`);
-      else {
-        body.append(`Board ${l.route} at ${l.from.name}. Ride ${l.stops} stops, ${l.ride_min} min. Get off at ${l.to.name}, ${clock(l.alight)}.`);
-        body.append(el("small", (l.bus_source === "live" ? "A tracked bus is on its way" : "Next bus from the timetable") + `, ${l.wait_min} min wait`));
-      }
-      li.append(body);
-      steps.append(li);
-    }
-    details.append(steps);
-    article.append(details);
-    article.append(el("p", `${Math.round(o.observed_share * 100)}% of this ride is on stretches where we have logged real buses. `
+    open.append(dl, el("p", `${Math.round(o.observed_share * 100)}% of this ride is on stretches where we have logged real buses. `
       + "The rest follows the city-wide pattern." + (o.hour_basis ? ` ${o.hour_basis[0].toUpperCase()}${o.hour_basis.slice(1)}.` : ""), "trust"));
   }
+  article.append(open);
 
-  const pick = (e) => { if (e.target.closest("summary")) return; select(i); };
+  const pick = (e) => { if (e.target.closest("summary, .it-stops")) return; select(i); };
   article.addEventListener("click", pick);
-  article.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(i); } });
+  article.addEventListener("keydown", (e) => {
+    if (e.target !== article) return; // keys inside the stop list stay there
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(i); }
+  });
   return article;
 }
 
@@ -263,8 +317,14 @@ function toMapJourney(o) {
   }));
   const firstBus = o.legs.find((l) => l.mode === "bus");
   const later = o.legs.filter((l) => l.mode === "bus").slice(1).map((l) => l.route);
+  const buses = o.legs.filter((l) => l.mode === "bus");
+  const keyStops = buses.flatMap((l, k) => {
+    const pins = [{ ...l.from, kind: k ? "change" : "board", label: k ? `Change to ${l.route}` : `Board ${l.route}` }];
+    if (k === buses.length - 1) pins.push({ ...l.to, kind: "alight", label: "Get off" });
+    return pins;
+  });
   return {
-    legs, minutes: o.total_min, arrival: o.arrive,
+    legs, minutes: o.total_min, arrival: o.arrive, keyStops,
     banner: firstBus
       ? { title: `Board ${firstBus.route} at ${firstBus.from.name}, ${clock(firstBus.board)}`,
           sub: (later.length ? `Then ${later.join(", ")}. ` : "") + "The moving bus is a preview, not a live position" }
