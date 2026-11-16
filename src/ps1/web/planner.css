@@ -1507,3 +1507,13 @@ th {
 .btn-search[aria-busy="true"] { cursor: progress; opacity: 0.8; }
 @media (max-width: 480px) { .compare { grid-template-columns: minmax(0, 1fr); } .compare div { border-right: 0; border-bottom: 1px solid var(--g-divider); } .hours { grid-template-columns: repeat(10, minmax(0, 1fr)); } }
 .legend-dot.metro-station { background: #fff; border: 2px solid var(--metro-blue); }
+
+/* three.js draws the bus body; the DOM marker keeps only its label */
+.has-3d .vehicle-3d-wrapper { display: none; }
+
+/* result cards rise in, one after another (transform and opacity only, under 300 ms) */
+@keyframes card-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.journey-cards-list .transit-card { animation: card-rise 220ms cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--i, 0) * 60ms); }
+.transit-card:active { transform: scale(0.99); }
+.btn-ctrl:active, .time-chip:active, .btn-search:active { transform: scale(0.97); }
+@media (prefers-reduced-motion: reduce) { .journey-cards-list .transit-card { animation: none; } }

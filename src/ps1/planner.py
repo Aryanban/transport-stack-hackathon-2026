@@ -240,6 +240,8 @@ class Planner:
                 "typical_min": round(hist_s / 60, 1), "quiet_min": round(quiet_s / 60, 1),
                 "timetable_min": round(sched_s / 60, 1), "observed_share": round(share, 2),
                 "bus_source": source, "hour_basis": self.hour_basis(board), "path": self._path(r, i, j),
+                "stop_points": [{"id": k, "name": self.net.stops[k][0], "lat": self.net.stops[k][1],
+                                 "lon": self.net.stops[k][2]} for k in r.stops[i:j + 1] if k in self.net.stops],
             })
             observed_s += share * ride_s
             ride_total += ride_s

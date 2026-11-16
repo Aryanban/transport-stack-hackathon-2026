@@ -232,6 +232,30 @@ function getHeading(fromCoord, toCoord) {
 }
 
 
+// Cumulative metres along a [lon, lat] path.
+function pathLengths(coords) {
+  const out = [0];
+  for (let i = 1; i < coords.length; i++) {
+    const [lo0, la0] = coords[i - 1], [lo1, la1] = coords[i];
+    const kx = 111320 * Math.cos(((la0 + la1) / 2) * Math.PI / 180);
+    out.push(out[i - 1] + Math.hypot((lo1 - lo0) * kx, (la1 - la0) * 110574));
+  }
+  return out;
+}
+function pointAt(coords, cum, metres) {
+  let i = 1;
+  while (i < cum.length - 1 && cum[i] < metres) i++;
+  const f = Math.max(0, Math.min(1, (metres - cum[i - 1]) / ((cum[i] - cum[i - 1]) || 1)));
+  return [coords[i - 1][0] + (coords[i][0] - coords[i - 1][0]) * f, coords[i - 1][1] + (coords[i][1] - coords[i - 1][1]) * f];
+}
+function slicePath(coords, cum, metres) {
+  const out = [coords[0]];
+  let i = 1;
+  while (i < coords.length && cum[i] <= metres) out.push(coords[i++]);
+  if (i < coords.length) out.push(pointAt(coords, cum, metres));
+  return out;
+}
+
 class TransitMapEngine {
   constructor(containerId, options = {}) {
     this.containerId = containerId;
@@ -339,16 +363,26 @@ class TransitMapEngine {
         source: "openmaptiles",
         "source-layer": "building",
         type: "fill-extrusion",
-        minzoom: 14.5,
+        minzoom: 13,
         filter: [">", ["to-number", ["get", "render_height"], 0], 0],
         paint: {
-          "fill-extrusion-color": "#E2E8F0",
-          "fill-extrusion-height": ["to-number", ["get", "render_height"], 10],
+          // Taller buildings read a little cooler and darker, so the skyline has depth.
+          "fill-extrusion-color": ["interpolate", ["linear"], ["to-number", ["get", "render_height"], 0],
+            0, "#eef1f5", 25, "#dfe5ec", 80, "#c9d3df"],
+          "fill-extrusion-height": ["interpolate", ["linear"], ["zoom"], 13, 0, 14.2, ["to-number", ["get", "render_height"], 10]],
           "fill-extrusion-base": ["to-number", ["get", "render_min_height"], 0],
-          "fill-extrusion-opacity": 0.65
+          "fill-extrusion-opacity": 0.88,
+          "fill-extrusion-vertical-gradient": true
         }
       }, labelLayerId);
     }
+    try {
+      map.setLight({ anchor: "viewport", color: "#ffffff", intensity: 0.5, position: [1.15, 210, 30] });
+      map.setSky({
+        "sky-color": "#a9cdf5", "horizon-color": "#e8f1fb", "fog-color": "#f4f7fb",
+        "sky-horizon-blend": 0.55, "horizon-fog-blend": 0.6, "fog-ground-blend": 0.75, "atmosphere-blend": 0.6
+      });
+    } catch (_) { /* older engines: flat background is fine */ }
 
     // Sanitize any existing 2D building layers to ensure clean Google Maps daylight tones
     const styleLayers = map.getStyle().layers || [];
@@ -457,7 +491,7 @@ class TransitMapEngine {
         layout: { "line-join": "round", "line-cap": "round" },
         paint: {
           "line-color": ["coalesce", ["get", "crowdColor"], "#1A73E8"],
-          "line-width": 10,
+          "line-width": ["interpolate", ["linear"], ["zoom"], 10, 9, 15, 18],
           "line-opacity": 0.25,
           "line-blur": 6
         }
@@ -473,7 +507,7 @@ class TransitMapEngine {
         layout: { "line-join": "round", "line-cap": "round" },
         paint: {
           "line-color": "#FFFFFF",
-          "line-width": 8.5,
+          "line-width": ["interpolate", ["linear"], ["zoom"], 10, 6.5, 15, 12],
           "line-opacity": 0.95
         }
       });
@@ -488,7 +522,7 @@ class TransitMapEngine {
         layout: { "line-join": "round", "line-cap": "round" },
         paint: {
           "line-color": ["coalesce", ["get", "crowdColor"], "#1A73E8"],
-          "line-width": 5.5,
+          "line-width": ["interpolate", ["linear"], ["zoom"], 10, 4, 15, 8],
           "line-opacity": 1.0
         }
       });
@@ -518,6 +552,7 @@ class TransitMapEngine {
         id: "route-stops-circles",
         type: "circle",
         source: "route-stops-source",
+        minzoom: 12.5,
         paint: {
           "circle-radius": [
             "interpolate", ["linear"], ["zoom"],
@@ -588,7 +623,7 @@ class TransitMapEngine {
       const el = document.createElement("div");
       el.className = "transit-vehicle-marker";
       el.innerHTML = `
-        <div class="vehicle-hud-speed" id="vehicle-floating-speed">Preview</div>
+        <div class="vehicle-hud-speed">Preview</div>
         <div class="vehicle-3d-wrapper">
           <div class="vehicle-underglow"></div>
           <div class="vehicle-chassis">
@@ -608,7 +643,7 @@ class TransitMapEngine {
         </div>
       `;
 
-      this.vehicleMarker = new maplibregl.Marker({ element: el, anchor: "center" });
+      this.vehicleMarker = new maplibregl.Marker({ element: el, anchor: "center", offset: [0, -30] });
 
       // Origin Marker (Google Blue Circle)
       const startEl = document.createElement("div");
@@ -676,16 +711,22 @@ class TransitMapEngine {
       ], p.name);
     });
 
-    map.on("click", "live-fleet-layer", ({ features }) => {
+    const fleetPopup = ({ features }) => {
       if (!features || !features.length) return;
       const p = features[0].properties;
       showPopup(features[0].geometry.coordinates.slice(), `Bus ${p.vehicle_id}`, [
         `Route ${p.route}`,
         `GPS reported ${p.age} s ago`,
       ]);
+    };
+    map.on("click", "route-stops-circles", ({ features }) => {
+      if (!features || !features.length) return;
+      showPopup(features[0].geometry.coordinates.slice(), features[0].properties.name || "Stop", ["A stop on your bus"]);
     });
+    map.on("click", "live-fleet-layer", fleetPopup);
+    map.on("click", "live-fleet-hit", fleetPopup);
 
-    ["metro-stations-halo", "live-fleet-layer"].forEach((layerId) => {
+    ["metro-stations-halo", "live-fleet-layer", "live-fleet-hit", "route-stops-circles"].forEach((layerId) => {
       map.on("mouseenter", layerId, () => { map.getCanvas().style.cursor = "pointer"; });
       map.on("mouseleave", layerId, () => { map.getCanvas().style.cursor = ""; });
     });
@@ -709,9 +750,10 @@ class TransitMapEngine {
       const legCoords = pts.map((p) => [parseFloat(p.lon), parseFloat(p.lat)]);
       allCoords.push(...legCoords);
 
-      pts.forEach((p, pIdx) => {
+      const stops = leg.stops || [];
+      stops.forEach((p, pIdx) => {
         const isStart = legIdx === 0 && pIdx === 0;
-        const isEnd = legIdx === journey.legs.length - 1 && pIdx === pts.length - 1;
+        const isEnd = legIdx === journey.legs.length - 1 && pIdx === stops.length - 1;
         if (!isStart && !isEnd) {
           stopFeatures.push({
             type: "Feature",
@@ -725,14 +767,14 @@ class TransitMapEngine {
     if (!allCoords.length) return;
     this.routeCoords = allCoords;
 
-    this.map.getSource("active-route-source").setData({
-      type: "FeatureCollection",
-      features: journey.legs.filter((leg) => (leg.points || []).length > 1).map((leg) => ({
-        type: "Feature",
-        properties: { mode: leg.mode },
-        geometry: { type: "LineString", coordinates: leg.points.map((p) => [+p.lon, +p.lat]) }
-      }))
-    });
+    const routeFeatures = journey.legs.filter((leg) => (leg.points || []).length > 1).map((leg) => ({
+      type: "Feature",
+      properties: { mode: leg.mode },
+      geometry: { type: "LineString", coordinates: leg.points.map((p) => [+p.lon, +p.lat]) }
+    }));
+    this._revealRoute(routeFeatures);
+    this.busCoords = journey.legs.filter((leg) => leg.mode === "bus")
+      .flatMap((leg) => leg.points.map((p) => [+p.lon, +p.lat]));
 
     this.map.getSource("route-stops-source").setData({
       type: "FeatureCollection",
@@ -750,6 +792,10 @@ class TransitMapEngine {
 
     const navBanner = document.getElementById("hud-nav-banner");
     if (navBanner) navBanner.hidden = false;
+    if (journey.banner) {
+      document.getElementById("hud-next-stop").textContent = journey.banner.title;
+      document.getElementById("hud-subtext").textContent = journey.banner.sub;
+    }
 
     const bottomEta = document.getElementById("hud-bottom-eta");
     if (bottomEta) {
@@ -783,9 +829,33 @@ class TransitMapEngine {
       maxZoom: 15.5
     });
 
-    this.vehicleMarker.setLngLat(startCoord).addTo(this.map);
     this.animProgress = 0;
     this._startVehicleAnimation();
+  }
+
+  // Draw the route on from start to end (one short sweep; instant with reduced motion).
+  _revealRoute(features) {
+    const source = this.map.getSource("active-route-source");
+    cancelAnimationFrame(this._revealId);
+    const lengths = features.map((f) => pathLengths(f.geometry.coordinates));
+    const total = lengths.reduce((s, l) => s + l[l.length - 1], 0);
+    const show = (fraction) => {
+      let budget = fraction * total;
+      source.setData({ type: "FeatureCollection", features: features.map((f, i) => {
+        const cum = lengths[i], len = cum[cum.length - 1];
+        const coords = budget >= len ? f.geometry.coordinates : slicePath(f.geometry.coordinates, cum, Math.max(0, budget));
+        budget -= len;
+        return { ...f, geometry: { type: "LineString", coordinates: coords } };
+      }).filter((f) => f.geometry.coordinates.length > 1) });
+    };
+    if (this.reducedMotion.matches || !total) return show(1);
+    const start = performance.now(), dur = 900;
+    const step = (now) => {
+      const t = Math.min(1, (now - start) / dur);
+      show(1 - Math.pow(1 - t, 3));
+      if (t < 1) this._revealId = requestAnimationFrame(step);
+    };
+    this._revealId = requestAnimationFrame(step);
   }
 
   _clearRoute() {
@@ -794,6 +864,9 @@ class TransitMapEngine {
       this.animId = null;
     }
     this.routeCoords = [];
+    this.busCoords = [];
+    this.preview = null;
+    cancelAnimationFrame(this._revealId);
     if (this.map && this.map.getSource("active-route-source")) {
       this.map.getSource("active-route-source").setData({ type: "FeatureCollection", features: [] });
     }
@@ -817,60 +890,46 @@ class TransitMapEngine {
       cancelAnimationFrame(this.animId);
       this.animId = null;
     }
+    const path = this.busCoords && this.busCoords.length > 1 ? this.busCoords : null;
+    if (!path) { this.vehicleMarker?.remove(); return; }
 
-    if (!this.routeCoords || this.routeCoords.length < 2) return;
-
-    const totalPoints = this.routeCoords.length;
-    let lastTimestamp = performance.now();
-    const durationMs = Math.max(18000, totalPoints * 2500);
+    const cum = pathLengths(path);
+    const total = cum[cum.length - 1];
+    // A short, readable sweep: about 2.2 s per km, between 14 s and 45 s for the whole ride.
+    const durationMs = Math.min(45000, Math.max(14000, total / 1000 * 2200));
+    let last = performance.now();
+    let heading = null;
+    this.vehicleMarker.setLngLat(path[0]).addTo(this.map);
 
     const render = (now) => {
-      const dt = (now - lastTimestamp) / 1000;
-      lastTimestamp = now;
+      const dt = Math.min(0.1, (now - last) / 1000);
+      last = now;
+      if (!this.previewPaused && !this.reducedMotion.matches) this.animProgress += (dt * 1000) / durationMs;
+      if (this.animProgress >= 1) this.animProgress = 0;
 
-      if (!this.previewPaused && !this.reducedMotion.matches) {
-        this.animProgress += (dt * 1000) / durationMs;
+      const at = this.animProgress * total;
+      let i = 1;
+      while (i < cum.length - 1 && cum[i] < at) i++;
+      const seg = cum[i] - cum[i - 1] || 1;
+      const f = Math.max(0, Math.min(1, (at - cum[i - 1]) / seg));
+      const p0 = path[i - 1], p1 = path[i];
+      const coord = [p0[0] + (p1[0] - p0[0]) * f, p0[1] + (p1[1] - p0[1]) * f];
+      // Look a little ahead so the bus turns smoothly instead of snapping at each shape point.
+      const ahead = pointAt(path, cum, Math.min(total, at + 25));
+      const target = (ahead[0] === coord[0] && ahead[1] === coord[1]) ? getHeading(p0, p1) : getHeading(coord, ahead);
+      heading = heading === null ? target : heading + (((target - heading + 540) % 360) - 180) * Math.min(1, dt * 6);
+      heading = (heading + 360) % 360;
+      this._previewHeading = heading;
+      this.preview = { coord, heading };
+
+      this.vehicleMarker.setLngLat(coord);
+      if (!this.fleet3D) {
+        const body = this.vehicleMarker.getElement().querySelector(".vehicle-3d-wrapper");
+        if (body) body.style.transform = `rotate(${heading - this.map.getBearing()}deg) perspective(140px) rotateX(${Math.round(this.map.getPitch() * 0.75)}deg)`;
       }
-      if (this.animProgress >= 1.0) {
-        this.animProgress = 0.0;
-      }
-
-      const totalSegments = totalPoints - 1;
-      const currentSegmentF = this.animProgress * totalSegments;
-      const segIndex = Math.min(Math.floor(currentSegmentF), totalSegments - 1);
-      const segFrac = currentSegmentF - segIndex;
-
-      const p0 = this.routeCoords[segIndex];
-      const p1 = this.routeCoords[segIndex + 1];
-
-      if (p0 && p1) {
-        const curLng = p0[0] + (p1[0] - p0[0]) * segFrac;
-        const curLat = p0[1] + (p1[1] - p0[1]) * segFrac;
-        const currentCoord = [curLng, curLat];
-
-        const heading = getHeading(p0, p1);
-        this._previewHeading = heading;
-
-        if (this.vehicleMarker) {
-          this.vehicleMarker.setLngLat(currentCoord);
-          const wrapper = this.vehicleMarker.getElement().querySelector(".vehicle-3d-wrapper");
-          if (wrapper) {
-            const pitch = this.map.getPitch();
-            const bearing = this.map.getBearing();
-            const rot = heading - bearing;
-            const tilt = Math.round(pitch * 0.75);
-            wrapper.style.transform = `rotate(${rot}deg) perspective(140px) rotateX(${tilt}deg)`;
-            wrapper.style.setProperty("--model-tilt", `${tilt}deg`);
-          }
-        }
-
-        this._paintHeadlights(currentCoord, heading);
-
-        if (this.followMode) {
-          this._followVehicle(currentCoord, heading, dt);
-        }
-      }
-
+      this._paintHeadlights(coord, heading);
+      if (this.followMode) this._followVehicle(coord, heading, dt);
+      this.map.triggerRepaint();
       this.animId = requestAnimationFrame(render);
     };
     this.animId = requestAnimationFrame(render);
@@ -927,9 +986,9 @@ class TransitMapEngine {
   async toggleLiveFleet() {
     this.liveFleetVisible = !this.liveFleetVisible;
     const visibility = this.liveFleetVisible ? "visible" : "none";
-    if (this.map?.getLayer("live-fleet-layer")) {
-      this.map.setLayoutProperty("live-fleet-layer", "visibility", visibility);
-    }
+    const fleetLayer = this.fleet3D ? "live-fleet-hit" : "live-fleet-layer";
+    if (this.map?.getLayer(fleetLayer)) this.map.setLayoutProperty(fleetLayer, "visibility", visibility);
+    this.map?.triggerRepaint();
     if (this.liveFleetVisible) {
       await this.refreshLiveFleet();
       if (!this.liveFleetTimer) {
@@ -978,6 +1037,7 @@ class TransitMapEngine {
           type: "FeatureCollection",
           features
         });
+        this.onFleet?.(vehicleList);
 
         const pillText = document.getElementById("fleet-count-text");
         if (pillText) {
@@ -986,6 +1046,20 @@ class TransitMapEngine {
       }
     } catch (e) {
       console.warn("Live fleet poll failed:", e);
+    }
+  }
+
+  // Called by buses3d.js once three.js draws the fleet: keep an invisible layer for taps and hide the 2D icons.
+  use3DFleet() {
+    const map = this.map;
+    this.fleet3D = true;
+    if (map.getLayer("live-fleet-layer")) map.setLayoutProperty("live-fleet-layer", "visibility", "none");
+    if (!map.getLayer("live-fleet-hit")) {
+      map.addLayer({
+        id: "live-fleet-hit", type: "circle", source: "live-fleet-source",
+        layout: { visibility: this.liveFleetVisible ? "visible" : "none" },
+        paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 5, 16, 14], "circle-opacity": 0 }
+      });
     }
   }
 
@@ -1088,6 +1162,7 @@ class TransitMapEngine {
       if (journey) this.setJourney(journey);
       if (this.liveFleetVisible) this.refreshLiveFleet();
       if (this._speeds) this.setSpeeds(this._speeds);
+      (this.styleHooks || []).forEach((hook) => hook(this.map));
     };
     this.map.once("style.load", this._styleLoaded);
     this.map.setStyle(style, { diff: false });

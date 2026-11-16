@@ -13,6 +13,7 @@ const istNow = () => new Date(Date.now() + 5.5 * 3600e3).toISOString().slice(0, 
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 
 const transitMap = typeof TransitMapEngine !== "undefined" ? new TransitMapEngine("map-container") : null;
+window.transitMap = transitMap; // buses3d.js (a module) attaches its 3D layer to it
 let lastPlan = null;
 
 async function getJSON(path, params, signal) {
@@ -169,7 +170,11 @@ function render(data) {
   statusEl.textContent = `${data.origin.label} to ${data.destination.label}, leaving ${clock(data.depart)}`;
   byId("source").textContent = data.options.some((o) => o.legs.some((l) => l.bus_source === "live"))
     ? "Times from bus GPS, with live buses" : "Times from bus GPS";
-  optionsEl.replaceChildren(...data.options.map((o, i) => card(o, i)));
+  optionsEl.replaceChildren(...data.options.map((o, i) => {
+    const c = card(o, i);
+    c.style.setProperty("--i", i); // stagger the entrance
+    return c;
+  }));
   select(0);
 }
 
@@ -254,10 +259,16 @@ function toMapJourney(o) {
   const legs = o.legs.map((l) => ({
     mode: l.mode,
     points: l.mode === "bus" ? l.path.map(([lat, lon]) => ({ lat, lon })) : [l.from, l.to].map(({ lat, lon }) => ({ lat, lon })),
+    stops: l.mode === "bus" ? (l.stop_points || [l.from, l.to]) : [],
   }));
   const firstBus = o.legs.find((l) => l.mode === "bus");
+  const later = o.legs.filter((l) => l.mode === "bus").slice(1).map((l) => l.route);
   return {
     legs, minutes: o.total_min, arrival: o.arrive,
+    banner: firstBus
+      ? { title: `Board ${firstBus.route} at ${firstBus.from.name}, ${clock(firstBus.board)}`,
+          sub: (later.length ? `Then ${later.join(", ")}. ` : "") + "The moving bus is a preview, not a live position" }
+      : { title: `Walk ${Math.round(o.total_min)} min`, sub: "No bus needed for this trip" },
     km: legs.reduce((s, l) => s + km(l.points), 0),
     badge: !firstBus ? "Walk" : firstBus.bus_source === "live" ? "Tracked bus on its way" : "Timetable departure",
   };

@@ -2,7 +2,7 @@
  * nav: top bar shared with the planner · signature: predicted-vs-observed pair of plots on one scale · states: loading, empty, error, full · wayfind: platform
  * axes: light/mono/cool · posture: committed · contrast: pass · v2.0.0 */
 /* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: P, one logged day gives one hour of bars; the page says so instead of padding it */
-/* Hallmark · waive 64 · theme Wayfind, --font-body is Chivo Mono · mono is the theme's material */
+/* Face set to Manrope at the end of this file to match the planner */
 @import url("./tokens.css");
 @import url("./base.css");
 
@@ -78,3 +78,6 @@ code { overflow-wrap: anywhere; font: 500 var(--text-sm) var(--font-body); backg
   .bar-links a[href="/docs"] { display: none; }
 }
 .bar-links a:active, .table-view summary:active { color: var(--color-ink); background: var(--color-paper-2); }
+
+/* match the planner: same face as the map screen */
+:root { --font-display: "Manrope", system-ui, sans-serif; --font-body: var(--font-display); }
