@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delhi bus times</title>
+  <meta name="description" content="Delhi bus journeys timed by live and logged bus GPS, not the timetable.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/vendor/maplibre-gl.css">
+  <link rel="stylesheet" href="/static/planner.css?v=4">
+  <script src="/static/vendor/maplibre-gl.js"></script>
+  <script src="/static/map3d.js?v=9" defer></script>
+  <script src="/static/planner.js?v=6" defer></script>
+  <script type="module" src="/static/buses3d.js?v=3"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="directions-panel" aria-label="Bus journey planner">
+      <header class="panel-header">
+        <div class="brand-row">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/></svg>
+          </div>
+          <div class="brand-text">
+            <h1>Delhi bus times</h1>
+            <span class="brand-status" id="live" data-state="off">Connecting to the live feed</span>
+          </div>
+          <nav class="brand-links" aria-label="More">
+            <a href="/accuracy">Accuracy</a>
+            <a href="/docs">API</a>
+          </nav>
+        </div>
+      </header>
+
+      <section class="search-box">
+        <form id="planner" class="route-form">
+          <div class="inputs-container">
+            <div class="input-track" aria-hidden="true">
+              <span class="track-circle"></span><span class="track-line"></span><span class="track-square"></span>
+            </div>
+            <div class="input-fields">
+              <div class="stop-field origin-field">
+                <input id="origin" role="combobox" aria-label="From" aria-autocomplete="list" aria-expanded="false" aria-controls="origin-results" placeholder="From: stop name or lat,lon" autocomplete="off" required>
+                <div id="origin-results" class="suggestions" role="listbox" hidden></div>
+              </div>
+              <div class="field-divider">
+                <button type="button" id="btn-swap-stops" class="btn-swap" aria-label="Swap from and to">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/></svg>
+                </button>
+              </div>
+              <div class="stop-field destination-field">
+                <input id="destination" role="combobox" aria-label="To" aria-autocomplete="list" aria-expanded="false" aria-controls="destination-results" placeholder="To: stop name or lat,lon" autocomplete="off" required>
+                <div id="destination-results" class="suggestions" role="listbox" hidden></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="time-presets" aria-label="Leave at">
+            <button type="button" class="time-chip" data-time="now">Now</button>
+            <button type="button" class="time-chip" data-time="08:30">8:30 am</button>
+            <button type="button" class="time-chip" data-time="18:00">6 pm</button>
+            <button type="button" class="time-chip" data-time="22:00">10 pm</button>
+          </div>
+          <div class="trip-filters">
+            <div class="filter-group">
+              <label for="departure">Leave at</label>
+              <input id="departure" type="datetime-local" required>
+            </div>
+          </div>
+
+          <button class="btn-search" type="submit"><span>Find buses</span></button>
+        </form>
+      </section>
+
+      <a class="proof" href="/accuracy">
+        <span class="proof-figure" id="proof-figure">Accuracy</span>
+        <span class="proof-text" id="proof-text">How close these times are to real buses</span>
+      </a>
+
+      <section class="results-container" aria-live="polite">
+        <div class="results-header">
+          <span class="results-title">Bus options</span>
+          <span id="source" class="results-meta"></span>
+        </div>
+        <div id="status" class="results-status" role="status"></div>
+        <div id="options" class="journey-cards-list"></div>
+
+        <section class="day" id="day" hidden>
+          <h2>Same trip, every hour</h2>
+          <p class="day-note">Door to door, in minutes. Pick an hour to plan it.</p>
+          <ol class="hours" id="hours"></ol>
+        </section>
+      </section>
+
+      <footer class="panel-footer">
+        <p>Crowding levels appear here once real ETM ticket data is loaded.</p>
+      </footer>
+    </aside>
+
+    <main class="map-viewport" id="map-viewport">
+      <div id="map-container" class="map-canvas" role="region" aria-label="Map"></div>
+      <p id="map-source-status" role="status" class="map-source-status"></p>
+
+      <div id="hud-nav-banner" class="hud-nav-banner" hidden>
+        <div class="hud-nav-left">
+          <div class="hud-maneuver-box" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+          </div>
+          <div class="hud-nav-content">
+            <strong id="hud-next-stop">Route preview</strong>
+            <span id="hud-subtext">The moving bus is a preview, not a live position</span>
+          </div>
+        </div>
+        <div class="hud-nav-actions">
+          <button type="button" id="hud-sound-toggle" class="hud-icon-btn" aria-label="Pause route preview" aria-pressed="false">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <button type="button" id="btn-recenter" class="floating-recenter-btn" hidden>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+        <span>Re-center</span>
+      </button>
+
+      <div id="hud-bottom-eta" class="hud-bottom-eta" hidden>
+        <div class="eta-left">
+          <div class="eta-large"><span id="hud-eta-min">-</span> <span class="eta-unit">min</span></div>
+          <div class="eta-sub"><span id="hud-eta-dist">-</span>, arrive <span id="hud-eta-arrival">-</span></div>
+        </div>
+        <div class="eta-center"><span id="hud-eta-crowd" class="hud-crowd-chip crowd-unknown"></span></div>
+        <div class="eta-right">
+          <button type="button" id="btn-cancel-route" class="btn-eta-close" aria-label="Clear route">✕</button>
+        </div>
+      </div>
+
+      <div class="map-floating-controls">
+        <div class="control-group">
+          <button type="button" id="btn-toggle-3d" class="btn-ctrl active" aria-pressed="true">3D</button>
+          <button type="button" id="btn-follow-vehicle" class="btn-ctrl" aria-pressed="false">Follow</button>
+          <button type="button" id="btn-toggle-live-fleet" class="btn-ctrl" aria-pressed="false">Live buses</button>
+          <button type="button" id="btn-toggle-speeds" class="btn-ctrl" aria-pressed="false">Speeds</button>
+        </div>
+        <div class="control-group legend-group">
+          <span class="legend-chip"><i class="legend-dot bus-route"></i> Your bus</span>
+          <span class="legend-chip"><i class="legend-dot metro-station"></i> Metro stations</span>
+          <span class="legend-chip" id="fleet-live-pill" hidden><i class="legend-dot bus-icon-dot"></i> <span id="fleet-count-text">Live buses</span></span>
+          <span class="legend-chip speed-legend" id="speed-legend" hidden><i class="sw slow"></i> under 12 <i class="sw mid"></i> 12 to 20 <i class="sw fast"></i> over 20 km/h</span>
+        </div>
+      </div>
+    </main>
+  </div>
+  <noscript><p class="noscript">This planner needs JavaScript. The API works without it: <a href="/docs">/docs</a>.</p></noscript>
+</body>
+</html>

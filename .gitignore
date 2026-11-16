@@ -47,3 +47,9 @@ secrets/
 # Large raw dumps if downloaded later
 *.tar.gz
 data/raw_full_dumps/
+data/gps_log/
+data/ps1/network.pkl
+data/ps1/segment_obs.csv.gz
+
+# Raw GTFS stop_times is over GitHub's 100 MB cap; the .gz copy is committed
+data/delhi_buses_gtfs/stop_times.txt

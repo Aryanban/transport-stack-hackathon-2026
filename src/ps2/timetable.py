@@ -1,5 +1,6 @@
 """GTFS schedule loading and bounded stop-to-stop journey search."""
 import csv
+import gzip
 import io
 import math
 import sys
@@ -338,8 +339,12 @@ def combine_feeds(bus, metro):
 
 def _folder_rows(folder, name, required):
     path = folder / name
+    gz = folder / (name + ".gz")
     if path.exists():
         with path.open(encoding="utf-8-sig", newline="") as stream:
+            yield from csv.DictReader(stream)
+    elif gz.exists():  # large GTFS files are kept gzipped in git
+        with gzip.open(gz, "rt", encoding="utf-8-sig", newline="") as stream:
             yield from csv.DictReader(stream)
     elif required:
         raise ValueError(f"GTFS directory is missing {name}.")

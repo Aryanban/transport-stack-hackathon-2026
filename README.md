@@ -1,15 +1,17 @@
 # Transport Stack Hackathon 2026 — Delhi Transit Engine
 
-## Start the PS2 planner
+## Our submission: Problem 1, bus travel times
 
 Use Python 3.10 or newer. From this repository:
 
-```powershell
-python -m pip install fastapi uvicorn
-python -m uvicorn src.ps2.api:app --host 127.0.0.1 --port 8010
+```bash
+python -m pip install -r requirements.txt
+python -m uvicorn src.ps1.api:app --port 8020
 ```
 
-Open http://127.0.0.1:8010/. PS2 uses the bundled Delhi bus timetable and generated ticket sample. The first search loads the timetable. The [PS2 submission note](docs/hackathon/PS2_SUBMISSION.md) covers setup, model assumptions, validation, and the demo.
+Open http://127.0.0.1:8020/ for the planner on a 3D map with live buses. Journeys are timed by a model learned from Delhi bus GPS (`src/ps1/`), not by the timetable. The [PS1 submission note](docs/hackathon/PS1_SUBMISSION.md) covers the method, the API, how to rebuild from raw GPS, and validation.
+
+The rest of this README describes the earlier multi-problem prototype in `src/`, kept for reference. The PS2 crowding prototype under `/ps2` runs on simulated ticket data and is not the submission. Its traffic model is a fixed hourly speed table, not the learned PS1 model.
 
 [![Transport Stack Hackathon](https://img.shields.io/badge/WhereUElevate-Transport%20Stack%20Hackathon%202026-blue)](https://whereuelevate.com/drills/transport-stack-hackathon-2026?w_ref=J66P10)
 [![Prize Pool](https://img.shields.io/badge/Prizes-%E2%82%B92%2C75%2C000-green)](https://delhi.transportstack.in/hackathon/)

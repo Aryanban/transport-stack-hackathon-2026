@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delhi bus times</title>
+  <meta name="description" content="Bus journeys across Delhi, timed by how fast buses actually move at each hour.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@400;500;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/vendor/maplibre-gl.css">
+  <link rel="stylesheet" href="/static/app.css?v=4">
+</head>
+<body>
+  <header class="bar">
+    <a class="wordmark" href="/">Delhi bus times</a>
+    <p class="live" id="live" aria-live="polite">Live feed: checking</p>
+    <nav class="bar-links"><a href="/docs">API</a> <a href="/accuracy">Accuracy</a></nav>
+  </header>
+
+  <main class="app">
+    <section class="panel" aria-label="Plan a journey">
+      <form id="plan" class="plan" autocomplete="off">
+        <label class="field">
+          <span>From</span>
+          <input id="from" name="from" list="from-list" required placeholder="Stop name or lat,lon">
+          <datalist id="from-list"></datalist>
+        </label>
+        <button type="button" class="swap" id="swap" aria-label="Swap from and to">Swap</button>
+        <label class="field">
+          <span>To</span>
+          <input id="to" name="to" list="to-list" required placeholder="Stop name or lat,lon">
+          <datalist id="to-list"></datalist>
+        </label>
+        <label class="field">
+          <span>Leave at</span>
+          <input id="depart" name="depart" type="datetime-local" required>
+        </label>
+        <div class="actions">
+          <button class="btn btn--primary" type="submit">Find buses</button>
+          <button class="btn" type="button" id="now">Leave now</button>
+        </div>
+      </form>
+
+      <a class="proof" id="proof" href="/accuracy">
+        <span class="proof-figure" id="proof-figure">..</span>
+        <span class="proof-text" id="proof-text">See how close these times are to real bus trips</span>
+      </a>
+
+      <div id="day" class="day" hidden>
+        <h2>Same trip, every hour</h2>
+        <p class="note">Door-to-door minutes on a typical day. Pick an hour to plan it.</p>
+        <ol class="hours" id="hours"></ol>
+      </div>
+
+      <div id="results" class="results" aria-live="polite">
+        <div class="empty">
+          <h2>Where to?</h2>
+          <p>Enter two stops, or coordinates as lat,lon. The example is Kashmere Gate to Nehru Place at 8:30. Times come from how fast Delhi buses actually moved at that hour, not from the timetable.</p>
+          <button class="btn" type="button" id="example">Show an example</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="map-wrap" aria-label="Map">
+      <div id="map"></div>
+      <div class="legend" id="legend" hidden>
+        <span><i class="sw sw--slow"></i>under 12 km/h</span>
+        <span><i class="sw sw--mid"></i>12 to 20</span>
+        <span><i class="sw sw--fast"></i>over 20</span>
+      </div>
+      <label class="toggle"><input type="checkbox" id="traffic"> Bus speeds at this hour</label>
+    </section>
+  </main>
+
+  <noscript><p class="noscript">This planner needs JavaScript. The API works without it: <a href="/docs">/docs</a>.</p></noscript>
+  <script src="/static/vendor/maplibre-gl.js"></script>
+  <script src="/static/app.js?v=4"></script>
+</body>
+</html>
