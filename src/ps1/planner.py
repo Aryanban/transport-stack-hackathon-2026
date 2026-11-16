@@ -28,6 +28,31 @@ HORIZON_S = 3 * 3600      # search window for a bus after you reach the stop
 MAX_OPTIONS = 3
 
 
+_ABBR = {"sector": "sec", "sect": "sec", "station": "stn", "road": "rd", "terminal": "term", "depot": "dpt",
+         "metro": "metro", "no": "no", "number": "no", "chowk": "chowk", "crossing": "xing", "x": "xing"}
+
+
+def norm(text: str) -> str:
+    """Comparable form of a stop name: 'Dwarka Sector-21' and 'Dwarka Sec21' both give 'dwarka sec 21'."""
+    t = re.sub(r"[^a-z0-9]+", " ", text.lower())
+    t = re.sub(r"(?<=[a-z])(?=\d)|(?<=\d)(?=[a-z])", " ", t)
+    return " ".join(_ABBR.get(w, w) for w in t.split())
+
+
+def match_rank(q: str, name: str):
+    """How well normalised query q matches normalised name: 0 exact .. 3 all words, None for no match."""
+    if name == q:
+        return 0
+    if name.startswith(q):
+        return 1
+    if q in name:
+        return 2
+    words = name.split()
+    if all(any(w.startswith(t) for w in words) for t in q.split()):
+        return 3
+    return None
+
+
 @dataclass
 class Place:
     label: str
@@ -42,7 +67,7 @@ class Planner:
         self.stop_ids = np.array(served)
         self.stop_lat = np.array([net.stops[s][1] for s in served])
         self.stop_lon = np.array([net.stops[s][2] for s in served])
-        self._names = [(s, net.stops[s][0].lower()) for s in served]
+        self._names = [(s, norm(net.stops[s][0])) for s in served]
 
     # ---------- places ----------
     def resolve(self, text: str) -> Place:
@@ -53,20 +78,9 @@ class Planner:
         if text in self.net.stops:
             name, lat, lon = self.net.stops[text]
             return Place(name, lat, lon)
-        q = text.lower()
-        scored = []
-        for sid, name in self._names:
-            if name == q:
-                rank = 0
-            elif name.startswith(q):
-                rank = 1
-            elif q in name:
-                rank = 2
-            elif all(w in name for w in q.split()):
-                rank = 3
-            else:
-                continue
-            scored.append((rank, len(name), sid))
+        q = norm(text)
+        scored = [(rank, len(name), sid) for sid, name in self._names
+                  if q and (rank := match_rank(q, name)) is not None]
         if not scored:
             raise LookupError(f"No stop matches '{text}'. Try a stop name or 'lat,lon'.")
         sid = min(scored)[2]
@@ -74,12 +88,22 @@ class Planner:
         return Place(name, lat, lon)
 
     def search_stops(self, text: str, limit=8):
-        q = text.lower().strip()
+        q = norm(text)
         if len(q) < 2:
             return []
-        hits = sorted((name.find(q) != 0, len(name), sid) for sid, name in self._names if q in name)
-        return [{"id": sid, "name": self.net.stops[sid][0], "lat": self.net.stops[sid][1],
-                 "lon": self.net.stops[sid][2]} for _, _, sid in hits[:limit]]
+        hits = sorted((rank, len(name), -len(self.net.stop_routes.get(sid, ())), sid) for sid, name in self._names
+                      if (rank := match_rank(q, name)) is not None)
+        out, seen = [], set()
+        for *_, sid in hits:  # one entry per name: the stop on that road served by the most routes
+            name, lat, lon = self.net.stops[sid]
+            if name.lower() in seen:
+                continue
+            seen.add(name.lower())
+            out.append({"id": sid, "name": name, "lat": lat, "lon": lon,
+                        "routes": len(self.net.stop_routes.get(sid, ()))})
+            if len(out) == limit:
+                break
+        return out
 
     def nearby(self, lat, lon, radius):
         d = haversine_m(lat, lon, self.stop_lat, self.stop_lon)
@@ -232,6 +256,7 @@ class Planner:
             aname, alat, alon = self.net.stops[r.stops[j]]
             legs.append({
                 "mode": "bus", "route": r.name, "route_id": rid, "headsign": r.desc,
+                "towards": r.desc.rsplit(" to ", 1)[-1].strip() if " to " in r.desc else r.desc,
                 "from": {"id": stop, "name": sname, "lat": slat, "lon": slon},
                 "to": {"id": r.stops[j], "name": aname, "lat": alat, "lon": alon},
                 "wait_min": round((board - t).total_seconds() / 60, 1),

@@ -787,6 +787,18 @@ class TransitMapEngine {
     this.startMarker.setLngLat(startCoord).addTo(this.map);
     this.endMarker.setLngLat(endCoord).addTo(this.map);
 
+    // Labelled pins where you board, change and get off.
+    this._keyMarkers = (journey.keyStops || []).map((k) => {
+      const pin = document.createElement("div");
+      pin.className = "key-stop-pin " + k.kind;
+      const label = document.createElement("span");
+      label.textContent = k.label;
+      pin.append(label);
+      const side = k.kind === "alight"; // sits left of the stop so it never covers the destination pin
+      return new maplibregl.Marker({ element: pin, anchor: side ? "right" : "bottom", offset: side ? [-16, 0] : [0, -6] })
+        .setLngLat([+k.lon, +k.lat]).addTo(this.map);
+    });
+
     const pinTime = document.getElementById("dest-pin-time");
     if (pinTime) pinTime.textContent = Math.round(journey.minutes || 10);
 
@@ -859,6 +871,8 @@ class TransitMapEngine {
   }
 
   _clearRoute() {
+    (this._keyMarkers || []).forEach((m) => m.remove());
+    this._keyMarkers = [];
     if (this.animId) {
       cancelAnimationFrame(this.animId);
       this.animId = null;

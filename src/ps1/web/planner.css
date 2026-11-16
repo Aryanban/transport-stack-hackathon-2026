@@ -1524,3 +1524,44 @@ th {
 .btn-ctrl .btn-swatch { display: inline-block; vertical-align: middle; margin-right: 6px; border-radius: 2px; }
 .btn-swatch.bus-icon-dot { width: 14px; height: 7px; background: linear-gradient(90deg, var(--fleet) 0 18%, var(--fleet-roof) 18% 82%, var(--fleet) 82%); box-shadow: 0 0 0 1px #fff; }
 .btn-swatch.speed-swatch { width: 16px; height: 5px; background: linear-gradient(90deg, #d93025 0 33%, #f9ab00 33% 66%, #7d8fa3 66%); box-shadow: 0 0 0 1px #fff; }
+
+/* ---------- Step-by-step directions on the selected card ---------- */
+.card-summary { margin: 6px 0 0; font-size: 0.8rem; line-height: 1.45; color: var(--g-subtext); }
+.card-open { display: none; }
+.transit-card.selected .card-open { display: block; }
+.transit-card.selected .card-summary { display: none; }
+
+.itinerary { list-style: none; margin: 12px 0 0; padding: 0; }
+.it-step { display: grid; grid-template-columns: 52px 16px minmax(0, 1fr); column-gap: 8px; position: relative; padding-bottom: 12px; }
+.it-step:last-child { padding-bottom: 0; }
+.it-time { font-size: 0.78rem; font-weight: 800; color: var(--g-text); text-align: right; padding-top: 1px; font-variant-numeric: tabular-nums; }
+.it-node { position: relative; display: block; }
+.it-node::before { content: ""; position: absolute; left: 3px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--g-surface); border: 2px solid var(--g-subtext); box-sizing: border-box; z-index: 1; }
+/* the line from this step down to the next */
+.it-step:not(:last-child) .it-node::after { content: ""; position: absolute; left: 7px; top: 12px; bottom: -14px; width: 2px; background: var(--g-divider); }
+.it-step.walk .it-node::after, .it-step.start .it-node::after { background: none; border-left: 2px dotted var(--g-subtext); width: 0; left: 7px; }
+.it-step.bus .it-node::after { background: var(--g-blue); width: 4px; left: 6px; }
+.it-step.bus .it-node::before { border-color: var(--g-blue); background: var(--g-blue); }
+.it-step.alight .it-node::before { border-color: var(--g-blue); }
+.it-step.start .it-node::before { border-color: var(--g-blue); }
+.it-step.end .it-node::before { border-color: #d93025; background: #d93025; border-radius: 2px; }
+.it-step.walk .it-node::before { width: 8px; height: 8px; left: 4px; top: 5px; border-width: 0; background: var(--g-subtext); }
+.it-body { min-width: 0; }
+.it-title { margin: 0; font-size: 0.84rem; font-weight: 700; line-height: 1.35; color: var(--g-text); overflow-wrap: anywhere; }
+.it-step.walk .it-title { font-weight: 600; color: var(--g-subtext); }
+.it-line { margin: 3px 0 0; font-size: 0.78rem; line-height: 1.45; color: var(--g-subtext); overflow-wrap: anywhere; }
+.it-bus-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.route-badge.big { font-size: 0.86rem; padding: 4px 9px; }
+.it-towards { font-size: 0.84rem; font-weight: 700; color: var(--g-text); overflow-wrap: anywhere; }
+.it-stops { margin-top: 4px; font-size: 0.76rem; }
+.it-stops summary { cursor: pointer; color: var(--g-blue); font-weight: 700; width: max-content; max-width: 100%; padding: 4px 0; min-height: 24px; }
+.it-stops summary:focus-visible { outline: 2px solid var(--g-blue); outline-offset: 2px; border-radius: 4px; }
+.it-stop-list { margin: 4px 0 0; padding-left: 18px; color: var(--g-subtext); line-height: 1.5; max-height: 220px; overflow-y: auto; }
+.compare { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.suggestions button .sugg-meta { display: block; font-size: 0.7rem; font-weight: 500; color: var(--g-subtext); }
+
+/* Map pins where you board, change and get off */
+.key-stop-pin { pointer-events: none; }
+.key-stop-pin span { display: block; padding: 4px 9px; border-radius: var(--radius-pill); background: var(--g-surface); color: var(--g-text); font: 700 0.72rem/1.2 var(--font-ui); white-space: nowrap; box-shadow: var(--shadow-float); border: 2px solid var(--g-blue); }
+.key-stop-pin.change span { border-color: #f9ab00; }
+.key-stop-pin.alight span { border-color: #d93025; }
