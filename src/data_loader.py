@@ -5,6 +5,7 @@ Parses static GTFS (Bus, Metro, Shared Mobility), DMRC OD Matrix, Gate locations
 
 from __future__ import annotations
 import csv
+import gzip
 import json
 import math
 import os
@@ -16,6 +17,18 @@ from typing import Dict, List, Optional, Tuple, Any
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
+
+
+def _gtfs_file(folder: Path, name: str) -> Path:
+    """GTFS file path, falling back to a gzipped copy (large files are stored as .gz)."""
+    p = folder / name
+    return p if p.exists() or not (folder / (name + ".gz")).exists() else folder / (name + ".gz")
+
+
+def _open_text(p: Path):
+    if p.suffix == ".gz":
+        return gzip.open(p, "rt", encoding="utf-8", errors="replace")
+    return open(p, encoding="utf-8", errors="replace")
 
 @dataclass
 class Stop:
@@ -251,9 +264,9 @@ def load_gtfs_bus_data(network: TransitNetwork, data_dir: Optional[Path] = None)
                             continue
 
     # Load stop times with fast streaming
-    stop_times_file = path / "stop_times.txt"
+    stop_times_file = _gtfs_file(path, "stop_times.txt")
     if stop_times_file.exists():
-        with open(stop_times_file, encoding="utf-8", errors="replace") as f:
+        with _open_text(stop_times_file) as f:
             reader = csv.reader(f)
             header = next(reader, None)
             if header:
@@ -358,9 +371,9 @@ def load_gtfs_metro_data(network: TransitNetwork, data_dir: Optional[Path] = Non
                     continue
 
     # Load stop times
-    stop_times_file = path / "stop_times.txt"
+    stop_times_file = _gtfs_file(path, "stop_times.txt")
     if stop_times_file.exists():
-        with open(stop_times_file, encoding="utf-8", errors="replace") as f:
+        with _open_text(stop_times_file) as f:
             reader = csv.DictReader(f)
             for row in reader:
                 try:

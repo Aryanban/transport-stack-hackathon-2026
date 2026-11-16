@@ -89,7 +89,10 @@ def build(gtfs=GTFS) -> Network:
     stops = {r.stop_id: (r.stop_name, float(r.stop_lat), float(r.stop_lon)) for r in stops_df.itertuples()}
     routes_df = pd.read_csv(gtfs / "routes.txt", dtype=str).set_index("route_id")
     trips = pd.read_csv(gtfs / "trips.txt", dtype=str)
-    st = pd.read_csv(gtfs / "stop_times.txt", usecols=["trip_id", "departure_time", "stop_id", "stop_sequence"],
+    st_path = gtfs / "stop_times.txt"
+    if not st_path.exists():  # kept gzipped in git (GitHub caps files at 100 MB)
+        st_path = st_path.with_suffix(".txt.gz")
+    st = pd.read_csv(st_path, usecols=["trip_id", "departure_time", "stop_id", "stop_sequence"],
                      dtype={"trip_id": str, "stop_id": str})
     st = st.sort_values(["trip_id", "stop_sequence"])
     st["sec"] = st["departure_time"].map(_secs)
