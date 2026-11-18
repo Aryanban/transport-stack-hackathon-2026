@@ -745,6 +745,7 @@ class TransitMapEngine {
       if (!features || !features.length) return;
       const f = features[0], coords = f.geometry.coordinates.slice(), name = f.properties.name || "Stop";
       if (!f.properties.id) return showPopup(coords, name, [], name);
+      const ticket = stopBoard.ticket = (stopBoard.ticket || 0) + 1; // only the latest tap opens a popup
       let lines;
       try {
         const depart = window.plannerDepart?.();
@@ -757,7 +758,7 @@ class TransitMapEngine {
              ...(deps.length > 6 ? [`and ${deps.length - 6} more routes`] : [])]
           : ["No bus in the next 3 hours"];
       } catch { lines = ["Could not load next buses"]; }
-      showPopup(coords, name, lines, name);
+      if (ticket === stopBoard.ticket) showPopup(coords, name, lines, name);
     };
     map.on("click", "route-stops-circles", stopBoard);
     map.on("click", "all-stops-circles", stopBoard);

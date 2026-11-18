@@ -130,15 +130,18 @@ const place = (id) => chosen[id] || byId(id).value.trim();
 function syncUrl(p) {
   const u = new URL(location.href);
   u.searchParams.set("from", p.from); u.searchParams.set("to", p.to); u.searchParams.set("depart", p.depart);
-  if (byId("origin").value !== p.from) u.searchParams.set("from_label", byId("origin").value); else u.searchParams.delete("from_label");
-  if (byId("destination").value !== p.to) u.searchParams.set("to_label", byId("destination").value); else u.searchParams.delete("to_label");
+  // "My location" means the sharer's position, so a shared link shows the coordinates instead.
+  for (const [field, key] of [["origin", "from"], ["destination", "to"]]) {
+    const label = byId(field).value;
+    if (label !== p[key] && label !== "My location") u.searchParams.set(`${key}_label`, label);
+    else u.searchParams.delete(`${key}_label`);
+  }
   history.replaceState(null, "", u);
 }
 
 async function plan(event, { withDay = true } = {}) {
   event?.preventDefault();
   const submit = form.querySelector("[type=submit]");
-  if (submit.disabled) return;
   const p = { from: place("origin"), to: place("destination"), depart: byId("departure").value || istNow() };
   if (!p.from || !p.to) { statusEl.textContent = "Enter where you start and where you are going."; return; }
   syncUrl(p);
@@ -154,12 +157,16 @@ async function plan(event, { withDay = true } = {}) {
     if (withDay) loadDay(p); else markHour(p.depart);
     if (byId("btn-toggle-speeds").getAttribute("aria-pressed") === "true") loadSpeeds();
   } catch (err) {
+    if (ticket !== plan.ticket) return;
     statusEl.textContent = err.message;
+    byId("btn-share").hidden = true;
     optionsEl.replaceChildren();
     transitMap?.clearJourney();
   } finally {
-    submit.disabled = false; submit.removeAttribute("aria-busy");
-    if (ticket === plan.ticket) showResults(); // options, or why there are none
+    if (ticket === plan.ticket) { // a newer plan may have started meanwhile; only the latest ends the wait
+      submit.disabled = false; submit.removeAttribute("aria-busy");
+      showResults(); // options, or why there are none
+    }
   }
 }
 form.addEventListener("submit", plan);

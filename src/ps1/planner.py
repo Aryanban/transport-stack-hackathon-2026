@@ -340,14 +340,14 @@ class Planner:
 
     def route_detail(self, rid: str):
         r = self.net.routes[rid]
-        deps = sorted(int(d) % 86400 for d in r.departures)
+        deps = sorted({int(d) % 86400 for d in r.departures})  # one entry per departure time
         gaps = np.diff(deps) if len(deps) > 1 else np.array([])
         peak = [g for d, g in zip(deps[1:], gaps) if 8 * 3600 <= d <= 11 * 3600]
         return {"route_id": rid, "route": r.name, "desc": r.desc, "towards": _towards(r.desc),
                 "km": round(float(r.stop_dist[-1]) / 1000, 1),
                 "first": f"{deps[0] // 3600:02d}:{deps[0] % 3600 // 60:02d}" if deps else None,
                 "last": f"{deps[-1] // 3600:02d}:{deps[-1] % 3600 // 60:02d}" if deps else None,
-                "trips_per_day": len(deps),
+                "trips_per_day": len(r.departures),
                 "peak_every_min": round(float(np.median(peak)) / 60) if peak else None,
                 "path": self._path(r, 0, len(r.stops) - 1),
                 "stops": [{"id": s, "name": self.net.stops[s][0], "lat": self.net.stops[s][1],
