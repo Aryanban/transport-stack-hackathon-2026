@@ -310,7 +310,7 @@ function card(o, i, data) {
       const d = el("div"); d.append(el("dt", dt), el("dd", dd)); dl.append(d);
     }
     open.append(dl, el("p", "Fares are DTC's distance slabs for a non-AC bus, with the AC fare in brackets. "
-      + "Women ride free with the Pink Saheli card.", "fare-note"), el("p", `${Math.round(o.observed_share * 100)}% of this ride is on stretches where we have logged real buses. `
+      + "Women ride free with the Pink Saheli card.", "fare-note"), el("p", `${Math.round(o.observed_share * 100)}% of this ride is on stretches where real buses were timed. `
       + "The rest follows the city-wide pattern." + (o.hour_basis ? ` ${o.hour_basis[0].toUpperCase()}${o.hour_basis.slice(1)}.` : ""), "trust"));
   }
   article.append(open);

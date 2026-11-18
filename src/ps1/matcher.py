@@ -22,7 +22,9 @@ from .gpslog import read_file
 from .network import Network, ROOT, to_xy
 
 LOG_DIR = ROOT / "data" / "gps_log"
-OBS_FILE = ROOT / "data" / "ps1" / "segment_obs.csv.gz"
+OBS_FILE = ROOT / "data" / "ps1" / "segment_obs.csv.gz"            # what the model fits on
+LIVE_OBS_FILE = ROOT / "data" / "ps1" / "segment_obs_live.csv.gz"  # from our own GTFS-RT log
+ARCHIVE_OBS_DIR = ROOT / "data" / "raw" / "obs"                    # from the October archive
 OFFSET_M = 60          # max distance from the route shape
 MAX_GAP_S = 150        # max gap between the two GPS points bracketing a stop
 MAX_SPEED_MS = 25.0    # 90 km/h: faster implied moves are GPS jumps
@@ -126,6 +128,21 @@ def build_observations(net: Network, log_dir=LOG_DIR, out=OBS_FILE, workers=None
         print(f"{day}: {len(by_day[day])} files -> {len(obs)} segment observations", flush=True)
     result = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(columns=OBS_COLS)
     result = result.drop_duplicates(["vehicle_id", "route_id", "idx", "t0"])
+    out.parent.mkdir(parents=True, exist_ok=True)
+    result.to_csv(LIVE_OBS_FILE, index=False)
+    return write_combined(out)
+
+
+def write_combined(out=OBS_FILE) -> pd.DataFrame:
+    """Join our own live-log observations with the October archive's, tagged by source."""
+    parts = []
+    if LIVE_OBS_FILE.exists():
+        parts.append(pd.read_csv(LIVE_OBS_FILE, dtype={"route_id": str, "from_stop": str, "to_stop": str})
+                     .assign(source="live"))
+    for f in sorted(ARCHIVE_OBS_DIR.glob("*.csv.gz")):
+        parts.append(pd.read_csv(f, dtype={"route_id": str, "from_stop": str, "to_stop": str})
+                     .assign(source="archive"))
+    result = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(columns=OBS_COLS + ["source"])
     out.parent.mkdir(parents=True, exist_ok=True)
     result.to_csv(out, index=False)
     return result

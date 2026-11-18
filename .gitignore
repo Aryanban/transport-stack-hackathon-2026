@@ -50,6 +50,10 @@ data/raw_full_dumps/
 data/gps_log/
 data/ps1/network.pkl
 data/ps1/segment_obs.csv.gz
+data/ps1/segment_obs_live.csv.gz
 
 # Raw GTFS stop_times is over GitHub's 100 MB cap; the .gz copy is committed
 data/delhi_buses_gtfs/stop_times.txt
+
+# Organiser October 2026 GPS archive and unpacked days
+data/raw/

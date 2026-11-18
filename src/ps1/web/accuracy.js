@@ -135,8 +135,9 @@
     const c = rep.coverage || {};
     const t = (s) => (s ? s.replace("T", " ").slice(0, 16) : "-");
     const items = [
-      ["Bus GPS logged", `${t(c.first)} to ${t(c.last)}`],
-      ["Days logged", (rep.days_logged || []).length],
+      ...(c.sources || []).map((s) => [s.source === "archive" ? "Organisers' GPS archive" : "Our live GTFS-RT log",
+        `${s.first_day} to ${s.last_day}, ${s.days} days, ${s.observations.toLocaleString("en-IN")} stretch observations`]),
+      ["Days of bus GPS", (rep.days_logged || []).length],
       ["Stretch observations", (c.observations ?? 0).toLocaleString("en-IN")],
       ["Buses seen", (c.vehicles ?? 0).toLocaleString("en-IN")],
       ["Routes seen", `${c.routes ?? 0} of ${c.routes_total ?? 0}`],

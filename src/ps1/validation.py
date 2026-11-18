@@ -2,8 +2,9 @@
 
 Ground truth: whole sub-trips of real buses (5 to 30 consecutive stops of one
 vehicle run), taken from the GPS log and never used for fitting.
-Split: the last logged day is held out. With only one day logged, the last
-30% of that day's time range is held out instead (stated in the report).
+Split: with the October archive loaded, its last 7 days are held out and the
+model is fitted on the rest. Otherwise, with 3 or more days logged, the last day
+is held out; with fewer, 30% of buses are (stated in the report).
 
 Compared estimators for the same sub-trip and departure time:
   model      learned model (this package), historical only, no live data
@@ -23,21 +24,37 @@ import numpy as np
 import pandas as pd
 
 from .matcher import OBS_FILE
-from .model import IST, add_time_fields, day_type, fit
+from .model import IST, add_time_fields, day_type, fit, read_obs
 from .network import ROOT, load
 
 REPORT = ROOT / "data" / "ps1" / "validation.json"
 GOOGLE = ROOT / "data" / "ps1" / "google_benchmark.csv"
 MIN_STOPS, MAX_STOPS = 5, 30
+MAX_SUBTRIPS = 50_000
 
 
-def split(obs):
+TEST_DAYS = 7
+
+
+def split(obs, seed=7):
+    if "source" in obs:
+        archive_days = sorted(obs.day[obs.source == "archive"].unique())
+        if len(archive_days) >= 2 * TEST_DAYS:
+            test_days = set(archive_days[-TEST_DAYS:])
+            mask = obs.day.isin(test_days) & (obs.source == "archive")
+            return obs[~mask], obs[mask], (f"held-out days {min(test_days)} to {max(test_days)} "
+                                          f"(last {TEST_DAYS} days of the October archive)")
     days = sorted(obs.day.unique())
-    if len(days) >= 2:
+    if len(days) >= 3:
         test_day = days[-1]
         return obs[obs.day != test_day], obs[obs.day == test_day], f"held-out day {test_day}"
-    cut = obs.t0.quantile(0.7)
-    return obs[obs.t0 < cut], obs[obs.t0 >= cut], "last 30% of a single logged day (more days needed)"
+    # Under 3 days, the earlier days do not cover the last day's hours, so hold out
+    # 30% of buses instead: their runs are never seen in fitting, at every hour.
+    buses = np.sort(obs.vehicle_id.unique())
+    rng = np.random.default_rng(seed)
+    test_buses = set(rng.choice(buses, size=int(len(buses) * 0.3), replace=False))
+    mask = obs.vehicle_id.isin(test_buses)
+    return obs[~mask], obs[mask], f"30% of buses held out ({len(days)} days logged; held-out day from 3 days)"
 
 
 def subtrips(test, rng):
@@ -81,11 +98,13 @@ def metrics(err_s, obs_s):
 
 def run(seed=7):
     net = load()
-    obs = add_time_fields(pd.read_csv(OBS_FILE, dtype={"route_id": str, "from_stop": str, "to_stop": str}))
+    obs = add_time_fields(read_obs(OBS_FILE))
     train, test, split_note = split(obs)
     model = fit(train)
     trips = subtrips(test, np.random.default_rng(seed))
     trips = trips[trips.route_id.isin(net.routes.keys())]
+    if len(trips) > MAX_SUBTRIPS:  # a random sample keeps the report quick on a month of data
+        trips = trips.sample(MAX_SUBTRIPS, random_state=seed)
     rows = []
     flat_mps = train.dist_m.sum() / train.travel_s.sum()
     for r in trips.itertuples():
@@ -102,7 +121,8 @@ def run(seed=7):
     res = pd.DataFrame(rows)
     report = {"generated": datetime.now(IST).isoformat(timespec="seconds"), "split": split_note,
               "train_observations": int(len(train)), "test_subtrips": int(len(res)),
-              "days_logged": sorted(obs.day.unique().tolist()), "estimators": {}, "by_period": {}}
+              "days_logged": sorted(str(d) for d, n in obs.day.value_counts().items() if n >= 1000),
+              "estimators": {}, "by_period": {}}
     if len(res):
         for est in ("model", "timetable", "flat"):
             report["estimators"][est] = metrics(res[est] - res.observed, res.observed)
@@ -126,6 +146,7 @@ def run(seed=7):
         "stretches_3plus": int((obs.groupby(["from_stop", "to_stop"]).size() >= 3).sum()),
         "routes": int(obs.route_id.nunique()), "routes_total": len(net.routes),
         "hours_with_data": sorted(int(h) for h, n in obs.groupby("hour").size().items() if n >= 30),
+        "sources": source_summary(obs),
         "first": datetime.fromtimestamp(float(obs.t0.min()), IST).isoformat(timespec="minutes"),
         "last": datetime.fromtimestamp(float(obs.t0.max()), IST).isoformat(timespec="minutes"),
     }
@@ -133,6 +154,21 @@ def run(seed=7):
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(report, indent=2))
     return report
+
+
+def source_summary(obs, min_obs=1000):
+    """Observations and days per data source. A day counts if it has at least min_obs observations,
+    so the few timings just before midnight in a daily file do not add a day."""
+    if "source" not in obs:
+        return []
+    out = []
+    for src, g in obs.groupby("source", observed=True):
+        n = g.day.value_counts()
+        days = sorted(str(d) for d in n[n >= min_obs].index)
+        if days:
+            out.append({"source": str(src), "observations": int(len(g)), "days": len(days),
+                        "first_day": days[0], "last_day": days[-1]})
+    return out
 
 
 def google_report():

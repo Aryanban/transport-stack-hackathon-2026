@@ -7,8 +7,9 @@
 ## ⚡ 1. Repository Essence & Architecture
 
 **Delhi bus times** is our submission for **Problem 1 (real-time bus traffic model and journey planner)**:
-a journey planner whose travel times come from a model learned from Delhi bus GPS, adjusted live from
-the GTFS-RT feed. Crowding (Problem 2) is not built: no real ETM ticket data is available yet.
+a journey planner whose travel times come from a model learned from a month of Delhi bus GPS (the
+organisers' October 2026 archive plus our own GTFS-RT log), adjusted live from the GTFS-RT feed.
+Crowding (Problem 2) is not built yet: October ticket data is published but not loaded.
 
 **Real data only.** Never add generated, simulated or hand-invented data, and never present a
 fallback as live. With no data, show nothing and say so.
@@ -17,11 +18,13 @@ fallback as live. With no data, show nothing and say so.
 ```
 src/ps1/               network.py (GTFS to routes), matcher.py (GPS to stretch timings), model.py
                        (travel-time model), validation.py, live.py (GTFS-RT layer), planner.py,
-                       metro.py (metro stations for map context), api.py (FastAPI), web/ (planner UI)
+                       metro.py (metro stations for map context), api.py (FastAPI), web/ (planner UI),
+                       october.py (October GPS archive to stretch timings, one day at a time)
 src/gtfs_rt_client.py  live GTFS-RT client, live data only
 scripts/log_gtfs_rt.py logs the live feed to data/gps_log/
 data/delhi_buses_gtfs/ official static GTFS (stop_times.txt.gz)
-data/ps1/              model.json, validation.json, google_benchmark_template.csv
+data/ps1/              model.json, validation.json, google_benchmark.csv
+data/raw/              October archive and per-day stretch timings (not in git)
 tests/test_ps1.py      test suite
 ```
 
@@ -34,6 +37,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 PYTHONPATH=. .venv/bin/pytest tests/ -q                         # run before completing any task
 PYTHONPATH=. .venv/bin/uvicorn src.ps1.api:app --port 8020       # planner at http://127.0.0.1:8020/
+python -m src.ps1.october && python -m src.ps1.model && python -m src.ps1.validation  # rebuild model
 ```
 
 ---

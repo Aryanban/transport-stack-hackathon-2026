@@ -16,26 +16,41 @@ A Delhi journey planner timed by real bus GPS, not by the timetable.
 <!-- Hero image: put a GIF or screenshot from the demo video at docs/demo.gif and uncomment the line below. -->
 <!-- <p align="center"><img src="docs/demo.gif" alt="Planning Kashmere Gate ISBT to Nehru Place on the 3D map" width="900"></p> -->
 
-The Delhi timetable gives the same travel time at 8:30 am and at 11 pm. Real buses don't. This app
-watches thousands of Delhi buses through their live GPS. It learns how fast they really move on each
-stretch of road at each hour, and plans your trip with those speeds.
+The Delhi timetable gives the same travel time at 8:30 am and at 11 pm. Real buses don't. We trained a
+travel-time model on **a full month of GPS from about 6,000 Delhi buses**: every stretch of road
+between two stops, at every hour, on weekdays and weekends. A journey planner uses that model to time
+your trip for the hour you leave.
+
+## The model is the product
+
+Most bus planners read the timetable. This one learns from where the buses really were.
+
+| From | To | How |
+| --- | --- | --- |
+| **31 days of raw bus GPS**<br/>1 to 31 October 2026, from the organisers' archive, 124 GB unpacked | **420+ million clean positions** | Duplicates removed, kept at one point per bus every 15 s, off-Delhi points dropped |
+| 420+ million positions | **39.1 million timed stretches** | Each point snapped to its bus's route on the road map. Jumps, backward moves and impossible speeds thrown out. The moment the bus passed each stop worked out from the points either side |
+| 39.1 million timed stretches | **One 6.5 MB model** | Speed for 13,525 stretches, with 205,974 stretch-and-hour corrections and a city traffic curve for every hour, weekday and weekend |
+| One model | **A journey in 0.4 s** | Planner, API and 3D map on a laptop, no GPU |
+
+The test is strict: the model is trained on 1 to 24 October and judged on **25 to 31 October, a week
+it never saw**, against 50,000 real bus trips.
 
 ## In numbers
 
 | | |
 | --- | --- |
-| **43% lower error than the timetable** | 1.27 min mean error per held-out bus sub-trip, against 2.21 min for the official timetable |
-| **78% of estimates within ±20%** | against 53% for the timetable, on the same 1,735 real bus sub-trips |
-| **67% within ±20% of Google Maps** | door to door, on 33 bus trips across 11 Delhi pairs and 3 times of day |
-| **8,231 road stretches learned** | from 52,914 GPS-timed stretch passes by 4,541 buses on 1,362 routes |
-| **The whole Delhi network** | 6,862 stops, 2,574 routes and 80,357 scheduled trips from the official GTFS |
-| **Live every 20 seconds** | positions of every DTC and cluster bus that reports, 5,699 in the 5 pm hour on 16 November |
-| **0.4 s per journey plan** | up to 3 options, door to door, on a laptop |
+| **40% lower error than the timetable** | 3.45 min mean error per real bus trip in the unseen week, against 5.72 min for the official timetable |
+| **Better at all 24 hours** | the model beats the timetable at every hour of the day, peak and off-peak |
+| **73% of estimates within ±20%** | against 42% for the timetable, on the same 50,000 trips of 5 to 30 stops |
+| **55% lower median error** | 1.57 min, against 3.51 min for the timetable |
+| **6,689 buses, 2,327 routes** | DTC buses from the archive and every DTC and cluster bus in our own live log |
+| **61% within ±20% of Google Maps** | door to door, on 33 bus trips across 11 Delhi pairs and 3 times of day |
+| **Live every 20 seconds** | positions of every DTC and cluster bus that reports, adjusting trips that leave now |
+| **0.4 s per journey plan** | up to 3 options, door to door |
 
-> **Read this before quoting the numbers.** The accuracy figures come from GPS logged on one evening
-> (16 November 2026, 17:00 to 17:45). Hours with no data yet use the city-wide pattern and say so on
-> screen. We will refit once a week of data is logged and update this table.
-> The full report is at `/accuracy` once the app is running.
+> **Where the numbers come from.** Model and test: the organisers' October 2026 DTC bus GPS, plus our
+> own GTFS-RT log of 16 and 17 November 2026. Google Maps times were read by hand on 17 November 2026.
+> The full report, by hour, is at `/accuracy` once the app is running.
 
 ## Run it in 2 minutes
 
@@ -103,8 +118,8 @@ Nothing is ever simulated.
   - the total time and the fare
 - **See the effect of traffic.** *Same trip, every hour* shows the door-to-door time from 5 am to
   11 pm, so you can pick a quieter hour.
-- **Know how much to trust it.** Every option says what share of the ride is on stretches with real
-  logged buses, and which hour's data it uses.
+- **Know how much to trust it.** Every option says what share of the ride is on stretches timed by
+  real buses, and which hour's data it uses.
 - **Watch the city move.**
   - *Live buses* shows every bus reporting now, pointed the way it is driving.
   - *Speeds* colours each road stretch by its predicted bus speed.
@@ -116,8 +131,9 @@ Nothing is ever simulated.
 
 ```mermaid
 flowchart LR
+    H0[October GPS archive<br/>31 days, 6,000 buses] --> C[Matcher<br/>GPS points snapped<br/>to each route's road]
     A[Live GPS feed<br/>every 20 s] --> B[Logger<br/>hourly files]
-    B --> C[Matcher<br/>GPS points snapped<br/>to each route's road]
+    B --> C
     C --> D[Stop-to-stop<br/>travel times]
     D --> E[Model<br/>speed per stretch,<br/>hour and day type]
     A --> F[Live layer<br/>last 30 minutes]
@@ -132,8 +148,8 @@ flowchart LR
 2. **Time every stretch.** The moment a bus passes each stop is interpolated from the GPS points on
    either side. Two stops in a row give one timed stretch. Stops and signals are included, because
    riders sit through them too.
-3. **Learn speeds.** The time on a stretch is a distance baseline × an hour-of-day factor × that
-   stretch's own factor, by hour.
+3. **Learn speeds.** The time on a stretch is a distance baseline × a city traffic factor for that hour
+   and day type × that stretch's own factor × its own factor at that hour.
    - A stretch with few buses stays close to the city-wide pattern.
    - A busy stretch follows its own data.
 4. **Adjust live.** The last 30 minutes of the live feed change the estimate for anyone leaving now.
@@ -146,38 +162,72 @@ validation method.
 
 ## Accuracy
 
-The test uses whole sub-trips of real buses, 5 to 30 stops long, that the model never saw during
-fitting.
+**The test.** Train on 1 to 24 October. Then predict real bus trips from 25 to 31 October, a week the
+model never saw. Each trip is 5 to 30 stops of one real bus, timed by its GPS. 50,000 trips are sampled
+from the week.
 
-| On 1,735 held-out bus sub-trips | Mean error | Median error | % error | Within ±20% |
+| On 50,000 bus trips in the unseen week | Mean error | Median error | % error | Within ±20% |
 | --- | --- | --- | --- | --- |
-| **This model** | **1.27 min** | **1.02 min** | **12.9%** | **78.3%** |
-| Official timetable | 2.21 min | 1.80 min | 23.2% | 52.9% |
-| One flat city speed | 2.18 min | 1.70 min | 23.3% | 55.2% |
+| **This model** | **3.45 min** | **1.57 min** | **15.1%** | **73.4%** |
+| Official timetable | 5.72 min | 3.51 min | 29.1% | 41.9% |
+| One flat city speed | 5.88 min | 3.83 min | 32.0% | 39.5% |
 
-Compared with the timetable, that is 43% less error, 10.3 points lower percentage error and 25.4 more
-points within ±20%.
+That is 40% less error than the timetable, 14 points lower percentage error and 31.5 more points
+within ±20%.
 
-To rebuild the model and the report from your own logged GPS:
+| | Model | Timetable |
+| --- | --- | --- |
+| Peak hours (8 to 10 am, 5 to 8 pm) | 3.82 min | 6.04 min |
+| Off-peak | 3.16 min | 5.48 min |
+| 6 pm, the worst hour | 5.50 min | 9.31 min |
+| 5 am | 1.51 min | 6.43 min |
 
-```bash
-python scripts/log_gtfs_rt.py
-```
+On average the model is 2.3 min short on these trips. It predicts the typical (median) time, and a few
+very slow trips pull the average up.
 
-This logger needs a key. Leave it running for days, with the computer awake and plugged in. Then run:
+**Same trip, different hour.** Kashmere Gate ISBT to Nehru Place, Tuesday 24 November:
 
-```bash
-python -m src.ps1.matcher && python -m src.ps1.model && python -m src.ps1.validation
-```
+| Leave at | 5 am | 8 am | 12 noon | 6 pm | 10 pm |
+| --- | --- | --- | --- | --- | --- |
+| Bus ride, this model | 31.5 min | 41.5 min | 62.3 min | 78.6 min | 47.6 min |
+| Bus ride, timetable | 48.3 min | 48.3 min | 48.3 min | 48.3 min | 48.3 min |
+
+On Saturday 28 November, the 6 pm ride drops to 74.4 min.
 
 **Against Google Maps.** We took 33 trips: 11 Delhi pairs at 8:30 am, 2 pm and 9:30 pm, with Google's
 best bus-only option for each, read on 17 November 2026.
 
-- Our door-to-door time is **within ±20% of Google's on 67%** of trips.
-- The mean difference is **12.1 min**.
+- Our door-to-door time is **within ±20% of Google's on 61%** of trips.
+- The mean difference is **13.5 min**, and ours is 6.6 min shorter on average.
+- Most of the gap is one pair, Dhaula Kuan to ITO, where Google's best bus takes 92 to 121 min and
+  ours 38 to 62 min. Without it: 67% within ±20%, 9.4 min mean difference.
 - Google's bus times are timetable estimates too, so this is a comparison, not ground truth.
 
 The pairs and both times are in `data/ps1/google_benchmark.csv` and on the `/accuracy` page.
+
+## Rebuild the model yourself
+
+The repository ships the fitted model, so you don't need any of this to run the app. To rebuild it
+from raw GPS, you need about 20 GB of free disk, 16 GB of RAM and 3 hours.
+
+1. Download the October archive (16.1 GB) from the
+   [hackathon page](https://delhi.transportstack.in/hackathon/) into `data/raw/`, and check it
+   against the published `SHA256SUMS`.
+2. Install 7-Zip (`brew install sevenzip` on a Mac, `7zz` on the path).
+3. Turn each day into timed stretches. Each day is unpacked, matched and deleted, 2 at a time:
+
+```bash
+python -m src.ps1.october
+```
+
+4. Fit the model, then run the held-out test and the Google comparison:
+
+```bash
+python -m src.ps1.model && python -m src.ps1.validation
+```
+
+To add your own live data, run `python scripts/log_gtfs_rt.py` (it needs a key) and then
+`python -m src.ps1.matcher` before step 4.
 
 ## API
 
@@ -206,21 +256,27 @@ curl "http://127.0.0.1:8020/journeys?from=Kashmere%20Gate%20ISBT&to=Nehru%20Plac
 
 ## Honest limits
 
-- **One evening of data so far.** Hours with no logged buses fall back to the city-wide pattern, and
-  the app says so on every option.
-- **Weekends and holidays** need their own logged days before they differ from weekdays.
+- **Cluster buses.** The October archive is DTC buses only. Cluster (DIMTS) routes are learned from
+  our own 2 days of live log, so they have less data. Every option shows how much of its ride rests
+  on timed stretches.
+- **Holidays and events.** October has weekdays and weekends, but the model has no holiday or rain
+  factor yet.
+- **It predicts the typical time.** The worst trips on a bad day take longer than the estimate.
 - **At most one change of bus.** Metro stations are shown for reference; plans are bus only.
-- **No crowding levels.** They need real ETM ticket data, which we don't have yet, so none are shown.
+- **No crowding levels yet.** October ticket data has just been published. Until it is built in, no
+  crowd levels are shown.
 - **The wait for the first bus** uses the timetable, unless a live bus is already on its way.
 
 ## Repository
 
 ```
 src/ps1/                 planner, travel-time model, GPS matcher, live layer, API and web app
+src/ps1/october.py       turns the October GPS archive into timed stretches, one day at a time
 src/gtfs_rt_client.py    live GTFS-RT client (live data only, never simulated)
 scripts/log_gtfs_rt.py   logs the live feed to data/gps_log/ (hourly gzip CSV, ~13 bytes a position)
 data/delhi_buses_gtfs/   official static GTFS v32
-data/ps1/                fitted model, validation report, Google benchmark template
+data/ps1/                fitted model (model.json), validation report, Google benchmark
+data/raw/                October archive and per-day stretch timings (not in git, about 1 GB after processing)
 docs/hackathon/          problem statements and the PS1 technical note
 tests/                   test suite
 ```
@@ -233,7 +289,8 @@ PYTHONPATH=. python -m pytest tests/ -q
 
 ## Credits
 
-- Data: Delhi Transport Stack (GTFS and GTFS-RT) and DMRC metro station locations.
+- Data: Delhi Transport Stack (GTFS, GTFS-RT and the October 2026 bus GPS archive, Transport Stack /
+  IIIT Delhi) and DMRC metro station locations.
 - Map: [MapLibre GL](https://maplibre.org) and [OpenFreeMap](https://openfreemap.org) tiles, with
   data © OpenStreetMap contributors.
 - Built for the Transport Stack Hackathon 2026.

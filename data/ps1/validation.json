@@ -1,3679 +1,3906 @@
 {
-  "generated": "2026-11-17T01:34:08+05:30",
-  "split": "last 30% of a single logged day (more days needed)",
-  "train_observations": 37040,
-  "test_subtrips": 1735,
+  "generated": "2026-11-18T02:58:15+05:30",
+  "split": "held-out days 2026-10-25 to 2026-10-31 (last 7 days of the October archive)",
+  "train_observations": 30481964,
+  "test_subtrips": 50000,
   "days_logged": [
-    "2026-11-16"
+    "2026-10-01",
+    "2026-10-02",
+    "2026-10-03",
+    "2026-10-04",
+    "2026-10-05",
+    "2026-10-06",
+    "2026-10-07",
+    "2026-10-08",
+    "2026-10-09",
+    "2026-10-10",
+    "2026-10-11",
+    "2026-10-12",
+    "2026-10-13",
+    "2026-10-14",
+    "2026-10-15",
+    "2026-10-16",
+    "2026-10-17",
+    "2026-10-18",
+    "2026-10-19",
+    "2026-10-20",
+    "2026-10-21",
+    "2026-10-22",
+    "2026-10-23",
+    "2026-10-24",
+    "2026-10-25",
+    "2026-10-26",
+    "2026-10-27",
+    "2026-10-28",
+    "2026-10-29",
+    "2026-10-30",
+    "2026-10-31",
+    "2026-11-16",
+    "2026-11-17"
   ],
   "estimators": {
     "model": {
-      "n": 1735,
-      "mae_min": 1.27,
-      "median_ae_min": 1.02,
-      "mape_pct": 12.9,
-      "within_20pct": 78.3,
-      "bias_min": -0.59
+      "n": 50000,
+      "mae_min": 3.45,
+      "median_ae_min": 1.57,
+      "mape_pct": 15.1,
+      "within_20pct": 73.4,
+      "bias_min": -2.27
     },
     "timetable": {
-      "n": 1735,
-      "mae_min": 2.21,
-      "median_ae_min": 1.8,
-      "mape_pct": 23.2,
-      "within_20pct": 52.9,
-      "bias_min": 0.06
+      "n": 50000,
+      "mae_min": 5.72,
+      "median_ae_min": 3.51,
+      "mape_pct": 29.1,
+      "within_20pct": 41.9,
+      "bias_min": -1.78
     },
     "flat": {
-      "n": 1735,
-      "mae_min": 2.18,
-      "median_ae_min": 1.7,
-      "mape_pct": 23.3,
-      "within_20pct": 55.2,
-      "bias_min": 0.61
+      "n": 50000,
+      "mae_min": 5.88,
+      "median_ae_min": 3.83,
+      "mape_pct": 32.0,
+      "within_20pct": 39.5,
+      "bias_min": -0.04
     }
   },
   "by_period": {
     "peak": {
       "model": {
-        "n": 1735,
-        "mae_min": 1.27,
-        "median_ae_min": 1.02,
-        "mape_pct": 12.9,
-        "within_20pct": 78.3,
-        "bias_min": -0.59
+        "n": 21766,
+        "mae_min": 3.82,
+        "median_ae_min": 1.81,
+        "mape_pct": 15.7,
+        "within_20pct": 71.8,
+        "bias_min": -2.54
       },
       "timetable": {
-        "n": 1735,
-        "mae_min": 2.21,
-        "median_ae_min": 1.8,
-        "mape_pct": 23.2,
-        "within_20pct": 52.9,
-        "bias_min": 0.06
+        "n": 21766,
+        "mae_min": 6.04,
+        "median_ae_min": 3.56,
+        "mape_pct": 26.9,
+        "within_20pct": 44.3,
+        "bias_min": -3.23
+      }
+    },
+    "off_peak": {
+      "model": {
+        "n": 28234,
+        "mae_min": 3.16,
+        "median_ae_min": 1.4,
+        "mape_pct": 14.7,
+        "within_20pct": 74.6,
+        "bias_min": -2.05
+      },
+      "timetable": {
+        "n": 28234,
+        "mae_min": 5.48,
+        "median_ae_min": 3.48,
+        "mape_pct": 30.8,
+        "within_20pct": 40.0,
+        "bias_min": -0.66
       }
     }
   },
   "by_hour": [
     {
+      "hour": 0,
+      "n": 182,
+      "model_mae_min": 1.67,
+      "timetable_mae_min": 5.23
+    },
+    {
+      "hour": 1,
+      "n": 58,
+      "model_mae_min": 2.61,
+      "timetable_mae_min": 6.83
+    },
+    {
+      "hour": 2,
+      "n": 40,
+      "model_mae_min": 1.34,
+      "timetable_mae_min": 6.01
+    },
+    {
+      "hour": 3,
+      "n": 75,
+      "model_mae_min": 1.78,
+      "timetable_mae_min": 7.47
+    },
+    {
+      "hour": 4,
+      "n": 179,
+      "model_mae_min": 1.8,
+      "timetable_mae_min": 7.42
+    },
+    {
+      "hour": 5,
+      "n": 1307,
+      "model_mae_min": 1.51,
+      "timetable_mae_min": 6.43
+    },
+    {
+      "hour": 6,
+      "n": 2638,
+      "model_mae_min": 1.66,
+      "timetable_mae_min": 5.17
+    },
+    {
+      "hour": 7,
+      "n": 3709,
+      "model_mae_min": 2.14,
+      "timetable_mae_min": 4.37
+    },
+    {
+      "hour": 8,
+      "n": 3961,
+      "model_mae_min": 2.49,
+      "timetable_mae_min": 4.06
+    },
+    {
+      "hour": 9,
+      "n": 3821,
+      "model_mae_min": 3.05,
+      "timetable_mae_min": 4.55
+    },
+    {
+      "hour": 10,
+      "n": 3760,
+      "model_mae_min": 3.18,
+      "timetable_mae_min": 4.83
+    },
+    {
+      "hour": 11,
+      "n": 3629,
+      "model_mae_min": 3.29,
+      "timetable_mae_min": 5.07
+    },
+    {
+      "hour": 12,
+      "n": 2997,
+      "model_mae_min": 3.47,
+      "timetable_mae_min": 5.21
+    },
+    {
+      "hour": 13,
+      "n": 2240,
+      "model_mae_min": 4.11,
+      "timetable_mae_min": 6.01
+    },
+    {
+      "hour": 14,
+      "n": 2142,
+      "model_mae_min": 4.2,
+      "timetable_mae_min": 6.13
+    },
+    {
+      "hour": 15,
+      "n": 2255,
+      "model_mae_min": 4.86,
+      "timetable_mae_min": 6.94
+    },
+    {
+      "hour": 16,
+      "n": 2689,
+      "model_mae_min": 4.71,
+      "timetable_mae_min": 6.96
+    },
+    {
       "hour": 17,
-      "n": 1735,
-      "model_mae_min": 1.27,
-      "timetable_mae_min": 2.21
+      "n": 2902,
+      "model_mae_min": 5.22,
+      "timetable_mae_min": 8.24
+    },
+    {
+      "hour": 18,
+      "n": 2487,
+      "model_mae_min": 5.5,
+      "timetable_mae_min": 9.31
+    },
+    {
+      "hour": 19,
+      "n": 2427,
+      "model_mae_min": 4.76,
+      "timetable_mae_min": 7.78
+    },
+    {
+      "hour": 20,
+      "n": 2408,
+      "model_mae_min": 3.82,
+      "timetable_mae_min": 5.77
+    },
+    {
+      "hour": 21,
+      "n": 2097,
+      "model_mae_min": 2.72,
+      "timetable_mae_min": 4.48
+    },
+    {
+      "hour": 22,
+      "n": 1438,
+      "model_mae_min": 2.24,
+      "timetable_mae_min": 4.28
+    },
+    {
+      "hour": 23,
+      "n": 559,
+      "model_mae_min": 1.65,
+      "timetable_mae_min": 4.33
     }
   ],
   "points": [
     {
-      "observed_min": 8.31,
-      "model_min": 7.91,
-      "timetable_min": 9.6,
+      "observed_min": 11.18,
+      "model_min": 9.62,
+      "timetable_min": 7.58,
+      "hour": 18
+    },
+    {
+      "observed_min": 16.55,
+      "model_min": 15.76,
+      "timetable_min": 17.23,
+      "hour": 7
+    },
+    {
+      "observed_min": 8.27,
+      "model_min": 7.41,
+      "timetable_min": 6.8,
       "hour": 17
     },
     {
-      "observed_min": 11.69,
-      "model_min": 13.71,
-      "timetable_min": 12.5,
+      "observed_min": 75.13,
+      "model_min": 48.85,
+      "timetable_min": 46.35,
+      "hour": 20
+    },
+    {
+      "observed_min": 12.56,
+      "model_min": 7.65,
+      "timetable_min": 12.1,
+      "hour": 16
+    },
+    {
+      "observed_min": 27.12,
+      "model_min": 14.41,
+      "timetable_min": 18.13,
+      "hour": 20
+    },
+    {
+      "observed_min": 11.46,
+      "model_min": 12.0,
+      "timetable_min": 7.63,
       "hour": 17
     },
     {
-      "observed_min": 6.92,
-      "model_min": 6.91,
-      "timetable_min": 9.23,
-      "hour": 17
+      "observed_min": 5.06,
+      "model_min": 5.83,
+      "timetable_min": 4.77,
+      "hour": 13
     },
     {
-      "observed_min": 11.49,
-      "model_min": 11.06,
-      "timetable_min": 11.5,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.45,
-      "model_min": 9.89,
-      "timetable_min": 10.38,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.92,
-      "model_min": 6.45,
-      "timetable_min": 7.75,
-      "hour": 17
-    },
-    {
-      "observed_min": 4.15,
-      "model_min": 5.04,
-      "timetable_min": 7.37,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.76,
-      "model_min": 7.8,
-      "timetable_min": 10.05,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.89,
-      "model_min": 10.61,
-      "timetable_min": 9.85,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.79,
-      "model_min": 10.75,
-      "timetable_min": 10.65,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.46,
-      "model_min": 10.06,
-      "timetable_min": 11.82,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.73,
-      "model_min": 15.12,
-      "timetable_min": 14.7,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.79,
-      "model_min": 7.69,
-      "timetable_min": 7.75,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.24,
-      "model_min": 9.49,
-      "timetable_min": 11.2,
-      "hour": 17
-    },
-    {
-      "observed_min": 14.22,
-      "model_min": 12.81,
-      "timetable_min": 14.4,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.87,
-      "model_min": 10.65,
-      "timetable_min": 8.73,
-      "hour": 17
-    },
-    {
-      "observed_min": 4.97,
-      "model_min": 5.02,
-      "timetable_min": 8.57,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.25,
-      "model_min": 5.44,
-      "timetable_min": 10.18,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.87,
-      "model_min": 7.9,
-      "timetable_min": 8.42,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.58,
-      "model_min": 5.1,
-      "timetable_min": 6.57,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.26,
-      "model_min": 10.42,
-      "timetable_min": 11.25,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.23,
-      "model_min": 10.16,
-      "timetable_min": 12.83,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.1,
-      "model_min": 10.33,
-      "timetable_min": 11.0,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.25,
-      "model_min": 8.02,
-      "timetable_min": 5.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.61,
-      "model_min": 8.61,
-      "timetable_min": 7.45,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.08,
-      "model_min": 12.51,
-      "timetable_min": 12.58,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.54,
-      "model_min": 9.64,
-      "timetable_min": 7.25,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.36,
+      "observed_min": 5.44,
       "model_min": 6.23,
-      "timetable_min": 6.4,
-      "hour": 17
+      "timetable_min": 10.82,
+      "hour": 11
     },
     {
-      "observed_min": 13.6,
-      "model_min": 12.52,
-      "timetable_min": 9.85,
-      "hour": 17
+      "observed_min": 29.14,
+      "model_min": 30.34,
+      "timetable_min": 28.53,
+      "hour": 11
     },
     {
-      "observed_min": 10.47,
-      "model_min": 9.29,
-      "timetable_min": 9.07,
-      "hour": 17
+      "observed_min": 9.87,
+      "model_min": 9.86,
+      "timetable_min": 6.63,
+      "hour": 19
     },
     {
-      "observed_min": 11.47,
-      "model_min": 9.66,
-      "timetable_min": 12.6,
-      "hour": 17
+      "observed_min": 41.64,
+      "model_min": 38.1,
+      "timetable_min": 48.57,
+      "hour": 7
     },
     {
-      "observed_min": 12.93,
-      "model_min": 11.43,
-      "timetable_min": 11.77,
-      "hour": 17
+      "observed_min": 8.49,
+      "model_min": 9.55,
+      "timetable_min": 16.47,
+      "hour": 7
     },
     {
-      "observed_min": 12.59,
-      "model_min": 9.07,
-      "timetable_min": 9.9,
-      "hour": 17
+      "observed_min": 12.46,
+      "model_min": 9.84,
+      "timetable_min": 7.97,
+      "hour": 12
     },
     {
-      "observed_min": 10.92,
-      "model_min": 10.69,
-      "timetable_min": 8.87,
-      "hour": 17
+      "observed_min": 10.75,
+      "model_min": 9.3,
+      "timetable_min": 10.32,
+      "hour": 10
     },
     {
-      "observed_min": 7.47,
-      "model_min": 7.86,
-      "timetable_min": 11.35,
-      "hour": 17
+      "observed_min": 44.14,
+      "model_min": 45.3,
+      "timetable_min": 54.93,
+      "hour": 8
     },
     {
-      "observed_min": 10.08,
-      "model_min": 9.32,
-      "timetable_min": 8.32,
-      "hour": 17
+      "observed_min": 27.28,
+      "model_min": 26.52,
+      "timetable_min": 39.35,
+      "hour": 7
     },
     {
-      "observed_min": 10.2,
-      "model_min": 10.64,
-      "timetable_min": 15.6,
-      "hour": 17
+      "observed_min": 14.25,
+      "model_min": 14.61,
+      "timetable_min": 14.37,
+      "hour": 10
     },
     {
-      "observed_min": 11.4,
-      "model_min": 11.32,
-      "timetable_min": 10.5,
-      "hour": 17
+      "observed_min": 8.83,
+      "model_min": 9.97,
+      "timetable_min": 10.58,
+      "hour": 20
     },
     {
-      "observed_min": 9.49,
-      "model_min": 7.15,
-      "timetable_min": 6.27,
-      "hour": 17
+      "observed_min": 44.63,
+      "model_min": 25.7,
+      "timetable_min": 18.08,
+      "hour": 18
     },
     {
-      "observed_min": 12.0,
-      "model_min": 10.88,
-      "timetable_min": 13.45,
-      "hour": 17
+      "observed_min": 42.21,
+      "model_min": 34.62,
+      "timetable_min": 30.87,
+      "hour": 18
     },
     {
-      "observed_min": 6.82,
-      "model_min": 7.18,
-      "timetable_min": 6.95,
-      "hour": 17
+      "observed_min": 9.68,
+      "model_min": 7.56,
+      "timetable_min": 11.12,
+      "hour": 8
     },
     {
-      "observed_min": 11.94,
-      "model_min": 10.87,
-      "timetable_min": 8.77,
-      "hour": 17
+      "observed_min": 6.19,
+      "model_min": 5.11,
+      "timetable_min": 4.6,
+      "hour": 19
     },
     {
-      "observed_min": 8.8,
-      "model_min": 7.76,
-      "timetable_min": 7.95,
-      "hour": 17
+      "observed_min": 14.13,
+      "model_min": 14.38,
+      "timetable_min": 16.4,
+      "hour": 7
     },
     {
-      "observed_min": 8.84,
-      "model_min": 8.9,
-      "timetable_min": 10.4,
-      "hour": 17
+      "observed_min": 7.04,
+      "model_min": 6.1,
+      "timetable_min": 7.53,
+      "hour": 8
     },
     {
-      "observed_min": 6.05,
-      "model_min": 7.21,
-      "timetable_min": 6.98,
-      "hour": 17
+      "observed_min": 7.71,
+      "model_min": 7.13,
+      "timetable_min": 7.35,
+      "hour": 13
     },
     {
-      "observed_min": 12.83,
-      "model_min": 12.22,
-      "timetable_min": 7.32,
-      "hour": 17
+      "observed_min": 14.08,
+      "model_min": 11.93,
+      "timetable_min": 10.28,
+      "hour": 20
     },
     {
-      "observed_min": 12.89,
-      "model_min": 12.15,
-      "timetable_min": 14.57,
-      "hour": 17
+      "observed_min": 8.96,
+      "model_min": 10.76,
+      "timetable_min": 9.83,
+      "hour": 7
     },
     {
-      "observed_min": 10.98,
-      "model_min": 9.78,
-      "timetable_min": 6.42,
-      "hour": 17
+      "observed_min": 28.59,
+      "model_min": 19.76,
+      "timetable_min": 21.1,
+      "hour": 10
     },
     {
-      "observed_min": 8.9,
-      "model_min": 10.25,
-      "timetable_min": 13.88,
-      "hour": 17
+      "observed_min": 9.45,
+      "model_min": 10.03,
+      "timetable_min": 16.42,
+      "hour": 14
     },
     {
-      "observed_min": 11.97,
-      "model_min": 10.38,
-      "timetable_min": 10.65,
-      "hour": 17
+      "observed_min": 16.87,
+      "model_min": 21.61,
+      "timetable_min": 26.03,
+      "hour": 15
     },
     {
-      "observed_min": 8.44,
-      "model_min": 11.82,
-      "timetable_min": 16.15,
-      "hour": 17
+      "observed_min": 21.53,
+      "model_min": 14.75,
+      "timetable_min": 13.03,
+      "hour": 11
     },
     {
-      "observed_min": 8.93,
-      "model_min": 8.88,
-      "timetable_min": 6.42,
-      "hour": 17
+      "observed_min": 28.61,
+      "model_min": 28.2,
+      "timetable_min": 29.47,
+      "hour": 12
     },
     {
-      "observed_min": 6.04,
-      "model_min": 5.24,
-      "timetable_min": 5.62,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.7,
-      "model_min": 7.14,
-      "timetable_min": 7.33,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.67,
-      "model_min": 9.93,
-      "timetable_min": 8.63,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.59,
-      "model_min": 11.04,
-      "timetable_min": 13.48,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.68,
-      "model_min": 10.52,
-      "timetable_min": 7.73,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.05,
-      "model_min": 8.97,
-      "timetable_min": 8.83,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.45,
-      "model_min": 7.36,
-      "timetable_min": 7.87,
-      "hour": 17
+      "observed_min": 22.9,
+      "model_min": 14.92,
+      "timetable_min": 15.03,
+      "hour": 6
     },
     {
       "observed_min": 6.55,
-      "model_min": 6.91,
-      "timetable_min": 9.82,
-      "hour": 17
+      "model_min": 4.1,
+      "timetable_min": 5.53,
+      "hour": 6
     },
     {
-      "observed_min": 10.08,
-      "model_min": 11.32,
-      "timetable_min": 9.23,
-      "hour": 17
+      "observed_min": 8.42,
+      "model_min": 10.21,
+      "timetable_min": 8.87,
+      "hour": 14
     },
     {
-      "observed_min": 7.75,
-      "model_min": 7.44,
-      "timetable_min": 8.92,
-      "hour": 17
+      "observed_min": 21.35,
+      "model_min": 22.18,
+      "timetable_min": 32.52,
+      "hour": 20
     },
     {
-      "observed_min": 11.59,
-      "model_min": 12.18,
-      "timetable_min": 12.65,
-      "hour": 17
+      "observed_min": 6.6,
+      "model_min": 6.1,
+      "timetable_min": 6.22,
+      "hour": 9
     },
     {
-      "observed_min": 8.21,
-      "model_min": 6.46,
-      "timetable_min": 8.52,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.36,
-      "model_min": 9.71,
-      "timetable_min": 9.22,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.96,
-      "model_min": 12.23,
-      "timetable_min": 12.17,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.65,
-      "model_min": 11.57,
-      "timetable_min": 10.73,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.42,
-      "model_min": 10.52,
-      "timetable_min": 11.58,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.85,
-      "model_min": 8.61,
-      "timetable_min": 12.02,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.02,
-      "model_min": 7.44,
-      "timetable_min": 5.72,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.97,
-      "model_min": 10.91,
-      "timetable_min": 12.1,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.99,
-      "model_min": 6.56,
-      "timetable_min": 6.97,
-      "hour": 17
-    },
-    {
-      "observed_min": 4.42,
-      "model_min": 4.46,
-      "timetable_min": 5.65,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.4,
-      "model_min": 9.15,
-      "timetable_min": 8.3,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.15,
-      "model_min": 7.11,
-      "timetable_min": 6.7,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.67,
-      "model_min": 14.91,
-      "timetable_min": 22.15,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.47,
-      "model_min": 10.7,
-      "timetable_min": 14.3,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.82,
-      "model_min": 8.19,
-      "timetable_min": 9.9,
-      "hour": 17
-    },
-    {
-      "observed_min": 14.17,
-      "model_min": 7.52,
-      "timetable_min": 5.48,
-      "hour": 17
+      "observed_min": 9.43,
+      "model_min": 12.76,
+      "timetable_min": 8.05,
+      "hour": 18
     },
     {
       "observed_min": 8.31,
-      "model_min": 7.96,
-      "timetable_min": 8.03,
+      "model_min": 8.35,
+      "timetable_min": 11.23,
       "hour": 17
     },
     {
-      "observed_min": 13.59,
-      "model_min": 13.99,
-      "timetable_min": 15.77,
+      "observed_min": 10.45,
+      "model_min": 9.18,
+      "timetable_min": 8.43,
+      "hour": 12
+    },
+    {
+      "observed_min": 56.15,
+      "model_min": 59.93,
+      "timetable_min": 39.98,
+      "hour": 19
+    },
+    {
+      "observed_min": 5.61,
+      "model_min": 5.93,
+      "timetable_min": 6.13,
+      "hour": 7
+    },
+    {
+      "observed_min": 21.22,
+      "model_min": 24.65,
+      "timetable_min": 39.52,
+      "hour": 7
+    },
+    {
+      "observed_min": 23.79,
+      "model_min": 18.3,
+      "timetable_min": 17.25,
+      "hour": 8
+    },
+    {
+      "observed_min": 14.87,
+      "model_min": 14.66,
+      "timetable_min": 18.52,
+      "hour": 8
+    },
+    {
+      "observed_min": 68.85,
+      "model_min": 41.49,
+      "timetable_min": 34.9,
       "hour": 17
     },
     {
-      "observed_min": 5.01,
-      "model_min": 4.96,
-      "timetable_min": 5.58,
+      "observed_min": 5.5,
+      "model_min": 8.11,
+      "timetable_min": 6.55,
+      "hour": 20
+    },
+    {
+      "observed_min": 8.43,
+      "model_min": 8.31,
+      "timetable_min": 9.08,
+      "hour": 16
+    },
+    {
+      "observed_min": 21.5,
+      "model_min": 16.21,
+      "timetable_min": 13.2,
+      "hour": 21
+    },
+    {
+      "observed_min": 33.93,
+      "model_min": 31.53,
+      "timetable_min": 25.98,
+      "hour": 10
+    },
+    {
+      "observed_min": 19.81,
+      "model_min": 20.22,
+      "timetable_min": 34.1,
+      "hour": 8
+    },
+    {
+      "observed_min": 4.85,
+      "model_min": 4.9,
+      "timetable_min": 6.25,
+      "hour": 21
+    },
+    {
+      "observed_min": 23.7,
+      "model_min": 19.37,
+      "timetable_min": 13.4,
       "hour": 17
     },
     {
-      "observed_min": 12.21,
-      "model_min": 11.83,
-      "timetable_min": 17.7,
-      "hour": 17
+      "observed_min": 5.98,
+      "model_min": 7.42,
+      "timetable_min": 5.25,
+      "hour": 20
     },
     {
-      "observed_min": 6.13,
-      "model_min": 6.07,
-      "timetable_min": 6.38,
-      "hour": 17
+      "observed_min": 4.11,
+      "model_min": 3.75,
+      "timetable_min": 5.88,
+      "hour": 7
     },
     {
-      "observed_min": 9.57,
-      "model_min": 9.37,
-      "timetable_min": 8.22,
-      "hour": 17
+      "observed_min": 8.28,
+      "model_min": 7.6,
+      "timetable_min": 10.47,
+      "hour": 7
     },
     {
-      "observed_min": 11.38,
-      "model_min": 11.67,
-      "timetable_min": 8.87,
-      "hour": 17
+      "observed_min": 17.72,
+      "model_min": 17.84,
+      "timetable_min": 18.12,
+      "hour": 16
     },
     {
-      "observed_min": 10.43,
-      "model_min": 9.47,
-      "timetable_min": 9.8,
-      "hour": 17
+      "observed_min": 17.5,
+      "model_min": 16.56,
+      "timetable_min": 17.85,
+      "hour": 12
     },
     {
-      "observed_min": 5.33,
-      "model_min": 4.25,
-      "timetable_min": 4.6,
-      "hour": 17
+      "observed_min": 29.1,
+      "model_min": 28.37,
+      "timetable_min": 44.53,
+      "hour": 7
     },
     {
-      "observed_min": 4.89,
-      "model_min": 7.1,
-      "timetable_min": 5.22,
-      "hour": 17
+      "observed_min": 30.77,
+      "model_min": 34.45,
+      "timetable_min": 23.78,
+      "hour": 10
     },
     {
-      "observed_min": 12.08,
-      "model_min": 13.03,
-      "timetable_min": 9.7,
-      "hour": 17
+      "observed_min": 5.39,
+      "model_min": 5.47,
+      "timetable_min": 7.4,
+      "hour": 5
     },
     {
-      "observed_min": 10.08,
-      "model_min": 9.66,
-      "timetable_min": 8.17,
-      "hour": 17
+      "observed_min": 26.22,
+      "model_min": 10.04,
+      "timetable_min": 7.22,
+      "hour": 10
     },
     {
-      "observed_min": 8.13,
-      "model_min": 9.37,
-      "timetable_min": 11.18,
-      "hour": 17
+      "observed_min": 34.45,
+      "model_min": 36.42,
+      "timetable_min": 39.65,
+      "hour": 9
     },
     {
-      "observed_min": 6.42,
-      "model_min": 5.78,
+      "observed_min": 20.87,
+      "model_min": 21.7,
+      "timetable_min": 23.8,
+      "hour": 10
+    },
+    {
+      "observed_min": 7.08,
+      "model_min": 5.83,
+      "timetable_min": 6.98,
+      "hour": 6
+    },
+    {
+      "observed_min": 17.43,
+      "model_min": 15.53,
+      "timetable_min": 15.0,
+      "hour": 20
+    },
+    {
+      "observed_min": 5.3,
+      "model_min": 5.63,
+      "timetable_min": 6.15,
+      "hour": 7
+    },
+    {
+      "observed_min": 10.17,
+      "model_min": 10.06,
+      "timetable_min": 13.17,
+      "hour": 6
+    },
+    {
+      "observed_min": 14.78,
+      "model_min": 17.3,
+      "timetable_min": 10.33,
+      "hour": 18
+    },
+    {
+      "observed_min": 7.2,
+      "model_min": 7.39,
+      "timetable_min": 8.52,
+      "hour": 13
+    },
+    {
+      "observed_min": 34.46,
+      "model_min": 17.46,
+      "timetable_min": 16.7,
+      "hour": 20
+    },
+    {
+      "observed_min": 5.26,
+      "model_min": 5.1,
+      "timetable_min": 5.65,
+      "hour": 12
+    },
+    {
+      "observed_min": 11.72,
+      "model_min": 13.81,
+      "timetable_min": 21.83,
+      "hour": 10
+    },
+    {
+      "observed_min": 14.39,
+      "model_min": 16.6,
+      "timetable_min": 19.73,
+      "hour": 15
+    },
+    {
+      "observed_min": 21.05,
+      "model_min": 18.94,
+      "timetable_min": 19.87,
+      "hour": 8
+    },
+    {
+      "observed_min": 7.66,
+      "model_min": 6.27,
+      "timetable_min": 6.22,
+      "hour": 9
+    },
+    {
+      "observed_min": 33.59,
+      "model_min": 28.33,
+      "timetable_min": 33.38,
+      "hour": 8
+    },
+    {
+      "observed_min": 18.91,
+      "model_min": 14.96,
+      "timetable_min": 11.55,
+      "hour": 11
+    },
+    {
+      "observed_min": 14.45,
+      "model_min": 14.47,
+      "timetable_min": 16.42,
+      "hour": 7
+    },
+    {
+      "observed_min": 30.87,
+      "model_min": 22.63,
+      "timetable_min": 22.12,
+      "hour": 11
+    },
+    {
+      "observed_min": 7.16,
+      "model_min": 8.46,
       "timetable_min": 5.93,
       "hour": 17
     },
     {
-      "observed_min": 4.91,
-      "model_min": 5.67,
-      "timetable_min": 7.95,
+      "observed_min": 47.06,
+      "model_min": 55.2,
+      "timetable_min": 40.73,
       "hour": 17
     },
     {
-      "observed_min": 6.76,
-      "model_min": 5.58,
-      "timetable_min": 7.62,
+      "observed_min": 9.5,
+      "model_min": 9.34,
+      "timetable_min": 15.43,
+      "hour": 16
+    },
+    {
+      "observed_min": 30.49,
+      "model_min": 23.42,
+      "timetable_min": 21.35,
+      "hour": 13
+    },
+    {
+      "observed_min": 4.93,
+      "model_min": 5.87,
+      "timetable_min": 8.68,
+      "hour": 12
+    },
+    {
+      "observed_min": 11.39,
+      "model_min": 11.54,
+      "timetable_min": 10.37,
+      "hour": 13
+    },
+    {
+      "observed_min": 18.43,
+      "model_min": 18.44,
+      "timetable_min": 22.62,
+      "hour": 13
+    },
+    {
+      "observed_min": 6.81,
+      "model_min": 7.28,
+      "timetable_min": 11.22,
+      "hour": 9
+    },
+    {
+      "observed_min": 10.18,
+      "model_min": 9.98,
+      "timetable_min": 10.0,
+      "hour": 10
+    },
+    {
+      "observed_min": 28.19,
+      "model_min": 27.92,
+      "timetable_min": 27.67,
+      "hour": 8
+    },
+    {
+      "observed_min": 49.09,
+      "model_min": 33.46,
+      "timetable_min": 28.52,
+      "hour": 16
+    },
+    {
+      "observed_min": 27.62,
+      "model_min": 19.69,
+      "timetable_min": 14.65,
+      "hour": 15
+    },
+    {
+      "observed_min": 13.85,
+      "model_min": 11.51,
+      "timetable_min": 11.25,
+      "hour": 16
+    },
+    {
+      "observed_min": 12.28,
+      "model_min": 9.56,
+      "timetable_min": 8.32,
+      "hour": 7
+    },
+    {
+      "observed_min": 16.74,
+      "model_min": 20.9,
+      "timetable_min": 18.7,
+      "hour": 13
+    },
+    {
+      "observed_min": 24.11,
+      "model_min": 10.68,
+      "timetable_min": 6.5,
+      "hour": 13
+    },
+    {
+      "observed_min": 9.95,
+      "model_min": 8.68,
+      "timetable_min": 8.75,
+      "hour": 20
+    },
+    {
+      "observed_min": 25.4,
+      "model_min": 19.44,
+      "timetable_min": 18.65,
+      "hour": 15
+    },
+    {
+      "observed_min": 11.11,
+      "model_min": 9.59,
+      "timetable_min": 4.88,
+      "hour": 19
+    },
+    {
+      "observed_min": 8.03,
+      "model_min": 7.5,
+      "timetable_min": 8.93,
+      "hour": 7
+    },
+    {
+      "observed_min": 60.5,
+      "model_min": 17.55,
+      "timetable_min": 12.5,
+      "hour": 14
+    },
+    {
+      "observed_min": 9.87,
+      "model_min": 9.44,
+      "timetable_min": 6.95,
+      "hour": 12
+    },
+    {
+      "observed_min": 20.17,
+      "model_min": 19.48,
+      "timetable_min": 23.95,
+      "hour": 16
+    },
+    {
+      "observed_min": 9.13,
+      "model_min": 7.27,
+      "timetable_min": 7.85,
+      "hour": 10
+    },
+    {
+      "observed_min": 5.36,
+      "model_min": 7.49,
+      "timetable_min": 7.3,
+      "hour": 11
+    },
+    {
+      "observed_min": 36.51,
+      "model_min": 32.92,
+      "timetable_min": 35.5,
+      "hour": 19
+    },
+    {
+      "observed_min": 14.18,
+      "model_min": 15.23,
+      "timetable_min": 18.3,
+      "hour": 15
+    },
+    {
+      "observed_min": 15.03,
+      "model_min": 13.02,
+      "timetable_min": 14.5,
+      "hour": 22
+    },
+    {
+      "observed_min": 17.66,
+      "model_min": 17.5,
+      "timetable_min": 13.25,
       "hour": 17
+    },
+    {
+      "observed_min": 24.35,
+      "model_min": 20.02,
+      "timetable_min": 19.07,
+      "hour": 20
+    },
+    {
+      "observed_min": 10.28,
+      "model_min": 8.86,
+      "timetable_min": 7.78,
+      "hour": 11
+    },
+    {
+      "observed_min": 25.94,
+      "model_min": 33.77,
+      "timetable_min": 18.13,
+      "hour": 19
+    },
+    {
+      "observed_min": 17.0,
+      "model_min": 16.28,
+      "timetable_min": 19.03,
+      "hour": 10
+    },
+    {
+      "observed_min": 26.31,
+      "model_min": 24.8,
+      "timetable_min": 14.55,
+      "hour": 12
+    },
+    {
+      "observed_min": 6.0,
+      "model_min": 4.02,
+      "timetable_min": 4.87,
+      "hour": 22
+    },
+    {
+      "observed_min": 28.11,
+      "model_min": 27.24,
+      "timetable_min": 22.27,
+      "hour": 11
+    },
+    {
+      "observed_min": 10.91,
+      "model_min": 11.87,
+      "timetable_min": 7.93,
+      "hour": 21
     },
     {
       "observed_min": 9.62,
-      "model_min": 7.86,
-      "timetable_min": 7.85,
+      "model_min": 10.47,
+      "timetable_min": 10.22,
+      "hour": 13
+    },
+    {
+      "observed_min": 24.09,
+      "model_min": 20.86,
+      "timetable_min": 30.82,
+      "hour": 7
+    },
+    {
+      "observed_min": 6.67,
+      "model_min": 8.21,
+      "timetable_min": 8.72,
+      "hour": 10
+    },
+    {
+      "observed_min": 9.35,
+      "model_min": 8.42,
+      "timetable_min": 11.18,
+      "hour": 16
+    },
+    {
+      "observed_min": 9.57,
+      "model_min": 9.51,
+      "timetable_min": 9.78,
+      "hour": 9
+    },
+    {
+      "observed_min": 75.85,
+      "model_min": 44.33,
+      "timetable_min": 38.62,
+      "hour": 14
+    },
+    {
+      "observed_min": 10.11,
+      "model_min": 10.65,
+      "timetable_min": 15.72,
+      "hour": 15
+    },
+    {
+      "observed_min": 31.29,
+      "model_min": 29.73,
+      "timetable_min": 49.1,
+      "hour": 23
+    },
+    {
+      "observed_min": 34.83,
+      "model_min": 25.12,
+      "timetable_min": 18.37,
       "hour": 17
     },
     {
-      "observed_min": 7.92,
-      "model_min": 6.85,
-      "timetable_min": 6.1,
+      "observed_min": 5.87,
+      "model_min": 6.98,
+      "timetable_min": 6.92,
       "hour": 17
     },
     {
-      "observed_min": 8.65,
-      "model_min": 10.56,
-      "timetable_min": 11.48,
-      "hour": 17
+      "observed_min": 8.51,
+      "model_min": 9.43,
+      "timetable_min": 10.28,
+      "hour": 14
     },
     {
-      "observed_min": 12.96,
-      "model_min": 14.0,
-      "timetable_min": 13.05,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.71,
-      "model_min": 7.24,
-      "timetable_min": 9.92,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.46,
-      "model_min": 11.35,
-      "timetable_min": 12.95,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.21,
-      "model_min": 10.91,
-      "timetable_min": 10.47,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.93,
-      "model_min": 12.58,
-      "timetable_min": 11.6,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.39,
-      "model_min": 14.05,
-      "timetable_min": 21.33,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.17,
-      "model_min": 10.1,
-      "timetable_min": 9.5,
+      "observed_min": 10.58,
+      "model_min": 11.42,
+      "timetable_min": 17.37,
       "hour": 17
     },
     {
       "observed_min": 9.88,
-      "model_min": 8.82,
-      "timetable_min": 8.27,
-      "hour": 17
+      "model_min": 11.63,
+      "timetable_min": 11.53,
+      "hour": 7
     },
     {
-      "observed_min": 13.83,
-      "model_min": 10.78,
-      "timetable_min": 9.75,
-      "hour": 17
+      "observed_min": 5.88,
+      "model_min": 7.44,
+      "timetable_min": 7.6,
+      "hour": 6
     },
     {
-      "observed_min": 5.46,
-      "model_min": 5.46,
-      "timetable_min": 6.33,
-      "hour": 17
+      "observed_min": 25.99,
+      "model_min": 28.37,
+      "timetable_min": 16.6,
+      "hour": 14
     },
     {
-      "observed_min": 5.12,
-      "model_min": 4.68,
-      "timetable_min": 6.47,
-      "hour": 17
+      "observed_min": 20.35,
+      "model_min": 19.29,
+      "timetable_min": 20.3,
+      "hour": 13
     },
     {
-      "observed_min": 8.92,
-      "model_min": 7.7,
-      "timetable_min": 8.47,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.46,
-      "model_min": 11.66,
-      "timetable_min": 14.17,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.1,
-      "model_min": 10.14,
-      "timetable_min": 9.97,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.35,
-      "model_min": 8.08,
-      "timetable_min": 8.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.27,
-      "model_min": 5.84,
-      "timetable_min": 6.67,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.47,
-      "model_min": 9.27,
-      "timetable_min": 9.88,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.87,
-      "model_min": 11.96,
-      "timetable_min": 12.4,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.47,
-      "model_min": 8.77,
-      "timetable_min": 8.27,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.25,
-      "model_min": 7.94,
-      "timetable_min": 10.0,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.78,
-      "model_min": 5.7,
-      "timetable_min": 7.45,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.73,
-      "model_min": 10.79,
-      "timetable_min": 12.53,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.53,
-      "model_min": 12.53,
-      "timetable_min": 13.43,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.95,
-      "model_min": 10.54,
-      "timetable_min": 14.0,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.05,
-      "model_min": 6.89,
-      "timetable_min": 6.58,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.63,
-      "model_min": 5.91,
-      "timetable_min": 5.7,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.65,
-      "model_min": 10.16,
-      "timetable_min": 11.22,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.87,
-      "model_min": 8.66,
-      "timetable_min": 7.73,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.92,
-      "model_min": 11.12,
-      "timetable_min": 11.4,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.93,
-      "model_min": 7.86,
-      "timetable_min": 7.93,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.43,
-      "model_min": 10.52,
-      "timetable_min": 9.68,
-      "hour": 17
-    },
-    {
-      "observed_min": 14.2,
-      "model_min": 12.89,
-      "timetable_min": 16.92,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.39,
-      "model_min": 7.91,
-      "timetable_min": 7.67,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.71,
-      "model_min": 8.3,
-      "timetable_min": 8.17,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.57,
-      "model_min": 8.98,
-      "timetable_min": 7.8,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.59,
-      "model_min": 10.36,
-      "timetable_min": 13.07,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.93,
-      "model_min": 6.26,
-      "timetable_min": 6.1,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.84,
-      "model_min": 10.38,
-      "timetable_min": 10.0,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.96,
-      "model_min": 10.7,
-      "timetable_min": 12.07,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.99,
-      "model_min": 11.29,
-      "timetable_min": 9.0,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.25,
-      "model_min": 10.38,
-      "timetable_min": 7.08,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.99,
-      "model_min": 12.12,
-      "timetable_min": 10.98,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.56,
-      "model_min": 12.47,
-      "timetable_min": 14.18,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.21,
-      "model_min": 9.42,
-      "timetable_min": 7.43,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.68,
-      "model_min": 8.93,
-      "timetable_min": 5.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.61,
-      "model_min": 4.97,
-      "timetable_min": 5.72,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.03,
-      "model_min": 10.75,
-      "timetable_min": 11.32,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.55,
-      "model_min": 5.9,
-      "timetable_min": 7.73,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.36,
-      "model_min": 11.43,
-      "timetable_min": 7.7,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.84,
-      "model_min": 5.9,
-      "timetable_min": 7.73,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.0,
-      "model_min": 10.88,
-      "timetable_min": 8.38,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.32,
-      "model_min": 8.41,
-      "timetable_min": 13.5,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.15,
-      "model_min": 7.93,
-      "timetable_min": 11.05,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.53,
-      "model_min": 12.38,
-      "timetable_min": 13.6,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.47,
-      "model_min": 10.5,
-      "timetable_min": 10.62,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.96,
-      "model_min": 8.65,
-      "timetable_min": 8.7,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.35,
-      "model_min": 11.76,
-      "timetable_min": 9.13,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.37,
-      "model_min": 10.96,
-      "timetable_min": 14.37,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.54,
-      "model_min": 8.57,
-      "timetable_min": 9.37,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.75,
-      "model_min": 10.1,
-      "timetable_min": 9.45,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.73,
-      "model_min": 11.11,
-      "timetable_min": 11.13,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.28,
-      "model_min": 9.5,
-      "timetable_min": 11.28,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.57,
-      "model_min": 10.08,
-      "timetable_min": 9.58,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.68,
-      "model_min": 7.77,
-      "timetable_min": 9.83,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.75,
-      "model_min": 10.12,
-      "timetable_min": 9.03,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.82,
-      "model_min": 11.45,
-      "timetable_min": 11.73,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.11,
-      "model_min": 6.48,
-      "timetable_min": 5.45,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.69,
-      "model_min": 10.53,
-      "timetable_min": 7.97,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.7,
-      "model_min": 8.55,
-      "timetable_min": 8.98,
-      "hour": 17
-    },
-    {
-      "observed_min": 4.05,
-      "model_min": 6.3,
-      "timetable_min": 5.38,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.08,
-      "model_min": 10.16,
-      "timetable_min": 7.87,
-      "hour": 17
+      "observed_min": 44.82,
+      "model_min": 46.85,
+      "timetable_min": 46.65,
+      "hour": 18
     },
     {
       "observed_min": 12.94,
-      "model_min": 10.69,
-      "timetable_min": 10.65,
-      "hour": 17
+      "model_min": 8.1,
+      "timetable_min": 11.42,
+      "hour": 11
     },
     {
-      "observed_min": 10.84,
-      "model_min": 7.56,
-      "timetable_min": 10.57,
-      "hour": 17
+      "observed_min": 4.56,
+      "model_min": 7.7,
+      "timetable_min": 12.08,
+      "hour": 5
     },
     {
-      "observed_min": 11.54,
-      "model_min": 12.99,
-      "timetable_min": 11.28,
-      "hour": 17
+      "observed_min": 16.53,
+      "model_min": 19.95,
+      "timetable_min": 16.2,
+      "hour": 13
     },
     {
-      "observed_min": 6.48,
-      "model_min": 6.66,
-      "timetable_min": 6.1,
-      "hour": 17
+      "observed_min": 7.26,
+      "model_min": 8.18,
+      "timetable_min": 7.0,
+      "hour": 21
     },
     {
-      "observed_min": 11.18,
-      "model_min": 9.83,
-      "timetable_min": 13.42,
-      "hour": 17
+      "observed_min": 34.06,
+      "model_min": 32.81,
+      "timetable_min": 38.85,
+      "hour": 7
     },
     {
-      "observed_min": 6.61,
-      "model_min": 6.05,
-      "timetable_min": 5.42,
-      "hour": 17
+      "observed_min": 5.91,
+      "model_min": 4.89,
+      "timetable_min": 7.33,
+      "hour": 8
     },
     {
-      "observed_min": 6.63,
-      "model_min": 6.74,
-      "timetable_min": 10.75,
-      "hour": 17
+      "observed_min": 11.93,
+      "model_min": 13.44,
+      "timetable_min": 11.45,
+      "hour": 16
     },
     {
-      "observed_min": 11.57,
-      "model_min": 8.16,
-      "timetable_min": 7.65,
-      "hour": 17
+      "observed_min": 28.12,
+      "model_min": 27.9,
+      "timetable_min": 47.0,
+      "hour": 5
     },
     {
-      "observed_min": 11.95,
-      "model_min": 10.24,
-      "timetable_min": 12.3,
-      "hour": 17
+      "observed_min": 38.75,
+      "model_min": 36.06,
+      "timetable_min": 37.62,
+      "hour": 11
     },
     {
-      "observed_min": 7.83,
-      "model_min": 7.77,
-      "timetable_min": 5.9,
-      "hour": 17
+      "observed_min": 5.57,
+      "model_min": 7.04,
+      "timetable_min": 9.43,
+      "hour": 11
     },
     {
-      "observed_min": 8.55,
-      "model_min": 8.68,
-      "timetable_min": 10.8,
-      "hour": 17
+      "observed_min": 8.62,
+      "model_min": 9.82,
+      "timetable_min": 8.8,
+      "hour": 11
     },
     {
-      "observed_min": 9.52,
-      "model_min": 11.34,
-      "timetable_min": 7.75,
-      "hour": 17
+      "observed_min": 9.48,
+      "model_min": 7.64,
+      "timetable_min": 8.47,
+      "hour": 16
     },
     {
-      "observed_min": 12.38,
-      "model_min": 12.87,
-      "timetable_min": 9.08,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.46,
-      "model_min": 11.6,
-      "timetable_min": 16.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.9,
-      "model_min": 9.54,
-      "timetable_min": 10.03,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.0,
-      "model_min": 13.48,
-      "timetable_min": 11.83,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.89,
-      "model_min": 8.7,
-      "timetable_min": 10.98,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.88,
-      "model_min": 8.25,
-      "timetable_min": 12.43,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.61,
-      "model_min": 13.04,
-      "timetable_min": 12.65,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.14,
-      "model_min": 6.2,
-      "timetable_min": 6.15,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.13,
-      "model_min": 7.99,
-      "timetable_min": 9.8,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.97,
-      "model_min": 6.01,
-      "timetable_min": 7.92,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.45,
-      "model_min": 6.93,
-      "timetable_min": 7.5,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.6,
-      "model_min": 12.5,
-      "timetable_min": 17.87,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.64,
-      "model_min": 7.61,
-      "timetable_min": 10.43,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.65,
-      "model_min": 5.01,
-      "timetable_min": 5.7,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.71,
-      "model_min": 13.18,
-      "timetable_min": 13.95,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.61,
-      "model_min": 8.74,
-      "timetable_min": 11.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.77,
-      "model_min": 5.61,
-      "timetable_min": 6.17,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.78,
-      "model_min": 10.91,
-      "timetable_min": 11.68,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.68,
-      "model_min": 9.13,
-      "timetable_min": 9.75,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.98,
-      "model_min": 10.7,
-      "timetable_min": 12.83,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.47,
-      "model_min": 5.43,
-      "timetable_min": 6.13,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.65,
-      "model_min": 9.49,
-      "timetable_min": 8.98,
-      "hour": 17
-    },
-    {
-      "observed_min": 14.23,
-      "model_min": 15.57,
-      "timetable_min": 19.12,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.75,
-      "model_min": 8.83,
-      "timetable_min": 9.05,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.61,
-      "model_min": 10.36,
-      "timetable_min": 8.1,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.06,
-      "model_min": 9.16,
-      "timetable_min": 8.08,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.09,
-      "model_min": 11.79,
-      "timetable_min": 13.05,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.69,
-      "model_min": 7.74,
-      "timetable_min": 8.02,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.7,
-      "model_min": 8.35,
-      "timetable_min": 7.55,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.38,
-      "model_min": 11.85,
-      "timetable_min": 10.58,
-      "hour": 17
+      "observed_min": 25.85,
+      "model_min": 25.2,
+      "timetable_min": 24.5,
+      "hour": 8
     },
     {
       "observed_min": 10.17,
-      "model_min": 8.88,
-      "timetable_min": 10.27,
-      "hour": 17
+      "model_min": 9.77,
+      "timetable_min": 11.0,
+      "hour": 10
     },
     {
-      "observed_min": 12.29,
-      "model_min": 11.61,
-      "timetable_min": 11.85,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.8,
-      "model_min": 8.83,
-      "timetable_min": 9.02,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.59,
-      "model_min": 9.82,
-      "timetable_min": 12.62,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.15,
-      "model_min": 8.72,
-      "timetable_min": 7.68,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.85,
-      "model_min": 9.96,
-      "timetable_min": 10.12,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.63,
-      "model_min": 12.14,
-      "timetable_min": 8.9,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.27,
-      "model_min": 8.22,
-      "timetable_min": 8.95,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.07,
-      "model_min": 10.94,
+      "observed_min": 19.49,
+      "model_min": 17.06,
       "timetable_min": 9.68,
-      "hour": 17
+      "hour": 18
     },
     {
-      "observed_min": 9.27,
-      "model_min": 8.97,
-      "timetable_min": 9.25,
-      "hour": 17
+      "observed_min": 19.99,
+      "model_min": 18.7,
+      "timetable_min": 28.3,
+      "hour": 20
     },
     {
-      "observed_min": 12.7,
-      "model_min": 12.86,
-      "timetable_min": 11.27,
-      "hour": 17
+      "observed_min": 30.19,
+      "model_min": 25.28,
+      "timetable_min": 26.98,
+      "hour": 9
     },
     {
-      "observed_min": 9.76,
-      "model_min": 8.98,
-      "timetable_min": 7.48,
-      "hour": 17
+      "observed_min": 11.27,
+      "model_min": 11.52,
+      "timetable_min": 13.43,
+      "hour": 7
     },
     {
-      "observed_min": 7.79,
-      "model_min": 7.94,
-      "timetable_min": 9.5,
-      "hour": 17
+      "observed_min": 13.65,
+      "model_min": 13.96,
+      "timetable_min": 18.28,
+      "hour": 6
     },
     {
-      "observed_min": 10.97,
-      "model_min": 10.06,
-      "timetable_min": 7.4,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.77,
-      "model_min": 8.79,
-      "timetable_min": 8.57,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.87,
-      "model_min": 13.56,
-      "timetable_min": 13.38,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.67,
-      "model_min": 6.91,
-      "timetable_min": 7.15,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.97,
-      "model_min": 9.04,
+      "observed_min": 13.16,
+      "model_min": 9.08,
       "timetable_min": 9.85,
-      "hour": 17
+      "hour": 16
     },
     {
-      "observed_min": 12.1,
-      "model_min": 9.8,
-      "timetable_min": 8.97,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.41,
-      "model_min": 15.65,
-      "timetable_min": 19.95,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.86,
-      "model_min": 9.5,
-      "timetable_min": 8.97,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.77,
-      "model_min": 10.24,
-      "timetable_min": 10.25,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.23,
-      "model_min": 9.62,
-      "timetable_min": 9.53,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.43,
-      "model_min": 10.18,
-      "timetable_min": 11.7,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.59,
-      "model_min": 11.11,
-      "timetable_min": 11.13,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.0,
-      "model_min": 7.99,
-      "timetable_min": 7.93,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.96,
-      "model_min": 8.57,
-      "timetable_min": 5.12,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.52,
-      "model_min": 11.67,
-      "timetable_min": 10.22,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.06,
-      "model_min": 8.49,
-      "timetable_min": 7.4,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.99,
-      "model_min": 9.65,
-      "timetable_min": 11.32,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.1,
-      "model_min": 10.18,
-      "timetable_min": 12.85,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.47,
-      "model_min": 9.0,
-      "timetable_min": 7.65,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.1,
-      "model_min": 11.53,
-      "timetable_min": 12.85,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.17,
-      "model_min": 10.16,
-      "timetable_min": 14.27,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.09,
-      "model_min": 7.42,
-      "timetable_min": 5.82,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.68,
-      "model_min": 9.61,
-      "timetable_min": 10.63,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.9,
-      "model_min": 12.07,
-      "timetable_min": 11.38,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.6,
-      "model_min": 11.95,
-      "timetable_min": 12.0,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.54,
-      "model_min": 9.5,
-      "timetable_min": 9.98,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.33,
-      "model_min": 9.8,
-      "timetable_min": 9.25,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.17,
-      "model_min": 6.7,
-      "timetable_min": 11.38,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.3,
-      "model_min": 8.1,
-      "timetable_min": 11.95,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.11,
-      "model_min": 5.82,
-      "timetable_min": 4.47,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.42,
-      "model_min": 9.1,
-      "timetable_min": 8.45,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.18,
-      "model_min": 11.66,
-      "timetable_min": 12.52,
-      "hour": 17
-    },
-    {
-      "observed_min": 14.45,
-      "model_min": 11.43,
-      "timetable_min": 11.27,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.47,
-      "model_min": 11.32,
-      "timetable_min": 10.62,
+      "observed_min": 37.49,
+      "model_min": 27.16,
+      "timetable_min": 25.93,
       "hour": 17
     },
     {
       "observed_min": 12.5,
-      "model_min": 9.09,
-      "timetable_min": 8.4,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.83,
-      "model_min": 13.18,
-      "timetable_min": 13.93,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.51,
-      "model_min": 11.76,
-      "timetable_min": 9.22,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.88,
-      "model_min": 8.31,
-      "timetable_min": 10.3,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.33,
-      "model_min": 8.21,
-      "timetable_min": 8.17,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.83,
-      "model_min": 7.93,
-      "timetable_min": 12.33,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.74,
-      "model_min": 10.1,
-      "timetable_min": 13.48,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.38,
-      "model_min": 5.3,
-      "timetable_min": 6.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.85,
-      "model_min": 11.46,
-      "timetable_min": 8.37,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.06,
-      "model_min": 10.46,
-      "timetable_min": 14.35,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.8,
-      "model_min": 11.29,
-      "timetable_min": 8.18,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.68,
-      "model_min": 11.04,
-      "timetable_min": 14.93,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.07,
-      "model_min": 9.12,
-      "timetable_min": 8.92,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.09,
-      "model_min": 12.62,
-      "timetable_min": 18.32,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.22,
-      "model_min": 7.04,
-      "timetable_min": 5.13,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.95,
-      "model_min": 11.86,
-      "timetable_min": 11.42,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.17,
-      "model_min": 9.62,
-      "timetable_min": 12.73,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.02,
-      "model_min": 9.36,
-      "timetable_min": 10.87,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.21,
-      "model_min": 9.53,
-      "timetable_min": 11.65,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.78,
-      "model_min": 10.14,
-      "timetable_min": 9.85,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.26,
-      "model_min": 10.82,
-      "timetable_min": 12.67,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.8,
-      "model_min": 11.87,
-      "timetable_min": 10.98,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.9,
-      "model_min": 9.17,
-      "timetable_min": 7.05,
-      "hour": 17
-    },
-    {
-      "observed_min": 4.24,
-      "model_min": 5.1,
-      "timetable_min": 8.32,
-      "hour": 17
-    },
-    {
-      "observed_min": 4.9,
-      "model_min": 4.99,
-      "timetable_min": 7.55,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.43,
-      "model_min": 11.82,
-      "timetable_min": 12.23,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.22,
-      "model_min": 7.5,
-      "timetable_min": 6.7,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.54,
-      "model_min": 9.27,
-      "timetable_min": 9.0,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.23,
-      "model_min": 11.16,
-      "timetable_min": 12.28,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.78,
-      "model_min": 6.74,
-      "timetable_min": 8.05,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.67,
-      "model_min": 8.44,
-      "timetable_min": 7.85,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.96,
-      "model_min": 15.66,
-      "timetable_min": 15.23,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.15,
-      "model_min": 6.74,
-      "timetable_min": 6.37,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.98,
-      "model_min": 9.93,
-      "timetable_min": 8.6,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.57,
-      "model_min": 14.7,
-      "timetable_min": 18.05,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.37,
-      "model_min": 14.13,
-      "timetable_min": 12.35,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.49,
-      "model_min": 9.06,
-      "timetable_min": 9.42,
-      "hour": 17
-    },
-    {
-      "observed_min": 4.64,
-      "model_min": 4.57,
-      "timetable_min": 4.55,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.35,
-      "model_min": 8.72,
-      "timetable_min": 7.68,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.49,
-      "model_min": 12.34,
-      "timetable_min": 15.22,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.57,
-      "model_min": 9.92,
-      "timetable_min": 11.4,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.25,
-      "model_min": 10.88,
-      "timetable_min": 11.37,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.2,
-      "model_min": 7.52,
-      "timetable_min": 5.48,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.54,
-      "model_min": 9.95,
-      "timetable_min": 9.03,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.39,
-      "model_min": 6.75,
-      "timetable_min": 6.48,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.35,
-      "model_min": 7.92,
-      "timetable_min": 12.33,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.26,
-      "model_min": 11.78,
-      "timetable_min": 8.52,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.79,
-      "model_min": 6.76,
-      "timetable_min": 7.48,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.46,
-      "model_min": 12.14,
-      "timetable_min": 12.82,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.26,
-      "model_min": 9.76,
-      "timetable_min": 10.38,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.74,
-      "model_min": 10.48,
-      "timetable_min": 10.03,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.41,
-      "model_min": 11.25,
-      "timetable_min": 10.22,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.66,
-      "model_min": 16.09,
-      "timetable_min": 14.45,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.04,
-      "model_min": 9.52,
-      "timetable_min": 11.5,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.76,
-      "model_min": 6.6,
-      "timetable_min": 10.38,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.54,
-      "model_min": 7.23,
-      "timetable_min": 6.37,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.04,
-      "model_min": 8.5,
-      "timetable_min": 8.9,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.4,
-      "model_min": 6.04,
-      "timetable_min": 5.05,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.5,
-      "model_min": 11.72,
-      "timetable_min": 13.38,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.21,
-      "model_min": 8.28,
-      "timetable_min": 5.93,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.46,
-      "model_min": 10.41,
-      "timetable_min": 12.88,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.22,
-      "model_min": 8.43,
-      "timetable_min": 9.23,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.6,
-      "model_min": 8.94,
-      "timetable_min": 12.6,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.46,
-      "model_min": 9.19,
-      "timetable_min": 7.87,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.41,
-      "model_min": 7.73,
-      "timetable_min": 9.17,
-      "hour": 17
-    },
-    {
-      "observed_min": 14.07,
-      "model_min": 9.15,
-      "timetable_min": 10.52,
-      "hour": 17
-    },
-    {
-      "observed_min": 14.05,
-      "model_min": 15.61,
-      "timetable_min": 16.65,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.6,
-      "model_min": 5.81,
-      "timetable_min": 5.83,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.8,
-      "model_min": 9.35,
-      "timetable_min": 9.02,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.93,
-      "model_min": 13.71,
-      "timetable_min": 13.02,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.06,
-      "model_min": 5.95,
-      "timetable_min": 5.62,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.24,
-      "model_min": 6.35,
-      "timetable_min": 8.47,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.18,
-      "model_min": 7.46,
-      "timetable_min": 7.13,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.76,
-      "model_min": 9.17,
-      "timetable_min": 8.95,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.47,
-      "model_min": 12.3,
-      "timetable_min": 13.07,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.06,
-      "model_min": 13.31,
-      "timetable_min": 17.87,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.99,
-      "model_min": 8.49,
-      "timetable_min": 9.73,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.13,
-      "model_min": 10.68,
-      "timetable_min": 10.92,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.1,
-      "model_min": 7.05,
-      "timetable_min": 9.7,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.65,
-      "model_min": 8.31,
-      "timetable_min": 8.2,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.29,
-      "model_min": 6.94,
-      "timetable_min": 5.32,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.56,
-      "model_min": 9.57,
-      "timetable_min": 7.75,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.11,
-      "model_min": 11.63,
-      "timetable_min": 13.12,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.37,
-      "model_min": 7.11,
-      "timetable_min": 10.92,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.94,
-      "model_min": 7.94,
-      "timetable_min": 10.98,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.03,
-      "model_min": 6.72,
-      "timetable_min": 10.32,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.22,
-      "model_min": 8.36,
-      "timetable_min": 9.27,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.67,
-      "model_min": 13.81,
-      "timetable_min": 9.88,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.97,
-      "model_min": 6.78,
-      "timetable_min": 8.55,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.62,
-      "model_min": 12.23,
-      "timetable_min": 13.42,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.59,
-      "model_min": 9.77,
-      "timetable_min": 6.43,
-      "hour": 17
-    },
-    {
-      "observed_min": 14.11,
-      "model_min": 11.37,
-      "timetable_min": 9.47,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.49,
-      "model_min": 9.1,
-      "timetable_min": 7.95,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.52,
-      "model_min": 10.47,
-      "timetable_min": 13.83,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.08,
-      "model_min": 6.14,
-      "timetable_min": 6.25,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.41,
-      "model_min": 11.56,
-      "timetable_min": 14.02,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.4,
-      "model_min": 12.48,
-      "timetable_min": 13.67,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.48,
-      "model_min": 12.67,
-      "timetable_min": 14.5,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.93,
-      "model_min": 10.16,
-      "timetable_min": 9.62,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.0,
-      "model_min": 9.48,
-      "timetable_min": 12.0,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.54,
-      "model_min": 7.73,
-      "timetable_min": 6.83,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.51,
-      "model_min": 12.28,
-      "timetable_min": 12.47,
-      "hour": 17
-    },
-    {
-      "observed_min": 4.93,
-      "model_min": 4.81,
-      "timetable_min": 4.98,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.95,
-      "model_min": 12.08,
-      "timetable_min": 12.9,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.67,
-      "model_min": 8.58,
-      "timetable_min": 9.37,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.97,
-      "model_min": 11.22,
-      "timetable_min": 8.78,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.2,
-      "model_min": 9.98,
-      "timetable_min": 9.93,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.16,
-      "model_min": 8.49,
-      "timetable_min": 11.98,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.64,
-      "model_min": 12.51,
-      "timetable_min": 16.33,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.7,
-      "model_min": 8.1,
-      "timetable_min": 7.98,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.18,
-      "model_min": 9.87,
-      "timetable_min": 10.07,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.11,
-      "model_min": 13.34,
-      "timetable_min": 20.92,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.13,
-      "model_min": 12.31,
-      "timetable_min": 10.27,
-      "hour": 17
-    },
-    {
-      "observed_min": 4.62,
-      "model_min": 5.09,
-      "timetable_min": 6.7,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.64,
-      "model_min": 6.01,
-      "timetable_min": 9.0,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.61,
-      "model_min": 10.66,
-      "timetable_min": 13.67,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.3,
-      "model_min": 7.65,
-      "timetable_min": 7.38,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.8,
-      "model_min": 9.27,
-      "timetable_min": 9.55,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.67,
-      "model_min": 6.46,
-      "timetable_min": 6.98,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.91,
-      "model_min": 15.74,
-      "timetable_min": 20.43,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.49,
-      "model_min": 9.8,
-      "timetable_min": 10.92,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.33,
-      "model_min": 7.55,
-      "timetable_min": 10.18,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.63,
-      "model_min": 10.01,
-      "timetable_min": 10.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.69,
-      "model_min": 8.27,
-      "timetable_min": 8.15,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.85,
-      "model_min": 14.11,
-      "timetable_min": 12.02,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.85,
-      "model_min": 12.2,
-      "timetable_min": 10.93,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.99,
-      "model_min": 8.98,
-      "timetable_min": 8.13,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.44,
-      "model_min": 5.41,
-      "timetable_min": 4.67,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.09,
-      "model_min": 11.27,
-      "timetable_min": 10.27,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.76,
-      "model_min": 9.08,
-      "timetable_min": 11.1,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.65,
-      "model_min": 6.07,
-      "timetable_min": 10.23,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.3,
-      "model_min": 8.98,
-      "timetable_min": 12.08,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.3,
-      "model_min": 10.22,
-      "timetable_min": 7.63,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.28,
-      "model_min": 7.55,
-      "timetable_min": 6.65,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.82,
-      "model_min": 5.41,
-      "timetable_min": 7.43,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.18,
-      "model_min": 4.87,
-      "timetable_min": 5.53,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.09,
-      "model_min": 10.3,
-      "timetable_min": 8.17,
-      "hour": 17
-    },
-    {
-      "observed_min": 14.09,
-      "model_min": 6.38,
-      "timetable_min": 7.87,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.41,
-      "model_min": 11.11,
-      "timetable_min": 8.4,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.19,
-      "model_min": 9.51,
-      "timetable_min": 9.15,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.42,
-      "model_min": 10.6,
-      "timetable_min": 10.25,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.45,
-      "model_min": 15.92,
-      "timetable_min": 20.1,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.43,
-      "model_min": 10.66,
-      "timetable_min": 6.83,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.43,
-      "model_min": 8.48,
-      "timetable_min": 9.07,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.43,
-      "model_min": 8.44,
-      "timetable_min": 8.62,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.03,
-      "model_min": 10.09,
-      "timetable_min": 7.32,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.51,
-      "model_min": 8.91,
-      "timetable_min": 10.23,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.12,
-      "model_min": 11.44,
-      "timetable_min": 14.07,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.72,
-      "model_min": 11.46,
-      "timetable_min": 9.38,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.53,
-      "model_min": 8.47,
-      "timetable_min": 6.17,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.98,
-      "model_min": 9.99,
-      "timetable_min": 7.23,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.59,
-      "model_min": 6.72,
-      "timetable_min": 7.92,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.11,
-      "model_min": 9.84,
-      "timetable_min": 9.02,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.41,
-      "model_min": 8.48,
-      "timetable_min": 9.85,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.85,
-      "model_min": 9.35,
-      "timetable_min": 8.68,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.81,
-      "model_min": 5.24,
-      "timetable_min": 5.62,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.36,
-      "model_min": 6.31,
-      "timetable_min": 9.0,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.72,
-      "model_min": 6.66,
-      "timetable_min": 5.92,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.68,
-      "model_min": 9.1,
-      "timetable_min": 12.22,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.24,
-      "model_min": 10.18,
-      "timetable_min": 11.12,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.3,
-      "model_min": 11.72,
-      "timetable_min": 11.13,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.34,
-      "model_min": 14.51,
-      "timetable_min": 20.88,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.72,
-      "model_min": 10.44,
-      "timetable_min": 6.67,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.48,
-      "model_min": 6.6,
-      "timetable_min": 6.13,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.63,
-      "model_min": 6.9,
-      "timetable_min": 6.57,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.19,
-      "model_min": 10.02,
-      "timetable_min": 11.63,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.64,
-      "model_min": 5.98,
-      "timetable_min": 7.23,
-      "hour": 17
-    },
-    {
-      "observed_min": 14.2,
-      "model_min": 12.09,
-      "timetable_min": 12.9,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.33,
-      "model_min": 7.89,
-      "timetable_min": 8.78,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.21,
-      "model_min": 10.41,
-      "timetable_min": 13.9,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.81,
-      "model_min": 10.15,
-      "timetable_min": 10.75,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.25,
-      "model_min": 5.98,
-      "timetable_min": 5.78,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.38,
-      "model_min": 5.09,
-      "timetable_min": 6.93,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.44,
-      "model_min": 10.04,
-      "timetable_min": 9.98,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.04,
-      "model_min": 11.45,
-      "timetable_min": 10.62,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.98,
-      "model_min": 6.89,
-      "timetable_min": 9.32,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.65,
-      "model_min": 13.8,
-      "timetable_min": 11.82,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.96,
-      "model_min": 9.24,
-      "timetable_min": 10.12,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.1,
-      "model_min": 11.28,
-      "timetable_min": 15.1,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.75,
-      "model_min": 6.81,
-      "timetable_min": 10.63,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.07,
-      "model_min": 10.9,
-      "timetable_min": 9.48,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.42,
-      "model_min": 11.73,
-      "timetable_min": 12.25,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.43,
-      "model_min": 10.73,
-      "timetable_min": 14.97,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.24,
-      "model_min": 8.84,
-      "timetable_min": 14.08,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.67,
-      "model_min": 6.93,
-      "timetable_min": 7.52,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.39,
-      "model_min": 7.06,
-      "timetable_min": 5.62,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.82,
-      "model_min": 5.95,
-      "timetable_min": 10.05,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.05,
-      "model_min": 8.83,
-      "timetable_min": 5.22,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.92,
-      "model_min": 8.35,
-      "timetable_min": 11.43,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.9,
-      "model_min": 10.73,
-      "timetable_min": 13.5,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.7,
-      "model_min": 7.48,
-      "timetable_min": 7.18,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.91,
-      "model_min": 14.78,
-      "timetable_min": 16.27,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.13,
-      "model_min": 11.14,
-      "timetable_min": 15.82,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.69,
-      "model_min": 11.77,
-      "timetable_min": 10.97,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.77,
-      "model_min": 9.18,
-      "timetable_min": 11.92,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.93,
-      "model_min": 8.82,
-      "timetable_min": 7.42,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.76,
-      "model_min": 6.75,
-      "timetable_min": 12.08,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.14,
-      "model_min": 6.5,
-      "timetable_min": 8.32,
-      "hour": 17
+      "model_min": 11.52,
+      "timetable_min": 14.78,
+      "hour": 21
     },
     {
       "observed_min": 11.76,
-      "model_min": 12.25,
-      "timetable_min": 13.07,
-      "hour": 17
+      "model_min": 11.34,
+      "timetable_min": 16.7,
+      "hour": 7
     },
     {
-      "observed_min": 12.1,
-      "model_min": 13.16,
-      "timetable_min": 11.78,
-      "hour": 17
+      "observed_min": 5.4,
+      "model_min": 3.95,
+      "timetable_min": 4.48,
+      "hour": 6
     },
     {
-      "observed_min": 12.68,
-      "model_min": 11.69,
-      "timetable_min": 11.68,
-      "hour": 17
+      "observed_min": 42.43,
+      "model_min": 41.56,
+      "timetable_min": 44.05,
+      "hour": 15
     },
     {
-      "observed_min": 9.57,
-      "model_min": 7.96,
-      "timetable_min": 9.02,
-      "hour": 17
+      "observed_min": 45.15,
+      "model_min": 42.01,
+      "timetable_min": 30.83,
+      "hour": 16
     },
     {
-      "observed_min": 7.16,
-      "model_min": 6.82,
-      "timetable_min": 6.7,
-      "hour": 17
+      "observed_min": 11.24,
+      "model_min": 9.38,
+      "timetable_min": 8.45,
+      "hour": 14
     },
     {
-      "observed_min": 12.28,
-      "model_min": 13.28,
-      "timetable_min": 8.53,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.22,
-      "model_min": 7.89,
-      "timetable_min": 8.78,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.21,
-      "model_min": 9.48,
-      "timetable_min": 9.95,
-      "hour": 17
-    },
-    {
-      "observed_min": 3.16,
-      "model_min": 4.33,
-      "timetable_min": 4.67,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.9,
-      "model_min": 11.17,
-      "timetable_min": 9.4,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.2,
-      "model_min": 9.14,
-      "timetable_min": 9.45,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.78,
-      "model_min": 14.97,
-      "timetable_min": 17.05,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.89,
-      "model_min": 6.87,
-      "timetable_min": 6.48,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.87,
-      "model_min": 6.87,
-      "timetable_min": 6.3,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.29,
-      "model_min": 10.83,
-      "timetable_min": 13.98,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.58,
-      "model_min": 11.2,
-      "timetable_min": 5.92,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.9,
-      "model_min": 11.41,
-      "timetable_min": 14.07,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.16,
-      "model_min": 6.47,
-      "timetable_min": 7.27,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.13,
-      "model_min": 13.27,
-      "timetable_min": 15.75,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.68,
-      "model_min": 6.19,
-      "timetable_min": 6.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 14.39,
-      "model_min": 12.53,
-      "timetable_min": 13.0,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.61,
-      "model_min": 5.41,
-      "timetable_min": 7.43,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.4,
-      "model_min": 5.72,
-      "timetable_min": 5.17,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.11,
-      "model_min": 10.22,
-      "timetable_min": 9.6,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.16,
-      "model_min": 9.2,
-      "timetable_min": 10.1,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.93,
-      "model_min": 6.71,
-      "timetable_min": 9.12,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.25,
-      "model_min": 5.55,
-      "timetable_min": 6.35,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.74,
-      "model_min": 11.64,
-      "timetable_min": 19.3,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.95,
-      "model_min": 8.67,
-      "timetable_min": 13.75,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.46,
-      "model_min": 13.86,
-      "timetable_min": 19.8,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.16,
-      "model_min": 7.97,
-      "timetable_min": 8.72,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.3,
-      "model_min": 9.13,
-      "timetable_min": 7.73,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.95,
-      "model_min": 7.91,
-      "timetable_min": 14.13,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.83,
-      "model_min": 11.7,
-      "timetable_min": 13.02,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.92,
-      "model_min": 10.27,
-      "timetable_min": 8.63,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.95,
-      "model_min": 13.08,
-      "timetable_min": 13.33,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.41,
-      "model_min": 10.47,
-      "timetable_min": 7.63,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.6,
-      "model_min": 9.22,
-      "timetable_min": 9.68,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.48,
-      "model_min": 9.8,
-      "timetable_min": 10.65,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.73,
-      "model_min": 7.81,
-      "timetable_min": 8.83,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.74,
-      "model_min": 7.98,
-      "timetable_min": 7.93,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.87,
-      "model_min": 9.85,
-      "timetable_min": 10.7,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.12,
-      "model_min": 10.42,
-      "timetable_min": 11.68,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.34,
-      "model_min": 10.09,
-      "timetable_min": 10.92,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.4,
-      "model_min": 11.03,
-      "timetable_min": 11.83,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.24,
-      "model_min": 5.85,
-      "timetable_min": 5.97,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.25,
-      "model_min": 10.57,
-      "timetable_min": 10.85,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.78,
-      "model_min": 8.97,
-      "timetable_min": 10.55,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.84,
-      "model_min": 9.16,
-      "timetable_min": 9.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.56,
-      "model_min": 10.58,
-      "timetable_min": 14.0,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.74,
-      "model_min": 6.01,
-      "timetable_min": 5.72,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.72,
-      "model_min": 11.87,
-      "timetable_min": 14.9,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.08,
-      "model_min": 12.59,
-      "timetable_min": 9.55,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.93,
-      "model_min": 9.25,
-      "timetable_min": 11.8,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.37,
-      "model_min": 9.17,
-      "timetable_min": 10.5,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.76,
-      "model_min": 7.81,
-      "timetable_min": 11.32,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.21,
-      "model_min": 10.01,
-      "timetable_min": 10.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.81,
-      "model_min": 8.78,
-      "timetable_min": 6.68,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.77,
-      "model_min": 6.73,
-      "timetable_min": 8.35,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.55,
-      "model_min": 10.65,
-      "timetable_min": 11.82,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.68,
-      "model_min": 12.67,
-      "timetable_min": 13.35,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.08,
-      "model_min": 9.41,
-      "timetable_min": 8.88,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.3,
-      "model_min": 11.79,
-      "timetable_min": 11.58,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.21,
-      "model_min": 10.83,
-      "timetable_min": 14.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.74,
-      "model_min": 6.55,
-      "timetable_min": 7.72,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.47,
-      "model_min": 7.92,
-      "timetable_min": 7.97,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.14,
-      "model_min": 7.86,
-      "timetable_min": 8.98,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.94,
-      "model_min": 8.7,
-      "timetable_min": 8.48,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.73,
-      "model_min": 9.8,
-      "timetable_min": 13.63,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.48,
-      "model_min": 9.97,
-      "timetable_min": 8.48,
-      "hour": 17
-    },
-    {
-      "observed_min": 4.67,
-      "model_min": 6.3,
-      "timetable_min": 5.92,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.63,
-      "model_min": 9.69,
-      "timetable_min": 9.73,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.81,
-      "model_min": 6.81,
-      "timetable_min": 6.17,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.74,
-      "model_min": 9.48,
-      "timetable_min": 12.42,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.15,
-      "model_min": 9.0,
-      "timetable_min": 8.47,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.12,
-      "model_min": 10.46,
-      "timetable_min": 9.87,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.53,
-      "model_min": 7.14,
-      "timetable_min": 10.28,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.35,
-      "model_min": 7.81,
-      "timetable_min": 6.93,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.42,
-      "model_min": 10.18,
-      "timetable_min": 10.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.94,
-      "model_min": 10.4,
-      "timetable_min": 10.1,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.12,
-      "model_min": 9.41,
-      "timetable_min": 11.67,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.25,
-      "model_min": 9.83,
-      "timetable_min": 13.53,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.57,
-      "model_min": 10.55,
-      "timetable_min": 14.03,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.26,
-      "model_min": 10.07,
-      "timetable_min": 9.15,
-      "hour": 17
-    },
-    {
-      "observed_min": 3.61,
-      "model_min": 3.53,
-      "timetable_min": 4.93,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.03,
-      "model_min": 8.93,
+      "observed_min": 12.76,
+      "model_min": 11.18,
       "timetable_min": 11.13,
+      "hour": 12
+    },
+    {
+      "observed_min": 12.74,
+      "model_min": 11.82,
+      "timetable_min": 12.15,
+      "hour": 10
+    },
+    {
+      "observed_min": 77.28,
+      "model_min": 29.26,
+      "timetable_min": 29.75,
+      "hour": 16
+    },
+    {
+      "observed_min": 40.53,
+      "model_min": 26.99,
+      "timetable_min": 27.5,
       "hour": 17
     },
     {
-      "observed_min": 7.35,
-      "model_min": 6.8,
-      "timetable_min": 8.7,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.76,
-      "model_min": 9.83,
-      "timetable_min": 8.53,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.32,
-      "model_min": 7.92,
-      "timetable_min": 8.75,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.62,
-      "model_min": 9.26,
-      "timetable_min": 12.9,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.34,
-      "model_min": 11.91,
-      "timetable_min": 12.7,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.96,
-      "model_min": 16.2,
-      "timetable_min": 24.48,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.64,
-      "model_min": 8.24,
-      "timetable_min": 12.53,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.79,
-      "model_min": 9.77,
-      "timetable_min": 9.28,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.74,
-      "model_min": 6.32,
-      "timetable_min": 6.05,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.56,
-      "model_min": 11.73,
-      "timetable_min": 11.88,
-      "hour": 17
-    },
-    {
-      "observed_min": 13.82,
-      "model_min": 13.79,
-      "timetable_min": 17.3,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.17,
-      "model_min": 6.76,
-      "timetable_min": 9.73,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.95,
-      "model_min": 14.34,
-      "timetable_min": 13.6,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.62,
-      "model_min": 11.2,
-      "timetable_min": 10.8,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.6,
-      "model_min": 7.67,
-      "timetable_min": 10.02,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.3,
-      "model_min": 7.44,
+      "observed_min": 4.49,
+      "model_min": 5.36,
       "timetable_min": 6.87,
-      "hour": 17
+      "hour": 9
     },
     {
-      "observed_min": 8.22,
-      "model_min": 6.35,
-      "timetable_min": 6.15,
-      "hour": 17
+      "observed_min": 17.34,
+      "model_min": 17.63,
+      "timetable_min": 22.82,
+      "hour": 8
     },
     {
-      "observed_min": 6.59,
-      "model_min": 6.54,
-      "timetable_min": 6.48,
-      "hour": 17
+      "observed_min": 9.86,
+      "model_min": 9.42,
+      "timetable_min": 10.4,
+      "hour": 10
     },
     {
-      "observed_min": 10.85,
-      "model_min": 10.38,
-      "timetable_min": 12.1,
-      "hour": 17
+      "observed_min": 12.92,
+      "model_min": 12.01,
+      "timetable_min": 14.7,
+      "hour": 7
     },
     {
-      "observed_min": 11.09,
-      "model_min": 10.35,
-      "timetable_min": 8.17,
-      "hour": 17
+      "observed_min": 23.02,
+      "model_min": 23.68,
+      "timetable_min": 25.98,
+      "hour": 11
     },
     {
-      "observed_min": 12.68,
-      "model_min": 10.24,
-      "timetable_min": 11.45,
-      "hour": 17
+      "observed_min": 17.8,
+      "model_min": 16.2,
+      "timetable_min": 18.18,
+      "hour": 11
     },
     {
-      "observed_min": 5.14,
-      "model_min": 5.12,
-      "timetable_min": 5.45,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.0,
-      "model_min": 11.11,
-      "timetable_min": 9.58,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.23,
-      "model_min": 13.89,
-      "timetable_min": 16.4,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.71,
-      "model_min": 9.44,
-      "timetable_min": 11.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.58,
-      "model_min": 5.43,
-      "timetable_min": 5.38,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.36,
-      "model_min": 11.28,
-      "timetable_min": 11.48,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.41,
-      "model_min": 9.19,
-      "timetable_min": 9.33,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.4,
-      "model_min": 9.93,
+      "observed_min": 8.23,
+      "model_min": 9.41,
       "timetable_min": 8.25,
       "hour": 17
     },
     {
-      "observed_min": 10.73,
-      "model_min": 11.39,
-      "timetable_min": 12.55,
-      "hour": 17
+      "observed_min": 13.15,
+      "model_min": 15.95,
+      "timetable_min": 10.45,
+      "hour": 12
     },
     {
-      "observed_min": 11.08,
-      "model_min": 10.18,
-      "timetable_min": 12.08,
-      "hour": 17
+      "observed_min": 6.01,
+      "model_min": 5.27,
+      "timetable_min": 5.97,
+      "hour": 15
     },
     {
-      "observed_min": 8.52,
-      "model_min": 7.92,
-      "timetable_min": 9.15,
-      "hour": 17
+      "observed_min": 47.41,
+      "model_min": 47.32,
+      "timetable_min": 46.63,
+      "hour": 11
+    },
+    {
+      "observed_min": 6.41,
+      "model_min": 8.59,
+      "timetable_min": 11.12,
+      "hour": 19
+    },
+    {
+      "observed_min": 28.05,
+      "model_min": 23.72,
+      "timetable_min": 22.28,
+      "hour": 11
+    },
+    {
+      "observed_min": 15.98,
+      "model_min": 12.85,
+      "timetable_min": 14.38,
+      "hour": 7
+    },
+    {
+      "observed_min": 10.53,
+      "model_min": 8.81,
+      "timetable_min": 8.78,
+      "hour": 9
+    },
+    {
+      "observed_min": 9.11,
+      "model_min": 6.34,
+      "timetable_min": 8.93,
+      "hour": 11
+    },
+    {
+      "observed_min": 8.61,
+      "model_min": 7.67,
+      "timetable_min": 7.53,
+      "hour": 11
+    },
+    {
+      "observed_min": 37.33,
+      "model_min": 30.2,
+      "timetable_min": 23.62,
+      "hour": 16
+    },
+    {
+      "observed_min": 21.43,
+      "model_min": 7.26,
+      "timetable_min": 8.55,
+      "hour": 7
+    },
+    {
+      "observed_min": 18.7,
+      "model_min": 13.19,
+      "timetable_min": 14.5,
+      "hour": 19
+    },
+    {
+      "observed_min": 10.33,
+      "model_min": 8.32,
+      "timetable_min": 7.58,
+      "hour": 9
     },
     {
       "observed_min": 10.5,
-      "model_min": 11.21,
-      "timetable_min": 12.73,
-      "hour": 17
+      "model_min": 11.36,
+      "timetable_min": 7.7,
+      "hour": 18
     },
     {
-      "observed_min": 8.14,
-      "model_min": 9.8,
-      "timetable_min": 13.62,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.24,
-      "model_min": 6.87,
-      "timetable_min": 6.33,
-      "hour": 17
-    },
-    {
-      "observed_min": 12.42,
-      "model_min": 8.79,
-      "timetable_min": 9.42,
-      "hour": 17
-    },
-    {
-      "observed_min": 4.99,
-      "model_min": 6.1,
-      "timetable_min": 5.65,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.66,
-      "model_min": 10.89,
-      "timetable_min": 10.15,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.82,
-      "model_min": 9.07,
-      "timetable_min": 8.55,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.73,
-      "model_min": 11.19,
-      "timetable_min": 7.55,
-      "hour": 17
-    },
-    {
-      "observed_min": 7.35,
-      "model_min": 7.93,
-      "timetable_min": 7.4,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.84,
-      "model_min": 7.29,
-      "timetable_min": 6.42,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.26,
-      "model_min": 9.93,
-      "timetable_min": 13.62,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.82,
-      "model_min": 8.96,
-      "timetable_min": 9.93,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.08,
-      "model_min": 11.08,
-      "timetable_min": 6.3,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.74,
-      "model_min": 8.9,
-      "timetable_min": 13.23,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.54,
-      "model_min": 10.79,
-      "timetable_min": 8.93,
-      "hour": 17
-    },
-    {
-      "observed_min": 6.53,
-      "model_min": 5.55,
-      "timetable_min": 7.33,
-      "hour": 17
-    },
-    {
-      "observed_min": 8.33,
-      "model_min": 8.37,
-      "timetable_min": 8.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 10.22,
-      "model_min": 7.61,
-      "timetable_min": 8.27,
-      "hour": 17
-    },
-    {
-      "observed_min": 11.35,
-      "model_min": 9.1,
-      "timetable_min": 12.28,
-      "hour": 17
-    },
-    {
-      "observed_min": 5.56,
-      "model_min": 4.6,
-      "timetable_min": 5.77,
-      "hour": 17
-    },
-    {
-      "observed_min": 9.32,
-      "model_min": 10.56,
-      "timetable_min": 9.22,
-      "hour": 17
+      "observed_min": 8.69,
+      "model_min": 7.09,
+      "timetable_min": 9.35,
+      "hour": 9
     },
     {
       "observed_min": 6.65,
-      "model_min": 7.34,
-      "timetable_min": 7.78,
+      "model_min": 6.05,
+      "timetable_min": 5.97,
+      "hour": 9
+    },
+    {
+      "observed_min": 9.13,
+      "model_min": 10.32,
+      "timetable_min": 10.02,
+      "hour": 11
+    },
+    {
+      "observed_min": 5.57,
+      "model_min": 6.29,
+      "timetable_min": 4.75,
+      "hour": 15
+    },
+    {
+      "observed_min": 8.04,
+      "model_min": 6.8,
+      "timetable_min": 6.73,
+      "hour": 7
+    },
+    {
+      "observed_min": 12.94,
+      "model_min": 11.61,
+      "timetable_min": 10.55,
       "hour": 17
     },
     {
-      "observed_min": 7.61,
-      "model_min": 7.74,
-      "timetable_min": 13.98,
+      "observed_min": 34.17,
+      "model_min": 24.87,
+      "timetable_min": 22.72,
+      "hour": 21
+    },
+    {
+      "observed_min": 16.94,
+      "model_min": 16.89,
+      "timetable_min": 12.95,
+      "hour": 13
+    },
+    {
+      "observed_min": 81.83,
+      "model_min": 33.96,
+      "timetable_min": 24.03,
       "hour": 17
     },
     {
-      "observed_min": 7.79,
-      "model_min": 7.54,
+      "observed_min": 24.59,
+      "model_min": 24.35,
+      "timetable_min": 14.15,
+      "hour": 18
+    },
+    {
+      "observed_min": 27.83,
+      "model_min": 24.02,
+      "timetable_min": 22.88,
+      "hour": 9
+    },
+    {
+      "observed_min": 9.11,
+      "model_min": 9.69,
+      "timetable_min": 8.63,
+      "hour": 15
+    },
+    {
+      "observed_min": 15.37,
+      "model_min": 15.09,
+      "timetable_min": 18.52,
+      "hour": 22
+    },
+    {
+      "observed_min": 5.84,
+      "model_min": 5.53,
+      "timetable_min": 8.82,
+      "hour": 15
+    },
+    {
+      "observed_min": 14.55,
+      "model_min": 16.95,
+      "timetable_min": 15.67,
+      "hour": 16
+    },
+    {
+      "observed_min": 65.91,
+      "model_min": 46.49,
+      "timetable_min": 40.63,
+      "hour": 16
+    },
+    {
+      "observed_min": 11.91,
+      "model_min": 11.88,
+      "timetable_min": 13.75,
+      "hour": 11
+    },
+    {
+      "observed_min": 5.46,
+      "model_min": 5.19,
+      "timetable_min": 8.07,
+      "hour": 5
+    },
+    {
+      "observed_min": 8.95,
+      "model_min": 9.46,
+      "timetable_min": 13.08,
+      "hour": 7
+    },
+    {
+      "observed_min": 7.42,
+      "model_min": 10.12,
+      "timetable_min": 8.25,
+      "hour": 11
+    },
+    {
+      "observed_min": 15.29,
+      "model_min": 11.52,
+      "timetable_min": 7.32,
+      "hour": 14
+    },
+    {
+      "observed_min": 40.51,
+      "model_min": 33.41,
+      "timetable_min": 27.52,
+      "hour": 11
+    },
+    {
+      "observed_min": 52.38,
+      "model_min": 60.95,
+      "timetable_min": 44.08,
+      "hour": 18
+    },
+    {
+      "observed_min": 18.77,
+      "model_min": 17.81,
+      "timetable_min": 7.53,
+      "hour": 18
+    },
+    {
+      "observed_min": 35.51,
+      "model_min": 20.15,
+      "timetable_min": 17.45,
+      "hour": 21
+    },
+    {
+      "observed_min": 38.86,
+      "model_min": 35.71,
+      "timetable_min": 36.75,
+      "hour": 14
+    },
+    {
+      "observed_min": 8.92,
+      "model_min": 10.35,
+      "timetable_min": 9.32,
+      "hour": 20
+    },
+    {
+      "observed_min": 7.64,
+      "model_min": 7.04,
+      "timetable_min": 9.88,
+      "hour": 15
+    },
+    {
+      "observed_min": 12.41,
+      "model_min": 14.75,
+      "timetable_min": 12.87,
+      "hour": 15
+    },
+    {
+      "observed_min": 6.83,
+      "model_min": 5.81,
+      "timetable_min": 9.77,
+      "hour": 12
+    },
+    {
+      "observed_min": 7.85,
+      "model_min": 6.9,
+      "timetable_min": 7.13,
+      "hour": 10
+    },
+    {
+      "observed_min": 8.72,
+      "model_min": 9.32,
+      "timetable_min": 10.42,
+      "hour": 10
+    },
+    {
+      "observed_min": 46.68,
+      "model_min": 30.47,
+      "timetable_min": 32.65,
+      "hour": 10
+    },
+    {
+      "observed_min": 15.89,
+      "model_min": 14.91,
+      "timetable_min": 11.75,
+      "hour": 20
+    },
+    {
+      "observed_min": 15.46,
+      "model_min": 15.71,
+      "timetable_min": 12.98,
+      "hour": 13
+    },
+    {
+      "observed_min": 19.91,
+      "model_min": 13.74,
+      "timetable_min": 13.02,
+      "hour": 18
+    },
+    {
+      "observed_min": 19.14,
+      "model_min": 16.64,
+      "timetable_min": 15.05,
+      "hour": 19
+    },
+    {
+      "observed_min": 21.34,
+      "model_min": 16.32,
+      "timetable_min": 13.23,
+      "hour": 20
+    },
+    {
+      "observed_min": 26.75,
+      "model_min": 15.14,
+      "timetable_min": 11.87,
+      "hour": 9
+    },
+    {
+      "observed_min": 24.35,
+      "model_min": 25.84,
+      "timetable_min": 22.87,
+      "hour": 8
+    },
+    {
+      "observed_min": 7.97,
+      "model_min": 8.8,
+      "timetable_min": 9.65,
+      "hour": 8
+    },
+    {
+      "observed_min": 11.21,
+      "model_min": 10.95,
+      "timetable_min": 11.2,
+      "hour": 23
+    },
+    {
+      "observed_min": 6.78,
+      "model_min": 7.35,
+      "timetable_min": 8.22,
+      "hour": 19
+    },
+    {
+      "observed_min": 8.84,
+      "model_min": 9.63,
+      "timetable_min": 11.92,
+      "hour": 9
+    },
+    {
+      "observed_min": 15.91,
+      "model_min": 13.67,
+      "timetable_min": 17.48,
+      "hour": 8
+    },
+    {
+      "observed_min": 12.95,
+      "model_min": 11.19,
+      "timetable_min": 12.02,
+      "hour": 11
+    },
+    {
+      "observed_min": 23.48,
+      "model_min": 26.75,
+      "timetable_min": 15.43,
+      "hour": 17
+    },
+    {
+      "observed_min": 12.62,
+      "model_min": 11.47,
+      "timetable_min": 7.8,
+      "hour": 17
+    },
+    {
+      "observed_min": 42.6,
+      "model_min": 36.64,
+      "timetable_min": 43.35,
+      "hour": 8
+    },
+    {
+      "observed_min": 23.82,
+      "model_min": 16.01,
+      "timetable_min": 20.12,
+      "hour": 13
+    },
+    {
+      "observed_min": 26.01,
+      "model_min": 16.05,
+      "timetable_min": 11.73,
+      "hour": 20
+    },
+    {
+      "observed_min": 16.06,
+      "model_min": 12.83,
+      "timetable_min": 10.5,
+      "hour": 8
+    },
+    {
+      "observed_min": 5.92,
+      "model_min": 8.77,
+      "timetable_min": 7.42,
+      "hour": 17
+    },
+    {
+      "observed_min": 26.27,
+      "model_min": 19.82,
+      "timetable_min": 15.12,
+      "hour": 11
+    },
+    {
+      "observed_min": 14.39,
+      "model_min": 9.42,
+      "timetable_min": 9.65,
+      "hour": 15
+    },
+    {
+      "observed_min": 21.66,
+      "model_min": 22.55,
+      "timetable_min": 16.07,
+      "hour": 17
+    },
+    {
+      "observed_min": 27.64,
+      "model_min": 24.99,
+      "timetable_min": 20.53,
+      "hour": 10
+    },
+    {
+      "observed_min": 6.38,
+      "model_min": 5.68,
+      "timetable_min": 8.47,
+      "hour": 6
+    },
+    {
+      "observed_min": 5.7,
+      "model_min": 5.59,
+      "timetable_min": 5.28,
+      "hour": 21
+    },
+    {
+      "observed_min": 11.39,
+      "model_min": 11.12,
+      "timetable_min": 16.78,
+      "hour": 21
+    },
+    {
+      "observed_min": 3.92,
+      "model_min": 3.97,
+      "timetable_min": 6.52,
+      "hour": 5
+    },
+    {
+      "observed_min": 23.59,
+      "model_min": 22.2,
+      "timetable_min": 27.48,
+      "hour": 16
+    },
+    {
+      "observed_min": 33.42,
+      "model_min": 33.74,
+      "timetable_min": 47.9,
+      "hour": 10
+    },
+    {
+      "observed_min": 4.99,
+      "model_min": 5.61,
+      "timetable_min": 6.12,
+      "hour": 8
+    },
+    {
+      "observed_min": 17.55,
+      "model_min": 16.98,
+      "timetable_min": 9.47,
+      "hour": 18
+    },
+    {
+      "observed_min": 16.6,
+      "model_min": 12.73,
+      "timetable_min": 7.13,
+      "hour": 20
+    },
+    {
+      "observed_min": 48.51,
+      "model_min": 22.11,
+      "timetable_min": 16.47,
+      "hour": 11
+    },
+    {
+      "observed_min": 8.91,
+      "model_min": 7.24,
+      "timetable_min": 7.3,
+      "hour": 9
+    },
+    {
+      "observed_min": 6.44,
+      "model_min": 5.94,
+      "timetable_min": 9.07,
+      "hour": 5
+    },
+    {
+      "observed_min": 7.68,
+      "model_min": 6.74,
+      "timetable_min": 8.6,
+      "hour": 6
+    },
+    {
+      "observed_min": 18.99,
+      "model_min": 24.51,
+      "timetable_min": 28.22,
+      "hour": 10
+    },
+    {
+      "observed_min": 14.7,
+      "model_min": 8.35,
+      "timetable_min": 7.38,
+      "hour": 7
+    },
+    {
+      "observed_min": 6.57,
+      "model_min": 5.5,
+      "timetable_min": 7.17,
+      "hour": 8
+    },
+    {
+      "observed_min": 30.89,
+      "model_min": 30.23,
+      "timetable_min": 72.63,
+      "hour": 18
+    },
+    {
+      "observed_min": 7.08,
+      "model_min": 4.82,
+      "timetable_min": 4.93,
+      "hour": 13
+    },
+    {
+      "observed_min": 9.39,
+      "model_min": 9.47,
+      "timetable_min": 10.27,
+      "hour": 11
+    },
+    {
+      "observed_min": 8.93,
+      "model_min": 6.7,
+      "timetable_min": 6.53,
+      "hour": 11
+    },
+    {
+      "observed_min": 17.94,
+      "model_min": 16.54,
+      "timetable_min": 13.1,
+      "hour": 14
+    },
+    {
+      "observed_min": 16.75,
+      "model_min": 17.04,
+      "timetable_min": 25.3,
+      "hour": 11
+    },
+    {
+      "observed_min": 41.3,
+      "model_min": 42.17,
+      "timetable_min": 31.33,
+      "hour": 20
+    },
+    {
+      "observed_min": 8.19,
+      "model_min": 7.65,
+      "timetable_min": 7.02,
+      "hour": 8
+    },
+    {
+      "observed_min": 7.48,
+      "model_min": 7.48,
+      "timetable_min": 9.55,
+      "hour": 9
+    },
+    {
+      "observed_min": 7.93,
+      "model_min": 8.07,
+      "timetable_min": 7.67,
+      "hour": 11
+    },
+    {
+      "observed_min": 44.07,
+      "model_min": 33.49,
+      "timetable_min": 36.85,
+      "hour": 21
+    },
+    {
+      "observed_min": 7.63,
+      "model_min": 8.14,
+      "timetable_min": 7.43,
+      "hour": 13
+    },
+    {
+      "observed_min": 11.86,
+      "model_min": 14.4,
+      "timetable_min": 13.03,
+      "hour": 9
+    },
+    {
+      "observed_min": 14.02,
+      "model_min": 11.76,
+      "timetable_min": 14.18,
+      "hour": 18
+    },
+    {
+      "observed_min": 17.29,
+      "model_min": 9.44,
+      "timetable_min": 6.3,
+      "hour": 16
+    },
+    {
+      "observed_min": 8.03,
+      "model_min": 8.31,
+      "timetable_min": 10.88,
+      "hour": 23
+    },
+    {
+      "observed_min": 18.04,
+      "model_min": 16.18,
+      "timetable_min": 15.78,
+      "hour": 14
+    },
+    {
+      "observed_min": 8.41,
+      "model_min": 7.25,
+      "timetable_min": 7.28,
+      "hour": 13
+    },
+    {
+      "observed_min": 8.36,
+      "model_min": 6.69,
+      "timetable_min": 8.93,
+      "hour": 4
+    },
+    {
+      "observed_min": 9.89,
+      "model_min": 11.21,
+      "timetable_min": 13.02,
+      "hour": 15
+    },
+    {
+      "observed_min": 28.31,
+      "model_min": 29.85,
+      "timetable_min": 37.65,
+      "hour": 9
+    },
+    {
+      "observed_min": 21.53,
+      "model_min": 19.36,
+      "timetable_min": 23.12,
+      "hour": 17
+    },
+    {
+      "observed_min": 4.91,
+      "model_min": 5.55,
+      "timetable_min": 7.32,
+      "hour": 11
+    },
+    {
+      "observed_min": 13.04,
+      "model_min": 14.8,
+      "timetable_min": 16.93,
+      "hour": 12
+    },
+    {
+      "observed_min": 80.17,
+      "model_min": 35.76,
+      "timetable_min": 35.35,
+      "hour": 21
+    },
+    {
+      "observed_min": 66.99,
+      "model_min": 59.34,
+      "timetable_min": 63.87,
+      "hour": 17
+    },
+    {
+      "observed_min": 18.58,
+      "model_min": 15.28,
+      "timetable_min": 13.3,
+      "hour": 12
+    },
+    {
+      "observed_min": 7.51,
+      "model_min": 7.88,
+      "timetable_min": 7.87,
+      "hour": 21
+    },
+    {
+      "observed_min": 8.03,
+      "model_min": 6.79,
+      "timetable_min": 5.53,
+      "hour": 16
+    },
+    {
+      "observed_min": 20.97,
+      "model_min": 16.96,
+      "timetable_min": 15.58,
+      "hour": 13
+    },
+    {
+      "observed_min": 8.6,
+      "model_min": 9.51,
+      "timetable_min": 10.08,
+      "hour": 8
+    },
+    {
+      "observed_min": 20.34,
+      "model_min": 15.33,
+      "timetable_min": 10.25,
+      "hour": 15
+    },
+    {
+      "observed_min": 7.76,
+      "model_min": 8.1,
+      "timetable_min": 7.42,
+      "hour": 10
+    },
+    {
+      "observed_min": 43.94,
+      "model_min": 37.06,
+      "timetable_min": 36.58,
+      "hour": 20
+    },
+    {
+      "observed_min": 36.31,
+      "model_min": 27.85,
+      "timetable_min": 23.88,
+      "hour": 18
+    },
+    {
+      "observed_min": 5.76,
+      "model_min": 7.28,
+      "timetable_min": 7.57,
+      "hour": 17
+    },
+    {
+      "observed_min": 22.86,
+      "model_min": 17.49,
+      "timetable_min": 23.17,
+      "hour": 6
+    },
+    {
+      "observed_min": 10.16,
+      "model_min": 10.8,
+      "timetable_min": 7.88,
+      "hour": 12
+    },
+    {
+      "observed_min": 11.01,
+      "model_min": 9.6,
+      "timetable_min": 9.55,
+      "hour": 11
+    },
+    {
+      "observed_min": 46.6,
+      "model_min": 37.74,
+      "timetable_min": 35.18,
+      "hour": 9
+    },
+    {
+      "observed_min": 25.03,
+      "model_min": 24.66,
+      "timetable_min": 35.38,
+      "hour": 10
+    },
+    {
+      "observed_min": 12.17,
+      "model_min": 13.32,
+      "timetable_min": 22.17,
+      "hour": 5
+    },
+    {
+      "observed_min": 19.3,
+      "model_min": 18.0,
+      "timetable_min": 16.6,
+      "hour": 12
+    },
+    {
+      "observed_min": 7.66,
+      "model_min": 6.37,
+      "timetable_min": 6.53,
+      "hour": 17
+    },
+    {
+      "observed_min": 9.98,
+      "model_min": 8.66,
+      "timetable_min": 12.55,
+      "hour": 20
+    },
+    {
+      "observed_min": 41.65,
+      "model_min": 37.63,
+      "timetable_min": 40.32,
+      "hour": 17
+    },
+    {
+      "observed_min": 35.09,
+      "model_min": 36.72,
+      "timetable_min": 15.9,
+      "hour": 17
+    },
+    {
+      "observed_min": 5.98,
+      "model_min": 6.39,
+      "timetable_min": 6.98,
+      "hour": 15
+    },
+    {
+      "observed_min": 8.33,
+      "model_min": 8.21,
+      "timetable_min": 14.67,
+      "hour": 7
+    },
+    {
+      "observed_min": 9.79,
+      "model_min": 5.97,
+      "timetable_min": 7.23,
+      "hour": 23
+    },
+    {
+      "observed_min": 21.94,
+      "model_min": 23.56,
+      "timetable_min": 32.48,
+      "hour": 6
+    },
+    {
+      "observed_min": 4.51,
+      "model_min": 5.44,
+      "timetable_min": 7.98,
+      "hour": 12
+    },
+    {
+      "observed_min": 10.44,
+      "model_min": 12.68,
+      "timetable_min": 16.15,
+      "hour": 7
+    },
+    {
+      "observed_min": 12.58,
+      "model_min": 16.42,
+      "timetable_min": 17.12,
+      "hour": 9
+    },
+    {
+      "observed_min": 29.98,
+      "model_min": 32.24,
+      "timetable_min": 36.48,
+      "hour": 7
+    },
+    {
+      "observed_min": 15.4,
+      "model_min": 14.59,
+      "timetable_min": 20.3,
+      "hour": 11
+    },
+    {
+      "observed_min": 62.33,
+      "model_min": 64.87,
+      "timetable_min": 53.67,
+      "hour": 19
+    },
+    {
+      "observed_min": 30.84,
+      "model_min": 27.62,
+      "timetable_min": 27.9,
+      "hour": 16
+    },
+    {
+      "observed_min": 14.58,
+      "model_min": 12.51,
+      "timetable_min": 6.9,
+      "hour": 16
+    },
+    {
+      "observed_min": 14.14,
+      "model_min": 14.22,
+      "timetable_min": 13.08,
+      "hour": 14
+    },
+    {
+      "observed_min": 48.86,
+      "model_min": 49.08,
+      "timetable_min": 34.0,
+      "hour": 11
+    },
+    {
+      "observed_min": 7.87,
+      "model_min": 6.38,
+      "timetable_min": 7.28,
+      "hour": 20
+    },
+    {
+      "observed_min": 19.7,
+      "model_min": 6.97,
+      "timetable_min": 6.48,
+      "hour": 10
+    },
+    {
+      "observed_min": 10.23,
+      "model_min": 9.08,
+      "timetable_min": 11.07,
+      "hour": 22
+    },
+    {
+      "observed_min": 38.99,
+      "model_min": 16.13,
+      "timetable_min": 22.5,
+      "hour": 8
+    },
+    {
+      "observed_min": 12.84,
+      "model_min": 13.61,
+      "timetable_min": 14.48,
+      "hour": 7
+    },
+    {
+      "observed_min": 31.79,
+      "model_min": 28.95,
+      "timetable_min": 29.13,
+      "hour": 20
+    },
+    {
+      "observed_min": 10.03,
+      "model_min": 9.98,
+      "timetable_min": 10.53,
+      "hour": 7
+    },
+    {
+      "observed_min": 20.24,
+      "model_min": 19.83,
+      "timetable_min": 14.95,
+      "hour": 16
+    },
+    {
+      "observed_min": 8.91,
+      "model_min": 9.42,
+      "timetable_min": 9.48,
+      "hour": 14
+    },
+    {
+      "observed_min": 26.68,
+      "model_min": 25.38,
+      "timetable_min": 39.15,
+      "hour": 21
+    },
+    {
+      "observed_min": 13.92,
+      "model_min": 13.52,
+      "timetable_min": 19.2,
+      "hour": 18
+    },
+    {
+      "observed_min": 14.68,
+      "model_min": 17.17,
+      "timetable_min": 18.38,
+      "hour": 10
+    },
+    {
+      "observed_min": 35.53,
+      "model_min": 27.24,
+      "timetable_min": 32.35,
+      "hour": 16
+    },
+    {
+      "observed_min": 6.29,
+      "model_min": 6.71,
+      "timetable_min": 4.87,
+      "hour": 13
+    },
+    {
+      "observed_min": 18.23,
+      "model_min": 21.01,
+      "timetable_min": 35.33,
+      "hour": 14
+    },
+    {
+      "observed_min": 24.29,
+      "model_min": 19.15,
+      "timetable_min": 23.17,
+      "hour": 7
+    },
+    {
+      "observed_min": 6.33,
+      "model_min": 7.59,
+      "timetable_min": 12.15,
+      "hour": 13
+    },
+    {
+      "observed_min": 27.72,
+      "model_min": 26.84,
+      "timetable_min": 28.82,
+      "hour": 9
+    },
+    {
+      "observed_min": 13.41,
+      "model_min": 10.73,
+      "timetable_min": 10.72,
+      "hour": 21
+    },
+    {
+      "observed_min": 15.88,
+      "model_min": 15.42,
+      "timetable_min": 7.95,
+      "hour": 18
+    },
+    {
+      "observed_min": 27.05,
+      "model_min": 23.84,
+      "timetable_min": 15.15,
+      "hour": 9
+    },
+    {
+      "observed_min": 12.66,
+      "model_min": 16.09,
+      "timetable_min": 16.8,
+      "hour": 14
+    },
+    {
+      "observed_min": 13.92,
+      "model_min": 12.79,
+      "timetable_min": 12.0,
+      "hour": 21
+    },
+    {
+      "observed_min": 14.61,
+      "model_min": 13.86,
+      "timetable_min": 12.93,
+      "hour": 13
+    },
+    {
+      "observed_min": 12.95,
+      "model_min": 14.48,
+      "timetable_min": 21.1,
+      "hour": 6
+    },
+    {
+      "observed_min": 13.83,
+      "model_min": 11.14,
+      "timetable_min": 11.12,
+      "hour": 18
+    },
+    {
+      "observed_min": 9.36,
+      "model_min": 8.69,
+      "timetable_min": 8.97,
+      "hour": 15
+    },
+    {
+      "observed_min": 13.27,
+      "model_min": 9.97,
+      "timetable_min": 12.38,
+      "hour": 13
+    },
+    {
+      "observed_min": 40.14,
+      "model_min": 40.48,
+      "timetable_min": 51.0,
+      "hour": 16
+    },
+    {
+      "observed_min": 6.42,
+      "model_min": 8.17,
+      "timetable_min": 7.6,
+      "hour": 7
+    },
+    {
+      "observed_min": 11.25,
+      "model_min": 10.4,
+      "timetable_min": 11.83,
+      "hour": 10
+    },
+    {
+      "observed_min": 7.11,
+      "model_min": 6.31,
+      "timetable_min": 7.5,
+      "hour": 19
+    },
+    {
+      "observed_min": 19.23,
+      "model_min": 18.21,
+      "timetable_min": 23.15,
+      "hour": 11
+    },
+    {
+      "observed_min": 7.41,
+      "model_min": 9.5,
+      "timetable_min": 11.63,
+      "hour": 9
+    },
+    {
+      "observed_min": 14.19,
+      "model_min": 12.24,
+      "timetable_min": 11.47,
+      "hour": 9
+    },
+    {
+      "observed_min": 37.95,
+      "model_min": 39.2,
+      "timetable_min": 26.0,
+      "hour": 19
+    },
+    {
+      "observed_min": 8.54,
+      "model_min": 9.2,
+      "timetable_min": 13.18,
+      "hour": 0
+    },
+    {
+      "observed_min": 23.69,
+      "model_min": 21.4,
+      "timetable_min": 21.88,
+      "hour": 23
+    },
+    {
+      "observed_min": 16.71,
+      "model_min": 16.5,
+      "timetable_min": 17.35,
+      "hour": 7
+    },
+    {
+      "observed_min": 15.52,
+      "model_min": 14.72,
+      "timetable_min": 11.03,
+      "hour": 7
+    },
+    {
+      "observed_min": 22.61,
+      "model_min": 14.21,
+      "timetable_min": 13.1,
+      "hour": 9
+    },
+    {
+      "observed_min": 22.91,
+      "model_min": 18.88,
+      "timetable_min": 17.15,
+      "hour": 9
+    },
+    {
+      "observed_min": 18.64,
+      "model_min": 17.34,
+      "timetable_min": 15.65,
+      "hour": 20
+    },
+    {
+      "observed_min": 7.84,
+      "model_min": 10.58,
+      "timetable_min": 9.32,
+      "hour": 12
+    },
+    {
+      "observed_min": 62.12,
+      "model_min": 44.63,
+      "timetable_min": 37.15,
+      "hour": 19
+    },
+    {
+      "observed_min": 20.91,
+      "model_min": 19.03,
+      "timetable_min": 17.18,
+      "hour": 21
+    },
+    {
+      "observed_min": 17.18,
+      "model_min": 14.54,
+      "timetable_min": 12.77,
+      "hour": 13
+    },
+    {
+      "observed_min": 9.45,
+      "model_min": 9.54,
+      "timetable_min": 8.53,
+      "hour": 20
+    },
+    {
+      "observed_min": 29.06,
+      "model_min": 23.92,
+      "timetable_min": 16.35,
+      "hour": 15
+    },
+    {
+      "observed_min": 16.17,
+      "model_min": 14.87,
+      "timetable_min": 16.48,
+      "hour": 11
+    },
+    {
+      "observed_min": 37.89,
+      "model_min": 12.16,
+      "timetable_min": 8.98,
+      "hour": 11
+    },
+    {
+      "observed_min": 14.93,
+      "model_min": 13.23,
+      "timetable_min": 10.18,
+      "hour": 8
+    },
+    {
+      "observed_min": 38.01,
+      "model_min": 29.51,
+      "timetable_min": 30.05,
+      "hour": 9
+    },
+    {
+      "observed_min": 23.64,
+      "model_min": 19.5,
+      "timetable_min": 14.95,
+      "hour": 12
+    },
+    {
+      "observed_min": 6.22,
+      "model_min": 5.21,
+      "timetable_min": 6.7,
+      "hour": 7
+    },
+    {
+      "observed_min": 9.22,
+      "model_min": 9.92,
+      "timetable_min": 11.5,
+      "hour": 10
+    },
+    {
+      "observed_min": 12.45,
+      "model_min": 11.2,
+      "timetable_min": 11.9,
+      "hour": 16
+    },
+    {
+      "observed_min": 22.13,
+      "model_min": 14.49,
+      "timetable_min": 18.53,
+      "hour": 6
+    },
+    {
+      "observed_min": 14.46,
+      "model_min": 16.11,
+      "timetable_min": 21.47,
+      "hour": 14
+    },
+    {
+      "observed_min": 77.37,
+      "model_min": 28.15,
+      "timetable_min": 39.18,
+      "hour": 7
+    },
+    {
+      "observed_min": 17.72,
+      "model_min": 22.36,
+      "timetable_min": 16.77,
+      "hour": 16
+    },
+    {
+      "observed_min": 14.05,
+      "model_min": 9.64,
+      "timetable_min": 10.47,
+      "hour": 14
+    },
+    {
+      "observed_min": 18.52,
+      "model_min": 16.43,
+      "timetable_min": 23.23,
+      "hour": 16
+    },
+    {
+      "observed_min": 14.87,
+      "model_min": 12.91,
+      "timetable_min": 17.07,
+      "hour": 9
+    },
+    {
+      "observed_min": 65.56,
+      "model_min": 48.47,
+      "timetable_min": 45.58,
+      "hour": 15
+    },
+    {
+      "observed_min": 7.99,
+      "model_min": 4.93,
+      "timetable_min": 4.97,
+      "hour": 6
+    },
+    {
+      "observed_min": 27.76,
+      "model_min": 32.58,
+      "timetable_min": 24.62,
+      "hour": 10
+    },
+    {
+      "observed_min": 7.39,
+      "model_min": 6.35,
+      "timetable_min": 6.03,
+      "hour": 20
+    },
+    {
+      "observed_min": 37.29,
+      "model_min": 40.93,
+      "timetable_min": 37.67,
+      "hour": 17
+    },
+    {
+      "observed_min": 4.41,
+      "model_min": 4.54,
+      "timetable_min": 4.93,
+      "hour": 11
+    },
+    {
+      "observed_min": 11.47,
+      "model_min": 9.1,
+      "timetable_min": 9.07,
+      "hour": 9
+    },
+    {
+      "observed_min": 5.91,
+      "model_min": 5.69,
+      "timetable_min": 11.22,
+      "hour": 6
+    },
+    {
+      "observed_min": 13.84,
+      "model_min": 13.03,
+      "timetable_min": 23.7,
+      "hour": 6
+    },
+    {
+      "observed_min": 5.82,
+      "model_min": 4.93,
+      "timetable_min": 8.08,
+      "hour": 16
+    },
+    {
+      "observed_min": 17.71,
+      "model_min": 16.79,
+      "timetable_min": 20.03,
+      "hour": 15
+    },
+    {
+      "observed_min": 10.84,
+      "model_min": 10.63,
+      "timetable_min": 7.15,
+      "hour": 19
+    },
+    {
+      "observed_min": 15.02,
+      "model_min": 14.56,
+      "timetable_min": 16.08,
+      "hour": 10
+    },
+    {
+      "observed_min": 7.21,
+      "model_min": 6.75,
+      "timetable_min": 7.08,
+      "hour": 10
+    },
+    {
+      "observed_min": 23.82,
+      "model_min": 19.15,
+      "timetable_min": 17.65,
+      "hour": 19
+    },
+    {
+      "observed_min": 12.59,
+      "model_min": 10.56,
+      "timetable_min": 15.25,
+      "hour": 5
+    },
+    {
+      "observed_min": 10.45,
+      "model_min": 10.99,
+      "timetable_min": 6.58,
+      "hour": 18
+    },
+    {
+      "observed_min": 7.36,
+      "model_min": 8.23,
       "timetable_min": 8.85,
+      "hour": 7
+    },
+    {
+      "observed_min": 25.56,
+      "model_min": 11.07,
+      "timetable_min": 6.67,
+      "hour": 16
+    },
+    {
+      "observed_min": 18.12,
+      "model_min": 18.1,
+      "timetable_min": 16.02,
+      "hour": 16
+    },
+    {
+      "observed_min": 56.96,
+      "model_min": 27.57,
+      "timetable_min": 31.38,
+      "hour": 15
+    },
+    {
+      "observed_min": 15.63,
+      "model_min": 15.17,
+      "timetable_min": 17.9,
+      "hour": 12
+    },
+    {
+      "observed_min": 15.13,
+      "model_min": 15.51,
+      "timetable_min": 15.37,
+      "hour": 10
+    },
+    {
+      "observed_min": 10.1,
+      "model_min": 9.15,
+      "timetable_min": 8.58,
+      "hour": 21
+    },
+    {
+      "observed_min": 14.49,
+      "model_min": 12.53,
+      "timetable_min": 16.35,
+      "hour": 9
+    },
+    {
+      "observed_min": 5.93,
+      "model_min": 5.83,
+      "timetable_min": 8.55,
+      "hour": 7
+    },
+    {
+      "observed_min": 54.71,
+      "model_min": 41.6,
+      "timetable_min": 52.8,
+      "hour": 11
+    },
+    {
+      "observed_min": 15.27,
+      "model_min": 12.12,
+      "timetable_min": 13.05,
+      "hour": 10
+    },
+    {
+      "observed_min": 6.17,
+      "model_min": 5.44,
+      "timetable_min": 7.62,
+      "hour": 7
+    },
+    {
+      "observed_min": 13.05,
+      "model_min": 11.55,
+      "timetable_min": 20.17,
+      "hour": 7
+    },
+    {
+      "observed_min": 8.47,
+      "model_min": 8.33,
+      "timetable_min": 9.58,
+      "hour": 20
+    },
+    {
+      "observed_min": 10.22,
+      "model_min": 9.73,
+      "timetable_min": 11.2,
+      "hour": 23
+    },
+    {
+      "observed_min": 12.03,
+      "model_min": 11.69,
+      "timetable_min": 17.95,
+      "hour": 6
+    },
+    {
+      "observed_min": 15.42,
+      "model_min": 13.06,
+      "timetable_min": 21.38,
+      "hour": 22
+    },
+    {
+      "observed_min": 6.31,
+      "model_min": 5.56,
+      "timetable_min": 8.3,
+      "hour": 15
+    },
+    {
+      "observed_min": 13.93,
+      "model_min": 10.25,
+      "timetable_min": 10.0,
+      "hour": 10
+    },
+    {
+      "observed_min": 8.63,
+      "model_min": 10.34,
+      "timetable_min": 9.38,
+      "hour": 21
+    },
+    {
+      "observed_min": 16.23,
+      "model_min": 12.46,
+      "timetable_min": 12.72,
+      "hour": 21
+    },
+    {
+      "observed_min": 12.65,
+      "model_min": 14.22,
+      "timetable_min": 8.88,
       "hour": 17
     },
     {
-      "observed_min": 10.11,
-      "model_min": 8.83,
+      "observed_min": 12.09,
+      "model_min": 11.38,
+      "timetable_min": 10.33,
+      "hour": 21
+    },
+    {
+      "observed_min": 21.92,
+      "model_min": 10.24,
+      "timetable_min": 10.37,
+      "hour": 16
+    },
+    {
+      "observed_min": 32.79,
+      "model_min": 24.32,
+      "timetable_min": 29.52,
+      "hour": 12
+    },
+    {
+      "observed_min": 12.1,
+      "model_min": 11.97,
+      "timetable_min": 11.9,
+      "hour": 10
+    },
+    {
+      "observed_min": 32.44,
+      "model_min": 32.36,
+      "timetable_min": 32.65,
+      "hour": 9
+    },
+    {
+      "observed_min": 20.06,
+      "model_min": 21.43,
+      "timetable_min": 20.45,
+      "hour": 16
+    },
+    {
+      "observed_min": 12.42,
+      "model_min": 12.28,
+      "timetable_min": 20.88,
+      "hour": 6
+    },
+    {
+      "observed_min": 9.66,
+      "model_min": 8.97,
+      "timetable_min": 12.0,
+      "hour": 22
+    },
+    {
+      "observed_min": 6.69,
+      "model_min": 8.88,
+      "timetable_min": 9.5,
+      "hour": 10
+    },
+    {
+      "observed_min": 34.12,
+      "model_min": 28.53,
+      "timetable_min": 24.55,
+      "hour": 10
+    },
+    {
+      "observed_min": 9.85,
+      "model_min": 6.92,
+      "timetable_min": 8.5,
+      "hour": 7
+    },
+    {
+      "observed_min": 11.3,
+      "model_min": 9.18,
+      "timetable_min": 8.93,
+      "hour": 15
+    },
+    {
+      "observed_min": 13.11,
+      "model_min": 7.95,
       "timetable_min": 7.73,
+      "hour": 21
+    },
+    {
+      "observed_min": 17.43,
+      "model_min": 16.01,
+      "timetable_min": 23.57,
+      "hour": 0
+    },
+    {
+      "observed_min": 10.85,
+      "model_min": 11.8,
+      "timetable_min": 12.82,
+      "hour": 7
+    },
+    {
+      "observed_min": 27.97,
+      "model_min": 29.41,
+      "timetable_min": 19.78,
+      "hour": 14
+    },
+    {
+      "observed_min": 6.9,
+      "model_min": 6.57,
+      "timetable_min": 8.52,
+      "hour": 7
+    },
+    {
+      "observed_min": 13.68,
+      "model_min": 15.85,
+      "timetable_min": 17.32,
+      "hour": 19
+    },
+    {
+      "observed_min": 5.02,
+      "model_min": 4.6,
+      "timetable_min": 6.0,
+      "hour": 6
+    },
+    {
+      "observed_min": 21.44,
+      "model_min": 18.06,
+      "timetable_min": 26.32,
+      "hour": 20
+    },
+    {
+      "observed_min": 29.27,
+      "model_min": 28.53,
+      "timetable_min": 15.23,
+      "hour": 19
+    },
+    {
+      "observed_min": 9.85,
+      "model_min": 10.95,
+      "timetable_min": 12.62,
+      "hour": 14
+    },
+    {
+      "observed_min": 4.24,
+      "model_min": 5.27,
+      "timetable_min": 5.78,
+      "hour": 10
+    },
+    {
+      "observed_min": 5.63,
+      "model_min": 5.04,
+      "timetable_min": 6.7,
+      "hour": 8
+    },
+    {
+      "observed_min": 38.94,
+      "model_min": 34.24,
+      "timetable_min": 44.75,
+      "hour": 7
+    },
+    {
+      "observed_min": 42.3,
+      "model_min": 25.93,
+      "timetable_min": 25.47,
+      "hour": 11
+    },
+    {
+      "observed_min": 17.37,
+      "model_min": 14.08,
+      "timetable_min": 9.67,
+      "hour": 16
+    },
+    {
+      "observed_min": 5.41,
+      "model_min": 5.88,
+      "timetable_min": 9.4,
+      "hour": 22
+    },
+    {
+      "observed_min": 38.32,
+      "model_min": 19.86,
+      "timetable_min": 14.9,
+      "hour": 19
+    },
+    {
+      "observed_min": 41.27,
+      "model_min": 26.42,
+      "timetable_min": 21.9,
+      "hour": 11
+    },
+    {
+      "observed_min": 17.39,
+      "model_min": 16.67,
+      "timetable_min": 10.37,
       "hour": 17
+    },
+    {
+      "observed_min": 42.14,
+      "model_min": 23.67,
+      "timetable_min": 21.48,
+      "hour": 14
+    },
+    {
+      "observed_min": 15.64,
+      "model_min": 14.62,
+      "timetable_min": 10.38,
+      "hour": 20
+    },
+    {
+      "observed_min": 7.83,
+      "model_min": 7.43,
+      "timetable_min": 9.08,
+      "hour": 8
+    },
+    {
+      "observed_min": 48.15,
+      "model_min": 36.9,
+      "timetable_min": 42.67,
+      "hour": 15
+    },
+    {
+      "observed_min": 52.07,
+      "model_min": 47.74,
+      "timetable_min": 44.48,
+      "hour": 8
+    },
+    {
+      "observed_min": 15.21,
+      "model_min": 9.64,
+      "timetable_min": 10.38,
+      "hour": 20
+    },
+    {
+      "observed_min": 27.96,
+      "model_min": 25.81,
+      "timetable_min": 15.05,
+      "hour": 16
+    },
+    {
+      "observed_min": 33.31,
+      "model_min": 17.06,
+      "timetable_min": 17.22,
+      "hour": 11
+    },
+    {
+      "observed_min": 13.19,
+      "model_min": 13.11,
+      "timetable_min": 9.35,
+      "hour": 13
+    },
+    {
+      "observed_min": 27.16,
+      "model_min": 28.31,
+      "timetable_min": 34.93,
+      "hour": 15
+    },
+    {
+      "observed_min": 9.94,
+      "model_min": 9.1,
+      "timetable_min": 11.33,
+      "hour": 21
+    },
+    {
+      "observed_min": 14.63,
+      "model_min": 14.35,
+      "timetable_min": 12.35,
+      "hour": 15
+    },
+    {
+      "observed_min": 42.43,
+      "model_min": 29.97,
+      "timetable_min": 26.3,
+      "hour": 18
+    },
+    {
+      "observed_min": 16.85,
+      "model_min": 18.85,
+      "timetable_min": 7.67,
+      "hour": 18
+    },
+    {
+      "observed_min": 16.5,
+      "model_min": 11.36,
+      "timetable_min": 17.45,
+      "hour": 20
+    },
+    {
+      "observed_min": 4.02,
+      "model_min": 4.03,
+      "timetable_min": 3.15,
+      "hour": 6
+    },
+    {
+      "observed_min": 22.94,
+      "model_min": 22.02,
+      "timetable_min": 22.48,
+      "hour": 10
+    },
+    {
+      "observed_min": 9.06,
+      "model_min": 10.36,
+      "timetable_min": 11.07,
+      "hour": 10
+    },
+    {
+      "observed_min": 12.26,
+      "model_min": 10.57,
+      "timetable_min": 11.35,
+      "hour": 11
+    },
+    {
+      "observed_min": 18.0,
+      "model_min": 14.81,
+      "timetable_min": 12.52,
+      "hour": 13
+    },
+    {
+      "observed_min": 19.0,
+      "model_min": 18.85,
+      "timetable_min": 10.22,
+      "hour": 16
+    },
+    {
+      "observed_min": 22.21,
+      "model_min": 19.8,
+      "timetable_min": 23.0,
+      "hour": 10
+    },
+    {
+      "observed_min": 12.43,
+      "model_min": 14.22,
+      "timetable_min": 18.1,
+      "hour": 12
+    },
+    {
+      "observed_min": 11.77,
+      "model_min": 10.05,
+      "timetable_min": 16.18,
+      "hour": 2
     },
     {
       "observed_min": 8.77,
-      "model_min": 6.26,
-      "timetable_min": 6.1,
+      "model_min": 7.33,
+      "timetable_min": 5.78,
+      "hour": 14
+    },
+    {
+      "observed_min": 35.5,
+      "model_min": 30.71,
+      "timetable_min": 31.42,
+      "hour": 16
+    },
+    {
+      "observed_min": 13.97,
+      "model_min": 17.27,
+      "timetable_min": 11.13,
+      "hour": 18
+    },
+    {
+      "observed_min": 16.03,
+      "model_min": 9.68,
+      "timetable_min": 11.48,
+      "hour": 21
+    },
+    {
+      "observed_min": 15.29,
+      "model_min": 15.71,
+      "timetable_min": 9.13,
+      "hour": 19
+    },
+    {
+      "observed_min": 8.75,
+      "model_min": 9.09,
+      "timetable_min": 10.05,
       "hour": 17
+    },
+    {
+      "observed_min": 28.57,
+      "model_min": 25.67,
+      "timetable_min": 15.37,
+      "hour": 16
+    },
+    {
+      "observed_min": 17.64,
+      "model_min": 18.14,
+      "timetable_min": 17.75,
+      "hour": 12
+    },
+    {
+      "observed_min": 11.45,
+      "model_min": 12.5,
+      "timetable_min": 18.13,
+      "hour": 6
+    },
+    {
+      "observed_min": 9.22,
+      "model_min": 14.73,
+      "timetable_min": 10.32,
+      "hour": 15
+    },
+    {
+      "observed_min": 14.97,
+      "model_min": 12.74,
+      "timetable_min": 13.82,
+      "hour": 21
+    },
+    {
+      "observed_min": 4.06,
+      "model_min": 6.79,
+      "timetable_min": 8.58,
+      "hour": 7
+    },
+    {
+      "observed_min": 19.91,
+      "model_min": 20.76,
+      "timetable_min": 26.47,
+      "hour": 16
+    },
+    {
+      "observed_min": 10.76,
+      "model_min": 9.65,
+      "timetable_min": 12.12,
+      "hour": 8
+    },
+    {
+      "observed_min": 15.61,
+      "model_min": 15.9,
+      "timetable_min": 25.63,
+      "hour": 6
+    },
+    {
+      "observed_min": 9.37,
+      "model_min": 8.36,
+      "timetable_min": 6.92,
+      "hour": 16
+    },
+    {
+      "observed_min": 24.95,
+      "model_min": 21.26,
+      "timetable_min": 27.27,
+      "hour": 16
+    },
+    {
+      "observed_min": 17.57,
+      "model_min": 16.63,
+      "timetable_min": 17.92,
+      "hour": 8
+    },
+    {
+      "observed_min": 3.76,
+      "model_min": 3.69,
+      "timetable_min": 7.12,
+      "hour": 7
+    },
+    {
+      "observed_min": 23.9,
+      "model_min": 20.64,
+      "timetable_min": 24.17,
+      "hour": 11
+    },
+    {
+      "observed_min": 18.99,
+      "model_min": 17.78,
+      "timetable_min": 22.5,
+      "hour": 7
+    },
+    {
+      "observed_min": 24.79,
+      "model_min": 16.61,
+      "timetable_min": 17.97,
+      "hour": 7
+    },
+    {
+      "observed_min": 16.57,
+      "model_min": 15.04,
+      "timetable_min": 16.65,
+      "hour": 7
+    },
+    {
+      "observed_min": 18.77,
+      "model_min": 20.57,
+      "timetable_min": 19.77,
+      "hour": 21
+    },
+    {
+      "observed_min": 20.37,
+      "model_min": 17.04,
+      "timetable_min": 13.58,
+      "hour": 8
+    },
+    {
+      "observed_min": 27.54,
+      "model_min": 25.27,
+      "timetable_min": 25.53,
+      "hour": 12
+    },
+    {
+      "observed_min": 34.46,
+      "model_min": 33.26,
+      "timetable_min": 34.1,
+      "hour": 8
+    },
+    {
+      "observed_min": 7.81,
+      "model_min": 7.98,
+      "timetable_min": 10.47,
+      "hour": 9
+    },
+    {
+      "observed_min": 12.78,
+      "model_min": 13.56,
+      "timetable_min": 22.87,
+      "hour": 13
+    },
+    {
+      "observed_min": 17.08,
+      "model_min": 22.22,
+      "timetable_min": 12.38,
+      "hour": 18
+    },
+    {
+      "observed_min": 45.6,
+      "model_min": 34.59,
+      "timetable_min": 20.98,
+      "hour": 11
+    },
+    {
+      "observed_min": 8.08,
+      "model_min": 7.49,
+      "timetable_min": 9.0,
+      "hour": 9
+    },
+    {
+      "observed_min": 13.37,
+      "model_min": 9.58,
+      "timetable_min": 7.52,
+      "hour": 14
+    },
+    {
+      "observed_min": 16.38,
+      "model_min": 16.89,
+      "timetable_min": 12.37,
+      "hour": 16
+    },
+    {
+      "observed_min": 9.32,
+      "model_min": 8.99,
+      "timetable_min": 9.22,
+      "hour": 14
+    },
+    {
+      "observed_min": 15.66,
+      "model_min": 12.86,
+      "timetable_min": 23.7,
+      "hour": 5
+    },
+    {
+      "observed_min": 5.51,
+      "model_min": 4.52,
+      "timetable_min": 6.93,
+      "hour": 23
+    },
+    {
+      "observed_min": 5.81,
+      "model_min": 6.01,
+      "timetable_min": 8.17,
+      "hour": 19
+    },
+    {
+      "observed_min": 22.14,
+      "model_min": 21.22,
+      "timetable_min": 21.6,
+      "hour": 11
+    },
+    {
+      "observed_min": 22.33,
+      "model_min": 23.45,
+      "timetable_min": 28.78,
+      "hour": 8
+    },
+    {
+      "observed_min": 29.53,
+      "model_min": 20.47,
+      "timetable_min": 22.03,
+      "hour": 10
+    },
+    {
+      "observed_min": 47.5,
+      "model_min": 34.91,
+      "timetable_min": 39.17,
+      "hour": 11
+    },
+    {
+      "observed_min": 6.41,
+      "model_min": 6.69,
+      "timetable_min": 6.9,
+      "hour": 17
+    },
+    {
+      "observed_min": 19.16,
+      "model_min": 12.26,
+      "timetable_min": 11.58,
+      "hour": 14
+    },
+    {
+      "observed_min": 8.62,
+      "model_min": 8.07,
+      "timetable_min": 10.53,
+      "hour": 6
+    },
+    {
+      "observed_min": 55.55,
+      "model_min": 42.99,
+      "timetable_min": 51.88,
+      "hour": 8
+    },
+    {
+      "observed_min": 10.5,
+      "model_min": 10.35,
+      "timetable_min": 16.83,
+      "hour": 20
+    },
+    {
+      "observed_min": 5.91,
+      "model_min": 6.46,
+      "timetable_min": 7.85,
+      "hour": 11
+    },
+    {
+      "observed_min": 7.04,
+      "model_min": 7.03,
+      "timetable_min": 6.03,
+      "hour": 7
+    },
+    {
+      "observed_min": 36.79,
+      "model_min": 30.47,
+      "timetable_min": 47.97,
+      "hour": 4
+    },
+    {
+      "observed_min": 8.14,
+      "model_min": 7.73,
+      "timetable_min": 8.25,
+      "hour": 12
+    },
+    {
+      "observed_min": 8.32,
+      "model_min": 8.38,
+      "timetable_min": 7.2,
+      "hour": 10
+    },
+    {
+      "observed_min": 28.82,
+      "model_min": 33.59,
+      "timetable_min": 45.78,
+      "hour": 7
+    },
+    {
+      "observed_min": 12.4,
+      "model_min": 14.69,
+      "timetable_min": 18.58,
+      "hour": 8
+    },
+    {
+      "observed_min": 26.15,
+      "model_min": 28.4,
+      "timetable_min": 42.6,
+      "hour": 22
+    },
+    {
+      "observed_min": 11.5,
+      "model_min": 12.74,
+      "timetable_min": 14.37,
+      "hour": 8
+    },
+    {
+      "observed_min": 25.76,
+      "model_min": 17.79,
+      "timetable_min": 16.3,
+      "hour": 17
+    },
+    {
+      "observed_min": 14.85,
+      "model_min": 11.81,
+      "timetable_min": 8.68,
+      "hour": 21
+    },
+    {
+      "observed_min": 8.35,
+      "model_min": 9.34,
+      "timetable_min": 11.12,
+      "hour": 17
+    },
+    {
+      "observed_min": 5.46,
+      "model_min": 5.08,
+      "timetable_min": 5.57,
+      "hour": 10
+    },
+    {
+      "observed_min": 7.8,
+      "model_min": 7.7,
+      "timetable_min": 7.43,
+      "hour": 11
+    },
+    {
+      "observed_min": 15.59,
+      "model_min": 12.57,
+      "timetable_min": 13.83,
+      "hour": 17
+    },
+    {
+      "observed_min": 33.84,
+      "model_min": 23.15,
+      "timetable_min": 21.32,
+      "hour": 13
+    },
+    {
+      "observed_min": 25.34,
+      "model_min": 27.87,
+      "timetable_min": 26.48,
+      "hour": 15
+    },
+    {
+      "observed_min": 14.13,
+      "model_min": 9.35,
+      "timetable_min": 6.25,
+      "hour": 12
+    },
+    {
+      "observed_min": 14.4,
+      "model_min": 14.06,
+      "timetable_min": 15.47,
+      "hour": 22
+    },
+    {
+      "observed_min": 8.14,
+      "model_min": 8.06,
+      "timetable_min": 6.13,
+      "hour": 17
+    },
+    {
+      "observed_min": 37.49,
+      "model_min": 31.35,
+      "timetable_min": 25.08,
+      "hour": 17
+    },
+    {
+      "observed_min": 9.22,
+      "model_min": 11.38,
+      "timetable_min": 10.85,
+      "hour": 11
+    },
+    {
+      "observed_min": 11.01,
+      "model_min": 11.43,
+      "timetable_min": 13.78,
+      "hour": 8
+    },
+    {
+      "observed_min": 29.06,
+      "model_min": 27.75,
+      "timetable_min": 35.15,
+      "hour": 20
+    },
+    {
+      "observed_min": 32.36,
+      "model_min": 20.95,
+      "timetable_min": 21.27,
+      "hour": 23
+    },
+    {
+      "observed_min": 7.48,
+      "model_min": 7.48,
+      "timetable_min": 11.82,
+      "hour": 5
+    },
+    {
+      "observed_min": 27.56,
+      "model_min": 23.11,
+      "timetable_min": 12.62,
+      "hour": 11
+    },
+    {
+      "observed_min": 29.43,
+      "model_min": 26.58,
+      "timetable_min": 22.5,
+      "hour": 9
+    },
+    {
+      "observed_min": 12.69,
+      "model_min": 10.98,
+      "timetable_min": 9.87,
+      "hour": 12
+    },
+    {
+      "observed_min": 38.4,
+      "model_min": 37.94,
+      "timetable_min": 50.3,
+      "hour": 20
+    },
+    {
+      "observed_min": 8.04,
+      "model_min": 8.53,
+      "timetable_min": 10.57,
+      "hour": 22
+    },
+    {
+      "observed_min": 43.84,
+      "model_min": 37.0,
+      "timetable_min": 24.18,
+      "hour": 20
+    },
+    {
+      "observed_min": 6.62,
+      "model_min": 7.72,
+      "timetable_min": 11.13,
+      "hour": 7
+    },
+    {
+      "observed_min": 24.64,
+      "model_min": 28.22,
+      "timetable_min": 26.38,
+      "hour": 11
+    },
+    {
+      "observed_min": 17.29,
+      "model_min": 14.17,
+      "timetable_min": 10.25,
+      "hour": 10
+    },
+    {
+      "observed_min": 9.48,
+      "model_min": 8.21,
+      "timetable_min": 8.15,
+      "hour": 15
+    },
+    {
+      "observed_min": 31.03,
+      "model_min": 27.33,
+      "timetable_min": 24.08,
+      "hour": 11
+    },
+    {
+      "observed_min": 67.06,
+      "model_min": 34.38,
+      "timetable_min": 41.9,
+      "hour": 15
+    },
+    {
+      "observed_min": 6.34,
+      "model_min": 6.27,
+      "timetable_min": 6.45,
+      "hour": 11
+    },
+    {
+      "observed_min": 43.78,
+      "model_min": 36.03,
+      "timetable_min": 41.82,
+      "hour": 11
+    },
+    {
+      "observed_min": 16.05,
+      "model_min": 21.2,
+      "timetable_min": 14.75,
+      "hour": 18
+    },
+    {
+      "observed_min": 22.73,
+      "model_min": 22.24,
+      "timetable_min": 25.62,
+      "hour": 7
+    },
+    {
+      "observed_min": 10.97,
+      "model_min": 12.72,
+      "timetable_min": 17.22,
+      "hour": 18
+    },
+    {
+      "observed_min": 8.09,
+      "model_min": 6.76,
+      "timetable_min": 5.83,
+      "hour": 19
+    },
+    {
+      "observed_min": 13.17,
+      "model_min": 13.9,
+      "timetable_min": 16.37,
+      "hour": 10
+    },
+    {
+      "observed_min": 8.77,
+      "model_min": 9.16,
+      "timetable_min": 12.47,
+      "hour": 14
+    },
+    {
+      "observed_min": 29.36,
+      "model_min": 24.19,
+      "timetable_min": 34.78,
+      "hour": 5
+    },
+    {
+      "observed_min": 15.67,
+      "model_min": 16.85,
+      "timetable_min": 18.48,
+      "hour": 20
+    },
+    {
+      "observed_min": 18.41,
+      "model_min": 19.02,
+      "timetable_min": 25.3,
+      "hour": 6
+    },
+    {
+      "observed_min": 28.59,
+      "model_min": 18.69,
+      "timetable_min": 18.33,
+      "hour": 13
+    },
+    {
+      "observed_min": 17.97,
+      "model_min": 14.93,
+      "timetable_min": 16.57,
+      "hour": 21
+    },
+    {
+      "observed_min": 12.0,
+      "model_min": 12.61,
+      "timetable_min": 12.97,
+      "hour": 17
+    },
+    {
+      "observed_min": 15.32,
+      "model_min": 13.24,
+      "timetable_min": 14.47,
+      "hour": 20
+    },
+    {
+      "observed_min": 14.33,
+      "model_min": 12.65,
+      "timetable_min": 8.85,
+      "hour": 20
+    },
+    {
+      "observed_min": 21.02,
+      "model_min": 9.91,
+      "timetable_min": 8.28,
+      "hour": 12
+    },
+    {
+      "observed_min": 24.42,
+      "model_min": 22.8,
+      "timetable_min": 26.72,
+      "hour": 10
+    },
+    {
+      "observed_min": 6.27,
+      "model_min": 8.07,
+      "timetable_min": 8.4,
+      "hour": 8
+    },
+    {
+      "observed_min": 10.9,
+      "model_min": 8.74,
+      "timetable_min": 9.63,
+      "hour": 17
+    },
+    {
+      "observed_min": 5.14,
+      "model_min": 5.15,
+      "timetable_min": 8.28,
+      "hour": 7
+    },
+    {
+      "observed_min": 17.28,
+      "model_min": 11.99,
+      "timetable_min": 11.33,
+      "hour": 11
+    },
+    {
+      "observed_min": 27.71,
+      "model_min": 14.7,
+      "timetable_min": 12.73,
+      "hour": 16
+    },
+    {
+      "observed_min": 11.61,
+      "model_min": 9.14,
+      "timetable_min": 12.03,
+      "hour": 7
+    },
+    {
+      "observed_min": 19.35,
+      "model_min": 19.35,
+      "timetable_min": 23.58,
+      "hour": 7
+    },
+    {
+      "observed_min": 5.63,
+      "model_min": 6.88,
+      "timetable_min": 7.97,
+      "hour": 7
+    },
+    {
+      "observed_min": 42.2,
+      "model_min": 33.71,
+      "timetable_min": 37.07,
+      "hour": 9
+    },
+    {
+      "observed_min": 17.59,
+      "model_min": 20.56,
+      "timetable_min": 15.98,
+      "hour": 10
+    },
+    {
+      "observed_min": 9.22,
+      "model_min": 11.9,
+      "timetable_min": 13.92,
+      "hour": 12
+    },
+    {
+      "observed_min": 4.7,
+      "model_min": 5.3,
+      "timetable_min": 6.25,
+      "hour": 15
+    },
+    {
+      "observed_min": 18.01,
+      "model_min": 19.5,
+      "timetable_min": 24.3,
+      "hour": 11
+    },
+    {
+      "observed_min": 33.24,
+      "model_min": 31.67,
+      "timetable_min": 37.18,
+      "hour": 15
+    },
+    {
+      "observed_min": 41.47,
+      "model_min": 42.85,
+      "timetable_min": 64.25,
+      "hour": 7
+    },
+    {
+      "observed_min": 6.8,
+      "model_min": 6.53,
+      "timetable_min": 5.82,
+      "hour": 8
+    },
+    {
+      "observed_min": 11.38,
+      "model_min": 13.21,
+      "timetable_min": 15.58,
+      "hour": 10
+    },
+    {
+      "observed_min": 45.49,
+      "model_min": 41.27,
+      "timetable_min": 47.12,
+      "hour": 9
     }
   ],
   "coverage": {
-    "observations": 52914,
-    "vehicles": 4541,
-    "stretches": 8231,
-    "stretches_3plus": 4588,
-    "routes": 1362,
+    "observations": 39125028,
+    "vehicles": 6689,
+    "stretches": 13525,
+    "stretches_3plus": 13199,
+    "routes": 2327,
     "routes_total": 2567,
     "hours_with_data": [
-      17
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
     ],
-    "first": "2026-11-16T16:59+05:30",
-    "last": "2026-11-16T17:43+05:30"
+    "sources": [
+      {
+        "source": "archive",
+        "observations": 38559787,
+        "days": 31,
+        "first_day": "2026-10-01",
+        "last_day": "2026-10-31"
+      },
+      {
+        "source": "live",
+        "observations": 565241,
+        "days": 2,
+        "first_day": "2026-11-16",
+        "last_day": "2026-11-17"
+      }
+    ],
+    "first": "2026-09-30T23:59+05:30",
+    "last": "2026-11-17T10:02+05:30"
   },
   "google": {
     "pairs": [
@@ -3682,236 +3909,236 @@
         "destination": "Nehru Place",
         "depart": "2026-11-24T08:30",
         "google_min": 61.0,
-        "ours_min": 61.2
+        "ours_min": 54.2
       },
       {
         "origin": "Kashmere Gate",
         "destination": "Nehru Place",
         "depart": "2026-11-24T14:00",
         "google_min": 61.0,
-        "ours_min": 53.2
+        "ours_min": 65.1
       },
       {
         "origin": "Kashmere Gate",
         "destination": "Nehru Place",
         "depart": "2026-11-24T21:30",
         "google_min": 66.0,
-        "ours_min": 68.2
+        "ours_min": 69.0
       },
       {
         "origin": "Anand Vihar",
         "destination": "Connaught Place",
         "depart": "2026-11-24T08:30",
         "google_min": 40.0,
-        "ours_min": 46.6
+        "ours_min": 41.1
       },
       {
         "origin": "Anand Vihar",
         "destination": "Connaught Place",
         "depart": "2026-11-24T14:00",
         "google_min": 50.0,
-        "ours_min": 47.5
+        "ours_min": 58.0
       },
       {
         "origin": "Anand Vihar",
         "destination": "Connaught Place",
         "depart": "2026-11-24T21:30",
         "google_min": 44.0,
-        "ours_min": 41.6
+        "ours_min": 49.3
       },
       {
         "origin": "Rohini Sec 22",
         "destination": "Azadpur",
         "depart": "2026-11-24T08:30",
         "google_min": 66.0,
-        "ours_min": 52.6
+        "ours_min": 49.2
       },
       {
         "origin": "Rohini Sec 22",
         "destination": "Azadpur",
         "depart": "2026-11-24T14:00",
         "google_min": 59.0,
-        "ours_min": 48.2
+        "ours_min": 64.8
       },
       {
         "origin": "Rohini Sec 22",
         "destination": "Azadpur",
         "depart": "2026-11-24T21:30",
         "google_min": 62.0,
-        "ours_min": 60.4
+        "ours_min": 57.8
       },
       {
         "origin": "Mehrauli",
         "destination": "Kashmere Gate",
         "depart": "2026-11-24T08:30",
         "google_min": 71.0,
-        "ours_min": 65.8
+        "ours_min": 58.9
       },
       {
         "origin": "Mehrauli",
         "destination": "Kashmere Gate",
         "depart": "2026-11-24T14:00",
         "google_min": 71.0,
-        "ours_min": 90.8
+        "ours_min": 110.6
       },
       {
         "origin": "Mehrauli",
         "destination": "Kashmere Gate",
         "depart": "2026-11-24T21:30",
         "google_min": 71.0,
-        "ours_min": 65.8
+        "ours_min": 59.4
       },
       {
         "origin": "Dhaula Kuan",
         "destination": "ITO",
         "depart": "2026-11-24T08:30",
         "google_min": 92.0,
-        "ours_min": 47.1
+        "ours_min": 45.4
       },
       {
         "origin": "Dhaula Kuan",
         "destination": "ITO",
         "depart": "2026-11-24T14:00",
         "google_min": 94.0,
-        "ours_min": 52.2
+        "ours_min": 62.3
       },
       {
         "origin": "Dhaula Kuan",
         "destination": "ITO",
         "depart": "2026-11-24T21:30",
         "google_min": 121.0,
-        "ours_min": 41.2
+        "ours_min": 37.6
       },
       {
         "origin": "Uttam Nagar",
         "destination": "Rajiv Chowk",
         "depart": "2026-11-24T08:30",
         "google_min": 90.0,
-        "ours_min": 84.8
+        "ours_min": 91.4
       },
       {
         "origin": "Uttam Nagar",
         "destination": "Rajiv Chowk",
         "depart": "2026-11-24T14:00",
         "google_min": 93.0,
-        "ours_min": 75.8
+        "ours_min": 85.7
       },
       {
         "origin": "Uttam Nagar",
         "destination": "Rajiv Chowk",
         "depart": "2026-11-24T21:30",
         "google_min": 88.0,
-        "ours_min": 83.8
+        "ours_min": 78.9
       },
       {
         "origin": "Badarpur",
         "destination": "Ashram",
         "depart": "2026-11-24T08:30",
         "google_min": 35.0,
-        "ours_min": 35.9
+        "ours_min": 29.7
       },
       {
         "origin": "Badarpur",
         "destination": "Ashram",
         "depart": "2026-11-24T14:00",
         "google_min": 35.0,
-        "ours_min": 30.8
+        "ours_min": 30.5
       },
       {
         "origin": "Badarpur",
         "destination": "Ashram",
         "depart": "2026-11-24T21:30",
         "google_min": 35.0,
-        "ours_min": 30.8
+        "ours_min": 23.7
       },
       {
         "origin": "Mayur Vihar",
         "destination": "Lajpat Nagar",
         "depart": "2026-11-24T08:30",
         "google_min": 48.0,
-        "ours_min": 50.5
+        "ours_min": 50.2
       },
       {
         "origin": "Mayur Vihar",
         "destination": "Lajpat Nagar",
         "depart": "2026-11-24T14:00",
         "google_min": 48.0,
-        "ours_min": 65.4
+        "ours_min": 68.3
       },
       {
         "origin": "Mayur Vihar",
         "destination": "Lajpat Nagar",
         "depart": "2026-11-24T21:30",
         "google_min": 55.0,
-        "ours_min": 70.4
+        "ours_min": 62.6
       },
       {
         "origin": "Punjabi Bagh",
         "destination": "Karol Bagh",
         "depart": "2026-11-24T08:30",
         "google_min": 35.0,
-        "ours_min": 32.9
+        "ours_min": 32.4
       },
       {
         "origin": "Punjabi Bagh",
         "destination": "Karol Bagh",
         "depart": "2026-11-24T14:00",
         "google_min": 64.0,
-        "ours_min": 34.8
+        "ours_min": 42.1
       },
       {
         "origin": "Punjabi Bagh",
         "destination": "Karol Bagh",
         "depart": "2026-11-24T21:30",
         "google_min": 37.0,
-        "ours_min": 37.5
+        "ours_min": 37.4
       },
       {
         "origin": "Seelampur",
         "destination": "Old Delhi Railway Station",
         "depart": "2026-11-24T08:30",
         "google_min": 43.0,
-        "ours_min": 32.6
+        "ours_min": 25.0
       },
       {
         "origin": "Seelampur",
         "destination": "Old Delhi Railway Station",
         "depart": "2026-11-24T14:00",
         "google_min": 43.0,
-        "ours_min": 27.6
+        "ours_min": 27.7
       },
       {
         "origin": "Seelampur",
         "destination": "Old Delhi Railway Station",
         "depart": "2026-11-24T21:30",
         "google_min": 43.0,
-        "ours_min": 34.8
+        "ours_min": 31.0
       },
       {
         "origin": "Saket",
         "destination": "AIIMS",
         "depart": "2026-11-24T08:30",
         "google_min": 36.0,
-        "ours_min": 29.5
+        "ours_min": 27.2
       },
       {
         "origin": "Saket",
         "destination": "AIIMS",
         "depart": "2026-11-24T14:00",
         "google_min": 35.0,
-        "ours_min": 43.7
+        "ours_min": 49.8
       },
       {
         "origin": "Saket",
         "destination": "AIIMS",
         "depart": "2026-11-24T21:30",
         "google_min": 33.0,
-        "ours_min": 31.7
+        "ours_min": 30.9
       }
     ],
     "n": 33,
-    "mae_min": 12.1,
-    "mape_pct": 17.9,
-    "within_20pct": 66.7
+    "mae_min": 13.5,
+    "mape_pct": 21.2,
+    "within_20pct": 60.6
   }
 }
