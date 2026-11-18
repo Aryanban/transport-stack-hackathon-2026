@@ -1,0 +1,913 @@
+{
+  "$comment": "The style library. One source for the Remotion tokens (src/styles/index.ts), the picker (tools/style/pick-style.mjs) and the skill doc (remotion-video-director/references/style-library.md). A brand skin overrides colors and fonts; it never changes a style's structure or motion.",
+  "styles": [
+    {
+      "id": "editorial-paper",
+      "name": "Editorial Paper",
+      "feel": "A smart magazine explaining a product: paper, ink, one highlighter word, the real app sliding in tilted.",
+      "reference": "Basement Ready, Meta AI developer hackathon winner (youtube.com/watch?v=mFCAcvSXj48); source in blueprints/basement-ready/video",
+      "bestFor": [
+        "hackathon",
+        "explainer",
+        "product demo",
+        "data story",
+        "civic",
+        "ml model",
+        "how it works",
+        "pitch",
+        "research"
+      ],
+      "signals": [
+        "hackathon",
+        "explain",
+        "explainer",
+        "how it works",
+        "pipeline",
+        "model",
+        "data",
+        "proof",
+        "accuracy",
+        "civic",
+        "transit",
+        "map",
+        "research",
+        "judges",
+        "demo",
+        "app"
+      ],
+      "avoid": [
+        "nightlife",
+        "gaming",
+        "luxury",
+        "fashion"
+      ],
+      "colors": {
+        "bg": "#F4F6F2",
+        "card": "#FBFCFA",
+        "ink": "#0F2A1E",
+        "muted": "#4A5D52",
+        "line": "#D5DDD4",
+        "accent": "#1F7A4A",
+        "marker": "#4BE38A",
+        "onAccent": "#0F2A1E",
+        "onMarker": "#0F2A1E"
+      },
+      "fonts": {
+        "display": "Hanken Grotesk",
+        "body": "Hanken Grotesk",
+        "mono": "Geist Mono"
+      },
+      "type": {
+        "displayWeight": 800,
+        "tracking": "-0.045em",
+        "leading": 0.92,
+        "case": "sentence, ends with a full stop"
+      },
+      "shape": {
+        "radius": 6,
+        "border": 1.5,
+        "stampBorder": 4,
+        "shadow": "0 50px 90px -40px rgb(15 42 30 / 0.55)"
+      },
+      "motion": {
+        "ease": [
+          0.22,
+          1,
+          0.36,
+          1
+        ],
+        "draw": [
+          0.65,
+          0,
+          0.35,
+          1
+        ],
+        "enter": 14,
+        "stagger": 4,
+        "camera": "slow dolly, frames tilt 8 to 15 degrees and settle",
+        "cuts": "hard cut or a paper wipe; no cross-dissolves"
+      },
+      "texture": "none: flat paper. Depth comes from the tilted browser and its long soft shadow, never from grain or gradients.",
+      "components": [
+        "Kicker",
+        "Headline with Marker word",
+        "LineArt",
+        "PillPipeline",
+        "BrowserFrame (tilted, runs off the right edge)",
+        "StampCard",
+        "NumberCard",
+        "Checklist",
+        "CaptionBar",
+        "CloseCard"
+      ],
+      "rules": [
+        "Headlines left aligned, 5 to 8 words, end with a full stop.",
+        "Exactly one highlighted word per headline.",
+        "Ink line art at 1.5 px, never filled illustrations.",
+        "The real product is the hero image; never mock it.",
+        "Kicker lines in mono, sentence case, no tracking."
+      ]
+    },
+    {
+      "id": "drawing-sheet",
+      "name": "Drawing Sheet",
+      "feel": "One sheet of an architect's drawing set: drawn border, title block, dimension lines that measure the product.",
+      "reference": "Basement Ready how-it-works film (blueprints/basement-ready/video/src/HowItWorks.tsx)",
+      "bestFor": [
+        "hardware",
+        "3d scan",
+        "architecture",
+        "engineering",
+        "spatial",
+        "measurement",
+        "process walkthrough"
+      ],
+      "signals": [
+        "scan",
+        "3d",
+        "measure",
+        "floor plan",
+        "cad",
+        "hardware",
+        "engineering",
+        "architecture",
+        "dimension",
+        "spatial",
+        "lidar",
+        "build"
+      ],
+      "avoid": [
+        "consumer social",
+        "music",
+        "fashion"
+      ],
+      "colors": {
+        "bg": "#F4F6F2",
+        "card": "#FBFCFA",
+        "ink": "#0F2A1E",
+        "muted": "#4A5D52",
+        "line": "#D5DDD4",
+        "accent": "#2E9A5C",
+        "marker": "#4BE38A",
+        "onAccent": "#0F2A1E",
+        "onMarker": "#0F2A1E"
+      },
+      "fonts": {
+        "display": "Archivo",
+        "body": "Archivo",
+        "mono": "Geist Mono"
+      },
+      "type": {
+        "displayWeight": 800,
+        "tracking": "-0.03em",
+        "leading": 0.95,
+        "case": "sentence"
+      },
+      "shape": {
+        "radius": 0,
+        "border": 1,
+        "stampBorder": 2,
+        "shadow": "none"
+      },
+      "motion": {
+        "ease": [
+          0.22,
+          1,
+          0.36,
+          1
+        ],
+        "draw": [
+          0.65,
+          0,
+          0.35,
+          1
+        ],
+        "enter": 18,
+        "stagger": 5,
+        "camera": "locked off; lines draw themselves",
+        "cuts": "sheet to sheet, the title block counts 01 / 09"
+      },
+      "texture": "hairline sheet border and title block on every scene",
+      "components": [
+        "Sheet",
+        "LineArt",
+        "Dim",
+        "Kicker",
+        "CaptionBar",
+        "NumberCard"
+      ],
+      "rules": [
+        "Every number is a dimension or a measurement in mono.",
+        "Lines stroke in; nothing fades in.",
+        "Title block names the sheet and counts sheets."
+      ]
+    },
+    {
+      "id": "keynote-black",
+      "name": "Keynote Black",
+      "feel": "A launch keynote: one idea per frame, huge type, long holds.",
+      "reference": "Apple keynote product films",
+      "bestFor": [
+        "launch",
+        "announcement",
+        "one big idea",
+        "teaser"
+      ],
+      "signals": [
+        "launch",
+        "announce",
+        "introducing",
+        "teaser",
+        "reveal",
+        "keynote",
+        "one more thing"
+      ],
+      "avoid": [
+        "dense data",
+        "tutorial",
+        "many features"
+      ],
+      "colors": {
+        "bg": "#000000",
+        "card": "#141414",
+        "ink": "#FFFFFF",
+        "muted": "#A1A1A1",
+        "line": "#2A2A2A",
+        "accent": "#FFFFFF",
+        "marker": "#FFFFFF",
+        "onAccent": "#000000",
+        "onMarker": "#000000"
+      },
+      "fonts": {
+        "display": "Instrument Sans",
+        "body": "Instrument Sans",
+        "mono": "JetBrains Mono"
+      },
+      "type": {
+        "displayWeight": 700,
+        "tracking": "-0.04em",
+        "leading": 0.95,
+        "case": "sentence"
+      },
+      "shape": {
+        "radius": 18,
+        "border": 0,
+        "stampBorder": 0,
+        "shadow": "none"
+      },
+      "motion": {
+        "ease": [
+          0.16,
+          1,
+          0.3,
+          1
+        ],
+        "draw": [
+          0.65,
+          0,
+          0.35,
+          1
+        ],
+        "enter": 24,
+        "stagger": 8,
+        "camera": "slow push on the product",
+        "cuts": "fade through black, 60-frame holds"
+      },
+      "texture": "none; brand colour appears once, at the reveal",
+      "components": [
+        "Headline",
+        "BrowserFrame (straight on)",
+        "CloseCard"
+      ],
+      "rules": [
+        "Seven words or fewer on screen.",
+        "No accent colour until the reveal.",
+        "Centre only the reveal; everything else left aligned."
+      ]
+    },
+    {
+      "id": "data-desk",
+      "name": "Data Desk",
+      "feel": "A markets desk: dense but ordered numbers, tickers, charts that draw.",
+      "reference": "Bloomberg and FT data graphics",
+      "bestFor": [
+        "report",
+        "metrics",
+        "weekly update",
+        "finance",
+        "analytics",
+        "dashboard"
+      ],
+      "signals": [
+        "report",
+        "metrics",
+        "kpi",
+        "weekly",
+        "monthly",
+        "revenue",
+        "growth",
+        "chart",
+        "dashboard",
+        "finance",
+        "numbers",
+        "analytics"
+      ],
+      "avoid": [
+        "emotional story",
+        "consumer lifestyle"
+      ],
+      "colors": {
+        "bg": "#0B1F3A",
+        "card": "#12294A",
+        "ink": "#E8EEF6",
+        "muted": "#9FB0C6",
+        "line": "#24406A",
+        "accent": "#FFB000",
+        "marker": "#FFB000",
+        "onAccent": "#0B1F3A",
+        "up": "#2BB673",
+        "down": "#E5484D",
+        "onMarker": "#0B1F3A"
+      },
+      "fonts": {
+        "display": "IBM Plex Sans",
+        "body": "IBM Plex Sans",
+        "mono": "IBM Plex Mono"
+      },
+      "type": {
+        "displayWeight": 600,
+        "tracking": "-0.02em",
+        "leading": 1,
+        "case": "sentence"
+      },
+      "shape": {
+        "radius": 2,
+        "border": 1,
+        "stampBorder": 1,
+        "shadow": "none"
+      },
+      "motion": {
+        "ease": [
+          0.33,
+          1,
+          0.68,
+          1
+        ],
+        "draw": [
+          0.65,
+          0,
+          0.35,
+          1
+        ],
+        "enter": 12,
+        "stagger": 3,
+        "camera": "none; panels slide on a grid",
+        "cuts": "grid panels swap; hard cuts"
+      },
+      "texture": "faint 8 px grid",
+      "components": [
+        "NumberCard",
+        "Checklist",
+        "Kicker",
+        "CaptionBar"
+      ],
+      "rules": [
+        "Up and down colours always carry an arrow or sign too.",
+        "Every chart has a source line.",
+        "One axis per chart."
+      ]
+    },
+    {
+      "id": "terminal",
+      "name": "Terminal",
+      "feel": "A developer's screen: monospace, typed commands, real output.",
+      "reference": "CLI launch videos (Warp, Bun, Deno)",
+      "bestFor": [
+        "cli",
+        "developer tool",
+        "sdk",
+        "api",
+        "infra",
+        "open source"
+      ],
+      "signals": [
+        "cli",
+        "terminal",
+        "command",
+        "sdk",
+        "api",
+        "developer",
+        "dev tool",
+        "npm",
+        "open source",
+        "infra",
+        "github"
+      ],
+      "avoid": [
+        "non-technical audience"
+      ],
+      "colors": {
+        "bg": "#0D1117",
+        "card": "#161B22",
+        "ink": "#E6EDF3",
+        "muted": "#8B949E",
+        "line": "#30363D",
+        "accent": "#3FB950",
+        "marker": "#1F6FEB",
+        "onAccent": "#0D1117",
+        "onMarker": "#FFFFFF"
+      },
+      "fonts": {
+        "display": "JetBrains Mono",
+        "body": "JetBrains Mono",
+        "mono": "JetBrains Mono"
+      },
+      "type": {
+        "displayWeight": 700,
+        "tracking": "-0.02em",
+        "leading": 1.1,
+        "case": "lower case allowed"
+      },
+      "shape": {
+        "radius": 8,
+        "border": 1,
+        "stampBorder": 1,
+        "shadow": "0 30px 60px -30px rgb(0 0 0 / 0.8)"
+      },
+      "motion": {
+        "ease": [
+          0.22,
+          1,
+          0.36,
+          1
+        ],
+        "draw": [
+          0.65,
+          0,
+          0.35,
+          1
+        ],
+        "enter": 8,
+        "stagger": 2,
+        "camera": "none",
+        "cuts": "hard cuts on the beat"
+      },
+      "texture": "none",
+      "components": [
+        "Kicker",
+        "BrowserFrame (as a terminal window)",
+        "Checklist",
+        "CaptionBar"
+      ],
+      "rules": [
+        "Commands type at 30 to 40 characters per second.",
+        "Output is real, captured, never invented."
+      ]
+    },
+    {
+      "id": "swiss-poster",
+      "name": "Swiss Poster",
+      "feel": "International typographic style: a strict grid, giant numerals, one red.",
+      "reference": "Müller-Brockmann posters; Vignelli transit signage",
+      "bestFor": [
+        "transit",
+        "conference",
+        "design tool",
+        "agency",
+        "manifesto",
+        "public service"
+      ],
+      "signals": [
+        "design",
+        "conference",
+        "manifesto",
+        "grid",
+        "typography",
+        "transit",
+        "public",
+        "city",
+        "museum",
+        "festival"
+      ],
+      "avoid": [
+        "playful kids",
+        "cosy"
+      ],
+      "colors": {
+        "bg": "#F2F2F2",
+        "card": "#FFFFFF",
+        "ink": "#000000",
+        "muted": "#575757",
+        "line": "#000000",
+        "accent": "#E30613",
+        "marker": "#E30613",
+        "onAccent": "#FFFFFF",
+        "onMarker": "#FFFFFF"
+      },
+      "fonts": {
+        "display": "Archivo",
+        "body": "Archivo",
+        "mono": "IBM Plex Mono"
+      },
+      "type": {
+        "displayWeight": 900,
+        "tracking": "-0.05em",
+        "leading": 0.85,
+        "case": "sentence"
+      },
+      "shape": {
+        "radius": 0,
+        "border": 2,
+        "stampBorder": 6,
+        "shadow": "none"
+      },
+      "motion": {
+        "ease": [
+          0.76,
+          0,
+          0.24,
+          1
+        ],
+        "draw": [
+          0.76,
+          0,
+          0.24,
+          1
+        ],
+        "enter": 10,
+        "stagger": 3,
+        "camera": "none; blocks slide on grid lines",
+        "cuts": "hard wipes along grid columns"
+      },
+      "texture": "visible 12-column grid in the first and last frame",
+      "components": [
+        "Headline",
+        "NumberCard",
+        "PillPipeline",
+        "CloseCard"
+      ],
+      "rules": [
+        "Everything snaps to the 12-column grid.",
+        "Red marks one thing per scene.",
+        "Numerals can be 600 px tall."
+      ]
+    },
+    {
+      "id": "riso-print",
+      "name": "Riso Print",
+      "feel": "A two-ink risograph zine: overprinted colours, slight misregistration, grain you can feel.",
+      "reference": "Risograph zines and indie gig posters",
+      "bestFor": [
+        "community",
+        "creator tool",
+        "education",
+        "nonprofit",
+        "event",
+        "indie"
+      ],
+      "signals": [
+        "community",
+        "zine",
+        "creator",
+        "indie",
+        "students",
+        "education",
+        "nonprofit",
+        "event",
+        "club",
+        "newsletter"
+      ],
+      "avoid": [
+        "enterprise security",
+        "finance"
+      ],
+      "colors": {
+        "bg": "#F3F1EC",
+        "card": "#FFFFFF",
+        "ink": "#1B1B1B",
+        "muted": "#5C5C5C",
+        "line": "#1B1B1B",
+        "accent": "#0078BF",
+        "marker": "#FF48B0",
+        "onAccent": "#FFFFFF",
+        "onMarker": "#1B1B1B"
+      },
+      "fonts": {
+        "display": "Bricolage Grotesque",
+        "body": "Bricolage Grotesque",
+        "mono": "DM Mono"
+      },
+      "type": {
+        "displayWeight": 800,
+        "tracking": "-0.03em",
+        "leading": 0.95,
+        "case": "sentence"
+      },
+      "shape": {
+        "radius": 0,
+        "border": 2,
+        "stampBorder": 3,
+        "shadow": "none"
+      },
+      "motion": {
+        "ease": [
+          0.34,
+          1.56,
+          0.64,
+          1
+        ],
+        "draw": [
+          0.65,
+          0,
+          0.35,
+          1
+        ],
+        "enter": 12,
+        "stagger": 4,
+        "camera": "2 px jitter on held frames (stepped, 8 fps)",
+        "cuts": "ink-roll wipe"
+      },
+      "texture": "paper grain plus two-colour multiply overlaps, offset 2 to 3 px",
+      "components": [
+        "Headline with Marker word",
+        "StampCard",
+        "LineArt",
+        "CloseCard"
+      ],
+      "rules": [
+        "Only two inks plus black.",
+        "Overlaps multiply; never alpha-blend.",
+        "Photos as one-colour halftone."
+      ]
+    },
+    {
+      "id": "sticker-pop",
+      "name": "Sticker Pop",
+      "feel": "Neo-brutalist stickers: thick black outlines, hard offset shadows, bright flat fills that bounce in.",
+      "reference": "Gumroad and Figma community launch reels",
+      "bestFor": [
+        "consumer app",
+        "social",
+        "creator economy",
+        "game",
+        "marketplace",
+        "reel"
+      ],
+      "signals": [
+        "fun",
+        "playful",
+        "social",
+        "reel",
+        "tiktok",
+        "shorts",
+        "creator",
+        "consumer",
+        "game",
+        "marketplace",
+        "gen z"
+      ],
+      "avoid": [
+        "healthcare",
+        "legal",
+        "serious civic"
+      ],
+      "colors": {
+        "bg": "#FFE14D",
+        "card": "#FFFFFF",
+        "ink": "#000000",
+        "muted": "#333333",
+        "line": "#000000",
+        "accent": "#4D96FF",
+        "marker": "#FF6B6B",
+        "onAccent": "#000000",
+        "onMarker": "#000000"
+      },
+      "fonts": {
+        "display": "Syne",
+        "body": "Familjen Grotesk",
+        "mono": "Space Mono"
+      },
+      "type": {
+        "displayWeight": 800,
+        "tracking": "-0.03em",
+        "leading": 0.95,
+        "case": "sentence"
+      },
+      "shape": {
+        "radius": 14,
+        "border": 4,
+        "stampBorder": 5,
+        "shadow": "8px 8px 0 #000000"
+      },
+      "motion": {
+        "ease": [
+          0.34,
+          1.56,
+          0.64,
+          1
+        ],
+        "draw": [
+          0.65,
+          0,
+          0.35,
+          1
+        ],
+        "enter": 10,
+        "stagger": 3,
+        "camera": "punch-ins on the beat",
+        "cuts": "hard cuts on the beat, sticker slaps"
+      },
+      "texture": "none; flat fills with hard shadows",
+      "components": [
+        "StampCard",
+        "Headline with Marker word",
+        "BrowserFrame (straight, hard shadow)",
+        "Checklist",
+        "CloseCard"
+      ],
+      "rules": [
+        "Shadows are hard offsets, never blurred.",
+        "Overshoot springs on entrances only, not exits.",
+        "Fits 9:16 best."
+      ]
+    },
+    {
+      "id": "photo-story",
+      "name": "Photo Story",
+      "feel": "A short documentary: real footage full bleed, captions set like subtitles in a good serif.",
+      "reference": "NYT and Guardian video explainers",
+      "bestFor": [
+        "founder story",
+        "customer story",
+        "nonprofit",
+        "place",
+        "people",
+        "social impact"
+      ],
+      "signals": [
+        "story",
+        "founder",
+        "customer",
+        "people",
+        "interview",
+        "impact",
+        "journey",
+        "documentary",
+        "footage",
+        "photos",
+        "community"
+      ],
+      "avoid": [
+        "no footage available",
+        "dev tool"
+      ],
+      "colors": {
+        "bg": "#1A1916",
+        "card": "#24221E",
+        "ink": "#FAF8F4",
+        "muted": "#C9C3B8",
+        "line": "#3A3731",
+        "accent": "#F2A541",
+        "marker": "#F2A541",
+        "onAccent": "#1A1916",
+        "onMarker": "#1A1916"
+      },
+      "fonts": {
+        "display": "Newsreader",
+        "body": "Newsreader",
+        "mono": "IBM Plex Mono"
+      },
+      "type": {
+        "displayWeight": 500,
+        "tracking": "-0.02em",
+        "leading": 1.05,
+        "case": "sentence"
+      },
+      "shape": {
+        "radius": 0,
+        "border": 0,
+        "stampBorder": 0,
+        "shadow": "none"
+      },
+      "motion": {
+        "ease": [
+          0.25,
+          1,
+          0.5,
+          1
+        ],
+        "draw": [
+          0.65,
+          0,
+          0.35,
+          1
+        ],
+        "enter": 20,
+        "stagger": 6,
+        "camera": "Ken Burns on every still, 1.0 to 1.08",
+        "cuts": "cuts on the voice, dissolves only between chapters"
+      },
+      "texture": "the footage itself; a 25 percent scrim under text",
+      "components": [
+        "Kicker",
+        "CaptionBar",
+        "NumberCard",
+        "CloseCard"
+      ],
+      "rules": [
+        "Needs real footage or photos; without them, pick another style.",
+        "Never stock photos of people."
+      ]
+    },
+    {
+      "id": "dark-atmospheric",
+      "name": "Dark Atmospheric",
+      "feel": "Glowing 3D in the dark: mesh light, glass panels, grain and vignette.",
+      "reference": "This repo's AEOForge scenes (starter/src/scenes)",
+      "bestFor": [
+        "ai product",
+        "3d",
+        "music",
+        "voice",
+        "video tool",
+        "gaming"
+      ],
+      "signals": [
+        "ai agent",
+        "3d",
+        "webgl",
+        "music",
+        "voice",
+        "audio",
+        "video",
+        "generative",
+        "gaming",
+        "immersive",
+        "night"
+      ],
+      "avoid": [
+        "civic",
+        "data proof",
+        "hackathon explainer",
+        "healthcare"
+      ],
+      "colors": {
+        "bg": "#08080A",
+        "card": "#15151C",
+        "ink": "#FCFCFD",
+        "muted": "#9496A1",
+        "line": "#2A2A33",
+        "accent": "#3B82F6",
+        "marker": "#3B82F6",
+        "onAccent": "#FFFFFF",
+        "onMarker": "#FFFFFF"
+      },
+      "fonts": {
+        "display": "Plus Jakarta Sans",
+        "body": "Plus Jakarta Sans",
+        "mono": "JetBrains Mono"
+      },
+      "type": {
+        "displayWeight": 800,
+        "tracking": "-0.03em",
+        "leading": 1,
+        "case": "sentence"
+      },
+      "shape": {
+        "radius": 16,
+        "border": 1,
+        "stampBorder": 1,
+        "shadow": "0 40px 80px -30px rgb(59 130 246 / 0.35)"
+      },
+      "motion": {
+        "ease": [
+          0.22,
+          1,
+          0.36,
+          1
+        ],
+        "draw": [
+          0.65,
+          0,
+          0.35,
+          1
+        ],
+        "enter": 18,
+        "stagger": 4,
+        "camera": "orbiting 3D camera, parallax layers",
+        "cuts": "light-leak and zoom-through transitions"
+      },
+      "texture": "five-layer stack: mesh, assets, type, grade, grain and vignette",
+      "components": [
+        "Atmosphere",
+        "AgentBot",
+        "ZoomPunch",
+        "Title"
+      ],
+      "rules": [
+        "This is the most generic-looking style when misused: pick it only when the subject is AI, 3D, audio or night.",
+        "Never a purple-to-blue gradient."
+      ]
+    }
+  ]
+}

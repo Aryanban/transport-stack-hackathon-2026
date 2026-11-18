@@ -1,0 +1,10 @@
+[
+  {"id": "s1", "text": "Kashmere Gate to Nehru Place. The timetable says forty-eight minutes, at any hour of the day. But leave at six in the evening, and you'll sit on that bus for seventy-nine."},
+  {"id": "s2", "text": "Because traffic isn't one number. The same ride takes thirty-one minutes at dawn, and almost eighty at rush hour."},
+  {"id": "s3", "text": "The buses already know this. So we asked them. A full month of Delhi bus GPS: four hundred million positions, from six thousand buses."},
+  {"id": "s4", "text": "We snapped every point onto its route, threw out the bad ones, and timed every bus between every pair of stops. Thirty-nine million timings."},
+  {"id": "s5", "text": "From those, the model learns four things: the distance, the hour, the road itself, and that road's own rush hour."},
+  {"id": "s6", "text": "Then we tested it on a week it had never seen. Forty percent less error than the timetable, at every single hour."},
+  {"id": "s7", "text": "And it isn't just a chart. It's a planner. Six p.m., Kashmere Gate to Nehru Place: seventy-nine minutes on the bus. Tap five a.m., and it drops to thirty-two. Every road shows its speed. Live buses move on the map. And every stop shows what's coming next."},
+  {"id": "s8", "text": "Delhi bus times. Real buses, real times. Run it on your own laptop."}
+]

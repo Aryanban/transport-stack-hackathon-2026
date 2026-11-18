@@ -1,0 +1,12 @@
+{
+  "name": "delhi-bus-times-video",
+  "private": true,
+  "description": "90-second explainer for Delhi bus times. Uses the shared Remotion install from motion-graphics-demo-video (node_modules is a symlink).",
+  "scripts": {
+    "dev": "remotion studio src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "render": "remotion render src/index.ts Film out/film-master.mp4 --crf 16",
+    "record": "node tools/record.mjs",
+    "encode": "bash tools/encode.sh out/film-master.mp4 out/delhi-bus-times.mp4"
+  }
+}
