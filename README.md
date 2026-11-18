@@ -291,7 +291,7 @@ curl "http://127.0.0.1:8020/journeys?from=Kashmere%20Gate%20ISBT&to=Nehru%20Plac
 
 </details>
 
-## 🏗️ Rebuild the model yourself
+## 🔁 Rebuild the model yourself
 
 You don't need this to run the app: the fitted model ships with the repo. To rebuild it from raw GPS
 you need about 20 GB of free disk, 16 GB of RAM and 3 hours.
@@ -315,7 +315,7 @@ python -m src.ps1.model && python -m src.ps1.validation
 To add your own live data, run `python scripts/log_gtfs_rt.py` (it needs a key), then
 `python -m src.ps1.matcher` before step 4.
 
-## ⚖️ Honest limits
+## 📏 Honest limits
 
 - **Cluster buses.** The October archive is DTC buses only. Cluster (DIMTS) routes learn from our own
   2 days of live log, so they have less data. Every option shows how much of its ride rests on timed
